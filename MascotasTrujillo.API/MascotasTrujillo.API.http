@@ -1,0 +1,6 @@
+@MascotasTrujillo.API_HostAddress = http://localhost:5139
+
+GET {{MascotasTrujillo.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
