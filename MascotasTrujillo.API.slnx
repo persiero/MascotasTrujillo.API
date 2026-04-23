@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="MascotasTrujillo.API/MascotasTrujillo.API.csproj" />
+  <Project Path="MascotasTrujillo.App/MascotasTrujillo.App.csproj" Id="db50c24e-8a7a-4154-88a3-85f31e515607" />
 </Solution>
