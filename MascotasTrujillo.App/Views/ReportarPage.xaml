@@ -1,0 +1,44 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MascotasTrujillo.App.Views.ReportarPage"
+             Title="Reportar Mascota">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="📷 Nueva Alerta" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#2B0B98" />
+            <Label Text="Toma una foto de la mascota que encontraste." HorizontalOptions="Center" TextColor="Gray" />
+
+            <Border BackgroundColor="#F5F5F5" HeightRequest="250" Stroke="LightGray" StrokeThickness="2" StrokeDashArray="5,5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <Grid>
+                    <Image x:Name="FotoPreview" Aspect="AspectFill" />
+
+                    <HorizontalStackLayout x:Name="BotonesCaptura" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               Spacing="15">
+                        <Button Text="📸 Cámara" 
+                    Clicked="OnTomarFotoClicked" 
+                    BackgroundColor="#2B0B98" 
+                    TextColor="White" />
+
+                        <Button Text="🖼️ Galería" 
+                    Clicked="OnElegirGaleriaClicked" 
+                    BackgroundColor="#6200EE" 
+                    TextColor="White" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+            <Entry x:Name="DescripcionEntry" Placeholder="Ej. Perrito blanco con collar rojo..." />
+
+            <Button x:Name="BtnEnviar" Text="📍 Enviar Reporte con GPS" Clicked="OnEnviarClicked" BackgroundColor="#2B0B98" TextColor="White" CornerRadius="10" HeightRequest="50" IsEnabled="False" />
+
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#2B0B98"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

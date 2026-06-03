@@ -9,6 +9,7 @@ namespace MascotasTrujillo.App
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiMaps() // <--- ¡Añade esta línea!
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -21,6 +22,9 @@ namespace MascotasTrujillo.App
 
             // Registramos nuestro servicio para usarlo en cualquier pantalla
             builder.Services.AddSingleton<MascotasTrujillo.App.Services.ApiService>();
+
+            builder.Services.AddSingleton<MascotasTrujillo.App.Services.ApiService>();
+            builder.Services.AddTransient<MascotasTrujillo.App.Views.LoginPage>();
 
             return builder.Build();
         }
