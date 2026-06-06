@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MascotasTrujillo.App.Views.MisReportesPage"
+             Title="Mis Publicaciones">
+
+    <Grid RowDefinitions="Auto, *" Padding="20">
+
+        <Label Grid.Row="0" 
+               Text="Gestiona tus alertas activas" 
+               FontSize="18" 
+               TextColor="Gray" 
+               Margin="0,0,0,15"/>
+
+        <CollectionView Grid.Row="1" x:Name="MisReportesList">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Stroke="#E0E0E0" Margin="0,0,0,15" Padding="10">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+
+                        <Grid ColumnDefinitions="90, *, Auto" ColumnSpacing="10">
+
+                            <Image Grid.Column="0" 
+                                   Source="{Binding FotoUrl}" 
+                                   HeightRequest="80" 
+                                   WidthRequest="80" 
+                                   Aspect="AspectFill" />
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding Descripcion}" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold" 
+                                       LineBreakMode="TailTruncation"/>
+                                <Label Text="{Binding FechaHora, StringFormat='{0:dd/MM/yyyy}'}" 
+                                       FontSize="13" 
+                                       TextColor="DimGray" />
+                            </VerticalStackLayout>
+
+                            <Button Grid.Column="2" 
+                                    Text="✔ Encontrada" 
+                                    BackgroundColor="#2B0B98" 
+                                    TextColor="White"
+                                    FontSize="12"
+                                    FontAttributes="Bold"
+                                    HeightRequest="40"
+                                    VerticalOptions="Center"
+                                    Clicked="OnMascotaEncontradaClicked"
+                                    CommandParameter="{Binding .}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

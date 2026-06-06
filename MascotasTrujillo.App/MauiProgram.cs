@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using MascotasTrujillo.App.Services;
+using MascotasTrujillo.App.Views;
 
 namespace MascotasTrujillo.App
 {
@@ -9,7 +11,7 @@ namespace MascotasTrujillo.App
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseMauiMaps() // <--- ¡Añade esta línea!
+                .UseMauiMaps() // <--- Mantenemos tu configuración de mapas
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -17,14 +19,20 @@ namespace MascotasTrujillo.App
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
-            // Registramos nuestro servicio para usarlo en cualquier pantalla
-            builder.Services.AddSingleton<MascotasTrujillo.App.Services.ApiService>();
+            // 1. Registramos nuestro servicio para usarlo en cualquier pantalla (solo una vez)
+            builder.Services.AddSingleton<ApiService>();
 
-            builder.Services.AddSingleton<MascotasTrujillo.App.Services.ApiService>();
-            builder.Services.AddTransient<MascotasTrujillo.App.Views.LoginPage>();
+            // 2. Registramos el contenedor principal de pestañas
+            builder.Services.AddSingleton<AppShell>();
+
+            // 3. Registramos TODAS las pantallas para la Inyección de Dependencias
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<RadarPage>();
+            builder.Services.AddTransient<MisReportesPage>();
+            builder.Services.AddTransient<MascotaDetailPage>();
 
             return builder.Build();
         }

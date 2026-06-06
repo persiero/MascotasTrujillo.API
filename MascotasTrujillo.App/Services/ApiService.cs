@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MascotasTrujillo.App.Models;
+using System;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -11,6 +12,7 @@ namespace MascotasTrujillo.App.Services
     {
         private readonly HttpClient _httpClient;
         private string? _token;
+        private readonly JsonSerializerOptions _jsonOptions;
 
         public ApiService()
         {
@@ -34,6 +36,12 @@ namespace MascotasTrujillo.App.Services
             _httpClient = new HttpClient(handler)
             {
                 BaseAddress = new Uri(baseUrl)
+            };
+
+            // AGREGAR ESTA CONFIGURACIÓN:
+            _jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
             };
         }
 
@@ -130,6 +138,48 @@ namespace MascotasTrujillo.App.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al reportar: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Añade estos métodos dentro de tu clase ApiService
+
+        public async Task<List<Avistamiento>?> GetMisReportesAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("Avistamientos");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<List<Avistamiento>>(json, _jsonOptions);
+                }
+                else
+                {
+                    // SI LA API NOS RECHAZA, ATRAPAMOS EL MOTIVO EXACTO
+                    string errorInfo = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"El servidor rechazó la petición. Código: {response.StatusCode}. Detalle: {errorInfo}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Esta excepción viajará hasta tu pantalla y la mostrará en una alerta
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> MarcarComoResueltoAsync(int mascotaId)
+        {
+            try
+            {
+                // Enviamos una solicitud PUT o PATCH para actualizar el campo 'is_resolved' o 'status'
+                var response = await _httpClient.PutAsync($"Avistamientos/{mascotaId}/resolver", null);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception)
+            {
                 return false;
             }
         }

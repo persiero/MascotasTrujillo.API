@@ -12,5 +12,6 @@ namespace MascotasTrujillo.App.Models
         public double Latitud { get; set; }
         public double Longitud { get; set; }
         public double DistanciaMetros { get; set; } // ¡El cálculo mágico de PostGIS!
+        public DateTime FechaHora { get; set; }
     }
 }

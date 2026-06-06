@@ -6,7 +6,7 @@ public partial class LoginPage : ContentPage
 {
     private readonly ApiService _apiService;
 
-    // Inyectamos nuestro servicio mágico
+    // Inyectamos el servicio de la API
     public LoginPage(ApiService apiService)
     {
         InitializeComponent();
@@ -15,7 +15,7 @@ public partial class LoginPage : ContentPage
 
     private async void OnLoginClicked(object? sender, EventArgs e)
     {
-        // Mostramos el círculo de carga
+        // Mostramos el círculo de carga (UX profesional)
         LoadingIndicator.IsRunning = true;
         LoadingIndicator.IsVisible = true;
 
@@ -31,26 +31,28 @@ public partial class LoginPage : ContentPage
 
         if (!string.IsNullOrEmpty(token))
         {
-            _apiService.SetToken(token); // Guardamos la pulsera en el servicio
+            _apiService.SetToken(token); // Guardamos el token JWT de forma segura
 
-            // Le decimos a la aplicación que cambie la pantalla principal por el Radar
-            Application.Current?.Windows[0].Page = new NavigationPage(new RadarPage(_apiService));
+            // CAMBIO CLAVE: Reemplazamos la ventana por AppShell para activar el TabBar inferior
+            if (Application.Current?.Windows.Count > 0)
+            {
+                Application.Current.Windows[0].Page = new AppShell();
+            }
         }
         else
         {
-            await DisplayAlertAsync("Error", "No se pudo conectar. Revisa la consola o credenciales.", "OK");
+            // CORRECCIÓN: Usamos la advertencia técnica correspondiente
+            await DisplayAlertAsync("Error de ingreso", "No se pudo conectar. Revisa tus credenciales o el estado de la API.", "OK");
         }
     }
 
     private async void OnOlvidastePasswordTapped(object? sender, EventArgs e)
     {
-        // Por ahora mostraremos una alerta, luego crearemos la pantalla
         await DisplayAlertAsync("Recuperación", "Próximamente: Pantalla de recuperación de contraseña.", "OK");
     }
 
     private async void OnRegistrarseTapped(object? sender, EventArgs e)
     {
-        // Por ahora mostraremos una alerta, luego crearemos la pantalla
         await DisplayAlertAsync("Registro", "Próximamente: Pantalla de creación de cuenta.", "OK");
     }
 }
