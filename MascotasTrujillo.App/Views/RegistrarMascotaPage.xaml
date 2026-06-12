@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MascotasTrujillo.App.Views.RegistrarMascotaPage"
+             Title="Registrar Mi Mascota"
+             BackgroundColor="#F4F6FA">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="25" VerticalOptions="Start">
+
+            <Label Text="Nueva Mascota" FontSize="26" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#2B0B98" />
+            <Label Text="Registra a tu compañero para activar su rastreo" FontSize="14" HorizontalOptions="Center" TextColor="#666666" Margin="0,0,0,10" />
+
+            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Margin="0,0,0,10">
+                <Border Stroke="#2B0B98" StrokeThickness="2" HeightRequest="130" WidthRequest="130">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="65" />
+                    </Border.StrokeShape>
+                    <Image x:Name="FotoMascotaImage" 
+                           Source="https://cdn-icons-png.flaticon.com/512/616/616408.png" 
+                           Aspect="AspectFill" 
+                           HeightRequest="130" 
+                           WidthRequest="130" />
+                </Border>
+
+                <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
+                    <Button Text="📷 Cámara" Clicked="OnTomarFotoClicked" BackgroundColor="#2B0B98" TextColor="White" HeightRequest="38" CornerRadius="8" FontSize="13"/>
+                    <Button Text="🖼️ Galería" Clicked="OnSeleccionarFotoClicked" BackgroundColor="#666666" TextColor="White" HeightRequest="38" CornerRadius="8" FontSize="13"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <Label Text="Nombre de la Mascota *" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
+            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Entry x:Name="NombreEntry" Placeholder="Ej: Firulais" TextColor="#333333" BackgroundColor="Transparent" />
+            </Border>
+
+            <Label Text="Especie" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
+            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Entry x:Name="EspecieEntry" Placeholder="Ej: Perro, Gato" TextColor="#333333" BackgroundColor="Transparent" />
+            </Border>
+
+            <Label Text="Raza" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
+            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Entry x:Name="RazaEntry" Placeholder="Ej: Labrador, Siamés" TextColor="#333333" BackgroundColor="Transparent" />
+            </Border>
+
+            <Label Text="Color Principal" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
+            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Entry x:Name="ColorEntry" Placeholder="Ej: Marrón con blanco" TextColor="#333333" BackgroundColor="Transparent" />
+            </Border>
+
+            <Label Text="ID del Dispositivo / Collar GPS" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
+            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Entry x:Name="DispositivoIdEntry" Placeholder="Ej: GPS-TRU-001" TextColor="#333333" BackgroundColor="Transparent" />
+            </Border>
+
+            <Label Text="Rasgos Particulares" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
+            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Editor x:Name="RasgosEditor" Placeholder="Ej: Tiene una mancha en el ojo derecho..." AutoSize="TextChanges" HeightRequest="80" TextColor="#333333" BackgroundColor="Transparent" />
+            </Border>
+
+            <Button Text="Guardar Registro" 
+                    Clicked="OnGuardarMascotaClicked" 
+                    BackgroundColor="#2B0B98" 
+                    TextColor="White" 
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    CornerRadius="12" 
+                    HeightRequest="55" 
+                    Margin="0,15,0,0"/>
+
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#2B0B98"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

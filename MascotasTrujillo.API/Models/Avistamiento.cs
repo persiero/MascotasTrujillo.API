@@ -19,5 +19,8 @@ namespace MascotasTrujillo.API.Models
 
         // ESTE ES EL CAMPO GEOGRÁFICO
         public Point Ubicacion { get; set; } = null!; // null! le dice al compilador: "Tranquilo, yo me encargo de que esto nunca sea nulo al guardar"
+
+        // NUEVO CAMPO: Controla si el caso ya fue cerrado
+        public bool IsResolved { get; set; } = false;
     }
 }

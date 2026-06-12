@@ -3,6 +3,7 @@ using System;
 using MascotasTrujillo.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MascotasTrujillo.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260607021127_AddIsResolvedToAvistamientos")]
+    partial class AddIsResolvedToAvistamientos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,10 +78,6 @@ namespace MascotasTrujillo.API.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
-                    b.Property<string>("DispositivoId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("Especie")
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
@@ -97,12 +96,6 @@ namespace MascotasTrujillo.API.Migrations
                     b.Property<string>("Raza")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
-
-                    b.Property<DateTime?>("UltimaActualizacion")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Point>("UltimaUbicacion")
-                        .HasColumnType("geometry");
 
                     b.Property<string>("UsuarioId")
                         .IsRequired()

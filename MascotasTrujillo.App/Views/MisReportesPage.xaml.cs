@@ -21,6 +21,12 @@ public partial class MisReportesPage : ContentPage
         MisReportesList.ItemsSource = _misPublicaciones;
     }
 
+    private async void OnAbrirRegistroMascotaClicked(object sender, EventArgs e)
+    {
+        // Navegamos a la nueva pantalla
+        await Navigation.PushAsync(new RegistrarMascotaPage(_apiService));
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -82,5 +88,11 @@ public partial class MisReportesPage : ContentPage
                 await DisplayAlertAsync("Error", $"No se pudo actualizar el estado: {ex.Message}", "OK");
             }
         }
+    }
+
+    // NUEVO MÉTODO: Navegación hacia el mapa de monitoreo
+    private async void OnAbrirRastreoClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new MisMascotasPage(_apiService));
     }
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
+             x:Class="MascotasTrujillo.App.Views.MisMascotasPage"
+             Title="Rastreo Satelital"
+             BackgroundColor="#F4F6FA">
+
+    <Grid RowDefinitions="180, *">
+
+        <CollectionView Grid.Row="0" x:Name="MascotasCarousel" 
+                        SelectionMode="Single"
+                        SelectionChanged="OnMascotaSelected"
+                        ItemsLayout="HorizontalList">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout Padding="10" Spacing="5" WidthRequest="120">
+                        <Border Stroke="#2B0B98" StrokeThickness="2" HeightRequest="80" WidthRequest="80">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="40" />
+                            </Border.StrokeShape>
+                            <Image Source="{Binding FotoPerfilUrl}" Aspect="AspectFill" />
+                        </Border>
+                        <Label Text="{Binding Nombre}" HorizontalOptions="Center" FontAttributes="Bold" />
+                        <Label Text="En línea" FontSize="10" TextColor="Green" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <maps:Map Grid.Row="1" x:Name="MascotaMap" IsShowingUser="True" />
+
+    </Grid>
+</ContentPage>

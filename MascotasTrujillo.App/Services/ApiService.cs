@@ -87,6 +87,38 @@ namespace MascotasTrujillo.App.Services
             }
         }
 
+        // --- NUEVO MÉTODO DE REGISTRO MEJORADO ---
+        public async Task<(bool Exito, string Mensaje)> RegistrarAsync(string nombreCompleto, string email, string password, string? telefono)
+        {
+            try
+            {
+                var registroData = new
+                {
+                    NombreCompleto = nombreCompleto,
+                    Email = email,
+                    Password = password,
+                    Telefono = telefono
+                };
+
+                var response = await _httpClient.PostAsJsonAsync("Auth/registrar", registroData);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Cuenta creada exitosamente");
+                }
+                else
+                {
+                    // ¡Atrapamos el mensaje real del backend!
+                    string errorInfo = await response.Content.ReadAsStringAsync();
+                    return (false, errorInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
         // Agrega esto debajo de tu método LoginAsync
         public async Task<List<Models.Avistamiento>> ObtenerCercanosAsync(double latitud, double longitud, double radioMetros = 3000)
         {
@@ -148,7 +180,7 @@ namespace MascotasTrujillo.App.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync("Avistamientos");
+                var response = await _httpClient.GetAsync("Avistamientos/mis-reportes");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -181,6 +213,81 @@ namespace MascotasTrujillo.App.Services
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        // =======================================================
+        // NUEVO: Obtener la lista de mascotas del usuario actual
+        // =======================================================
+        public async Task<List<Models.Mascota>?> GetMisMascotasAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("Mascotas/mis-mascotas");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<List<Models.Mascota>>(json, _jsonOptions);
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener mascotas: {ex.Message}");
+                return null;
+            }
+        }
+
+        // =======================================================
+        // NUEVO: Registrar una mascota con foto (Multipart/Form-Data)
+        // =======================================================
+        public async Task<(bool Exito, string Mensaje)> RegistrarMascotaAsync(
+            string nombre, string especie, string raza, string color,
+            string rasgos, string dispositivoId, string rutaFotoLocal)
+        {
+            try
+            {
+                using var content = new MultipartFormDataContent();
+
+                // 1. Agregamos los textos al formulario
+                content.Add(new StringContent(nombre), "Nombre");
+                if (!string.IsNullOrEmpty(especie)) content.Add(new StringContent(especie), "Especie");
+                if (!string.IsNullOrEmpty(raza)) content.Add(new StringContent(raza), "Raza");
+                if (!string.IsNullOrEmpty(color)) content.Add(new StringContent(color), "ColorPrincipal");
+                if (!string.IsNullOrEmpty(rasgos)) content.Add(new StringContent(rasgos), "RasgosParticulares");
+                if (!string.IsNullOrEmpty(dispositivoId)) content.Add(new StringContent(dispositivoId), "DispositivoId");
+
+                // 2. Adjuntamos la foto si el usuario tomó una
+                if (!string.IsNullOrEmpty(rutaFotoLocal) && File.Exists(rutaFotoLocal))
+                {
+                    var fileStream = File.OpenRead(rutaFotoLocal);
+                    var streamContent = new StreamContent(fileStream);
+
+                    // Asignamos el MIME type genérico para imágenes
+                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+                    // El nombre del parámetro "Foto" DEBE coincidir con el IFormFile de tu DTO en la API
+                    content.Add(streamContent, "Foto", Path.GetFileName(rutaFotoLocal));
+                }
+
+                // 3. Enviamos el paquete completo
+                var response = await _httpClient.PostAsync("Mascotas", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Mascota registrada exitosamente.");
+                }
+                else
+                {
+                    string errorInfo = await response.Content.ReadAsStringAsync();
+                    return (false, $"Error del servidor: {errorInfo}");
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
             }
         }
 

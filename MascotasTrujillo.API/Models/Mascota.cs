@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using NetTopologySuite.Geometries; // IMPORTANTE: Para usar Point
 
 namespace MascotasTrujillo.API.Models
 {
@@ -24,5 +25,16 @@ namespace MascotasTrujillo.API.Models
 
         public string? RasgosParticulares { get; set; }
         public string? FotoPerfilUrl { get; set; }
+
+        // ==========================================
+        // NUEVOS CAMPOS PARA EL MONITOREO GPS / IoT
+        // ==========================================
+
+        [MaxLength(100)]
+        public string? DispositivoId { get; set; } // IMEI o ID único del collar
+
+        public Point? UltimaUbicacion { get; set; } // Coordenada geográfica exacta (PostGIS)
+
+        public DateTime? UltimaActualizacion { get; set; } // Cuándo mandó señal por última vez
     }
 }

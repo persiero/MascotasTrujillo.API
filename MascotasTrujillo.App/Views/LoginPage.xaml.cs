@@ -13,6 +13,36 @@ public partial class LoginPage : ContentPage
         _apiService = apiService;
     }
 
+    // NUEVO MÉTODO: Se ejecuta automáticamente cuando la pantalla se dibuja en el celular
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        try
+        {
+            // Verificamos si existe una sesión previa guardada encriptada
+            string? tokenGuardado = await SecureStorage.Default.GetAsync("auth_token");
+
+            if (!string.IsNullOrEmpty(tokenGuardado))
+            {
+                // Si existe, le colocamos la credencial al servicio web
+                _apiService.SetToken(tokenGuardado);
+
+                // Redireccionamos directo al contenedor principal de pestañas
+                if (Application.Current?.Windows.Count > 0)
+                {
+                    Application.Current.Windows[0].Page = new AppShell();
+                }
+            }
+        }
+        catch (Exception ex) // <-- Le agregamos "ex" para capturar el error
+        {
+            // Registramos el error internamente para depuración.
+            // La app simplemente se quedará en el Login de forma segura.
+            Console.WriteLine($"Aviso - Fallo al leer SecureStorage: {ex.Message}");
+        }
+    }
+
     private async void OnLoginClicked(object? sender, EventArgs e)
     {
         // Mostramos el círculo de carga (UX profesional)
@@ -31,9 +61,12 @@ public partial class LoginPage : ContentPage
 
         if (!string.IsNullOrEmpty(token))
         {
-            _apiService.SetToken(token); // Guardamos el token JWT de forma segura
+            _apiService.SetToken(token); // Guardamos el token JWT en la sesión activa
 
-            // CAMBIO CLAVE: Reemplazamos la ventana por AppShell para activar el TabBar inferior
+            // NUEVA ACCIÓN: Guardamos el token permanentemente en la memoria segura del móvil
+            await SecureStorage.Default.SetAsync("auth_token", token);
+
+            // Reemplazamos la ventana por AppShell para activar el TabBar inferior
             if (Application.Current?.Windows.Count > 0)
             {
                 Application.Current.Windows[0].Page = new AppShell();
@@ -41,7 +74,6 @@ public partial class LoginPage : ContentPage
         }
         else
         {
-            // CORRECCIÓN: Usamos la advertencia técnica correspondiente
             await DisplayAlertAsync("Error de ingreso", "No se pudo conectar. Revisa tus credenciales o el estado de la API.", "OK");
         }
     }
@@ -53,6 +85,7 @@ public partial class LoginPage : ContentPage
 
     private async void OnRegistrarseTapped(object? sender, EventArgs e)
     {
-        await DisplayAlertAsync("Registro", "Próximamente: Pantalla de creación de cuenta.", "OK");
+        // Abrimos la pantalla de registro de forma modal (animación de abajo hacia arriba)
+        await Navigation.PushModalAsync(new RegistroPage(_apiService));
     }
 }

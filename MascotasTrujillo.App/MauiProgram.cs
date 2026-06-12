@@ -33,6 +33,9 @@ namespace MascotasTrujillo.App
             builder.Services.AddTransient<RadarPage>();
             builder.Services.AddTransient<MisReportesPage>();
             builder.Services.AddTransient<MascotaDetailPage>();
+            builder.Services.AddTransient<RegistroPage>();
+            builder.Services.AddTransient<RegistrarMascotaPage>();
+            builder.Services.AddTransient<MisMascotasPage>();
 
             return builder.Build();
         }
