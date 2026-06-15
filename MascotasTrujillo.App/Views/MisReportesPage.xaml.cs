@@ -1,30 +1,20 @@
 using MascotasTrujillo.App.Models;
 using MascotasTrujillo.App.Services;
-using System.Collections.ObjectModel; // 1. Nueva librería necesaria
+using System.Collections.ObjectModel;
 
 namespace MascotasTrujillo.App.Views;
 
 public partial class MisReportesPage : ContentPage
 {
     private readonly ApiService _apiService;
-
-    // 2. Cambiamos de List a ObservableCollection
     private ObservableCollection<Avistamiento> _misPublicaciones;
 
     public MisReportesPage(ApiService apiService)
     {
         InitializeComponent();
         _apiService = apiService;
-
-        // 3. Inicializamos y enlazamos la lista desde el principio
         _misPublicaciones = new ObservableCollection<Avistamiento>();
         MisReportesList.ItemsSource = _misPublicaciones;
-    }
-
-    private async void OnAbrirRegistroMascotaClicked(object sender, EventArgs e)
-    {
-        // Navegamos a la nueva pantalla
-        await Navigation.PushAsync(new RegistrarMascotaPage(_apiService));
     }
 
     protected override async void OnAppearing()
@@ -41,7 +31,6 @@ public partial class MisReportesPage : ContentPage
 
             if (reportesServidor != null)
             {
-                // Obligamos a MAUI a actualizar la pantalla gráfica en el Hilo Principal
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     _misPublicaciones.Clear();
@@ -49,8 +38,6 @@ public partial class MisReportesPage : ContentPage
                     {
                         _misPublicaciones.Add(reporte);
                     }
-
-                    // Refrescamos el enlace visual
                     MisReportesList.ItemsSource = null;
                     MisReportesList.ItemsSource = _misPublicaciones;
                 });
@@ -69,14 +56,13 @@ public partial class MisReportesPage : ContentPage
 
         if (mascota == null) return;
 
-        bool respuesta = await DisplayAlertAsync("¡Qué alegría!", $"¿Confirmas que encontraste a la mascota?", "Sí, Encontrada", "Cancelar");
+        bool respuesta = await DisplayAlertAsync("¡Qué alegría!", "¿Confirmas que encontraste a la mascota?", "Sí, Encontrada", "Cancelar");
 
         if (respuesta)
         {
             try
             {
                 bool exito = await _apiService.MarcarComoResueltoAsync(mascota.Id);
-
                 if (exito)
                 {
                     await DisplayAlertAsync("Éxito", "El caso ha sido cerrado.", "OK");
@@ -88,11 +74,5 @@ public partial class MisReportesPage : ContentPage
                 await DisplayAlertAsync("Error", $"No se pudo actualizar el estado: {ex.Message}", "OK");
             }
         }
-    }
-
-    // NUEVO MÉTODO: Navegación hacia el mapa de monitoreo
-    private async void OnAbrirRastreoClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new MisMascotasPage(_apiService));
     }
 }

@@ -28,7 +28,7 @@ public partial class LoginPage : ContentPage
                 // Si existe, le colocamos la credencial al servicio web
                 _apiService.SetToken(tokenGuardado);
 
-                // Redireccionamos directo al contenedor principal de pestañas
+                // Sintaxis moderna y segura para .NET 8/9 (Soporte Multi-ventana)
                 if (Application.Current?.Windows.Count > 0)
                 {
                     Application.Current.Windows[0].Page = new AppShell();
@@ -66,7 +66,7 @@ public partial class LoginPage : ContentPage
             // NUEVA ACCIÓN: Guardamos el token permanentemente en la memoria segura del móvil
             await SecureStorage.Default.SetAsync("auth_token", token);
 
-            // Reemplazamos la ventana por AppShell para activar el TabBar inferior
+            // Sintaxis moderna y segura para .NET 8/9 (Soporte Multi-ventana)
             if (Application.Current?.Windows.Count > 0)
             {
                 Application.Current.Windows[0].Page = new AppShell();

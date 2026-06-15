@@ -3,22 +3,24 @@
     x:Class="MascotasTrujillo.App.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MascotasTrujillo.App"
     xmlns:views="clr-namespace:MascotasTrujillo.App.Views"
-    Title="Mascotas Trujillo">
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarBackgroundColor="#FFFFFF"
+    Shell.TabBarTitleColor="#2B0B98"
+    Shell.TabBarUnselectedColor="#94A3B8">
 
     <TabBar>
 
-        <Tab Title="Radar">
-            <ShellContent
-                ContentTemplate="{DataTemplate views:RadarPage}"
-                Route="MainPage" />
+        <Tab Title="Radar" Icon="icon_radar.png">
+            <ShellContent ContentTemplate="{DataTemplate views:RadarPage}" />
         </Tab>
 
-        <Tab Title="Mis Reportes">
-            <ShellContent
-                ContentTemplate="{DataTemplate views:MisReportesPage}"
-                Route="MisReportesPage" />
+        <Tab Title="Mis Mascotas" Icon="icon_paw.png">
+            <ShellContent ContentTemplate="{DataTemplate views:MisMascotasPage}" />
+        </Tab>
+
+        <Tab Title="Mis Reportes" Icon="icon_clipboard.png">
+            <ShellContent ContentTemplate="{DataTemplate views:MisReportesPage}" />
         </Tab>
 
     </TabBar>

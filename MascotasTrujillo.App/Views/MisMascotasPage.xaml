@@ -3,15 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
              x:Class="MascotasTrujillo.App.Views.MisMascotasPage"
-             Title="Rastreo Satelital"
+             Title="Mis Mascotas"
              BackgroundColor="#F4F6FA">
 
-    <Grid RowDefinitions="180, *">
+    <Grid RowDefinitions="Auto, 160, *">
 
-        <CollectionView Grid.Row="0" x:Name="MascotasCarousel" 
+        <Button Grid.Row="0"
+                Text="+ Nueva Mascota" 
+                Clicked="OnAbrirRegistroMascotaClicked" 
+                BackgroundColor="#2B0B98" 
+                TextColor="White" 
+                FontAttributes="Bold"
+                CornerRadius="10"
+                Margin="15,15,15,5"/>
+
+        <CollectionView Grid.Row="1" x:Name="MascotasCarousel" 
                         SelectionMode="Single"
                         SelectionChanged="OnMascotaSelected"
-                        ItemsLayout="HorizontalList">
+                        ItemsLayout="HorizontalList"
+                        Margin="0,10,0,0">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <VerticalStackLayout Padding="10" Spacing="5" WidthRequest="120">
@@ -28,7 +38,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <maps:Map Grid.Row="1" x:Name="MascotaMap" IsShowingUser="True" />
+        <maps:Map Grid.Row="2" x:Name="MascotaMap" IsShowingUser="True" />
 
     </Grid>
 </ContentPage>

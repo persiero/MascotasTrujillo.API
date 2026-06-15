@@ -100,4 +100,10 @@ public partial class MisMascotasPage : ContentPage
 
         MascotaMap.MoveToRegion(MapSpan.FromCenterAndRadius(loc, Distance.FromKilometers(0.5)));
     }
+
+    // NUEVO MÉTODO: Agregado al final de tu MisMascotasPage.xaml.cs
+    private async void OnAbrirRegistroMascotaClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new RegistrarMascotaPage(_apiService));
+    }
 }
