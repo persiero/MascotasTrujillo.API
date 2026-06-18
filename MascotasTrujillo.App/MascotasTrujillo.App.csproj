@@ -91,6 +91,9 @@
 	  <MauiXaml Update="Views\MisReportesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\PerfilPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\RadarPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

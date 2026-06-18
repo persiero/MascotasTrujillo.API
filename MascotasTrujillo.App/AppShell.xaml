@@ -23,6 +23,10 @@
             <ShellContent ContentTemplate="{DataTemplate views:MisReportesPage}" />
         </Tab>
 
+        <Tab Title="Perfil" Icon="icon_user.png">
+            <ShellContent ContentTemplate="{DataTemplate views:PerfilPage}" />
+        </Tab>
+
     </TabBar>
 
 </Shell>

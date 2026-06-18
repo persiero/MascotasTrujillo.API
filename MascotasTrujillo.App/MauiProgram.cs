@@ -36,6 +36,7 @@ namespace MascotasTrujillo.App
             builder.Services.AddTransient<RegistroPage>();
             builder.Services.AddTransient<RegistrarMascotaPage>();
             builder.Services.AddTransient<MisMascotasPage>();
+            builder.Services.AddTransient<PerfilPage>();
 
             return builder.Build();
         }
