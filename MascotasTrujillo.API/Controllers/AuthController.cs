@@ -56,7 +56,7 @@ namespace MascotasTrujillo.API.Controllers
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, usuario.Email!),
-                new Claim(ClaimTypes.NameIdentifier, usuario.Id), // Guardamos el ID real dentro del token
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()), // Guardamos el ID real dentro del token
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 

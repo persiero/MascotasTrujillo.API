@@ -1,55 +1,185 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MascotasTrujillo.App.Views.MisReportesPage"
-             Title="Mis Publicaciones">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MascotasTrujillo.App.Views.MisReportesPage"
+    Title="Mis Reportes"
+    BackgroundColor="#F8FAFC">
 
-    <Grid RowDefinitions="Auto, *" Padding="20">
+    <Grid RowDefinitions="Auto,*"
+          Padding="18"
+          RowSpacing="14">
 
-        <Label Grid.Row="0" 
-               Text="Gestiona tus alertas activas" 
-               FontSize="18" 
-               TextColor="Gray" 
-               Margin="0,0,0,15"/>
+        <!-- Encabezado -->
+        <Border Grid.Row="0"
+                BackgroundColor="#FFFFFF"
+                Stroke="Transparent"
+                Padding="18">
 
-        <CollectionView Grid.Row="1" x:Name="MisReportesList">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
+
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Opacity="0.08"
+                        Offset="0,3"
+                        Radius="8" />
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Mis Reportes"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#1E1B4B" />
+
+                <Label Text="Consulta y administra los reportes que registraste en la plataforma."
+                       FontSize="14"
+                       TextColor="#64748B"
+                       LineBreakMode="WordWrap" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Lista -->
+        <CollectionView Grid.Row="1"
+                        x:Name="MisReportesList"
+                        SelectionMode="None">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="30"
+                                     Spacing="8"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
+
+                    <Label Text="🐾"
+                           FontSize="42"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="Aún no tienes reportes"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="#334155"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="Cuando registres una mascota perdida o encontrada, aparecerá aquí."
+                           FontSize="13"
+                           TextColor="#64748B"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Stroke="#E0E0E0" Margin="0,0,0,15" Padding="10">
+
+                    <Border Stroke="Transparent"
+                            BackgroundColor="#FFFFFF"
+                            Margin="0,0,0,14"
+                            Padding="12">
+
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="12" />
+                            <RoundRectangle CornerRadius="18" />
                         </Border.StrokeShape>
 
-                        <Grid ColumnDefinitions="90, *, Auto" ColumnSpacing="10">
+                        <Border.Shadow>
+                            <Shadow Brush="Black"
+                                    Opacity="0.08"
+                                    Offset="0,3"
+                                    Radius="8" />
+                        </Border.Shadow>
 
-                            <Image Grid.Column="0" 
-                                   Source="{Binding FotoUrl}" 
-                                   HeightRequest="80" 
-                                   WidthRequest="80" 
-                                   Aspect="AspectFill" />
+                        <Grid ColumnDefinitions="88,*"
+                              RowDefinitions="Auto,Auto"
+                              ColumnSpacing="12">
 
-                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                <Label Text="{Binding Descripcion}" 
-                                       FontSize="16" 
-                                       FontAttributes="Bold" 
-                                       LineBreakMode="TailTruncation"/>
-                                <Label Text="{Binding FechaHora, StringFormat='{0:dd/MM/yyyy}'}" 
-                                       FontSize="13" 
-                                       TextColor="DimGray" />
+                            <!-- Foto -->
+                            <Border Grid.RowSpan="2"
+                                    Grid.Column="0"
+                                    Stroke="Transparent"
+                                    BackgroundColor="#F1F5F9"
+                                    HeightRequest="82"
+                                    WidthRequest="82">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Image Source="{Binding FotoUrl}"
+                                       HeightRequest="82"
+                                       WidthRequest="82"
+                                       Aspect="AspectFill" />
+                            </Border>
+
+                            <!-- Información -->
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Grid.Row="0"
+                                                 Spacing="5">
+
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+
+                                    <Label Text="{Binding Titulo}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="#1E293B"
+                                           LineBreakMode="TailTruncation" />
+
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="#EEF2FF"
+                                            Stroke="Transparent"
+                                            Padding="8,3"
+                                            VerticalOptions="Center">
+
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10" />
+                                        </Border.StrokeShape>
+
+                                        <Label Text="{Binding TipoReporte}"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="#2B0B98" />
+                                    </Border>
+                                </Grid>
+
+                                <Label Text="{Binding Descripcion}"
+                                       FontSize="13"
+                                       TextColor="#64748B"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2" />
+
+                                <Label Text="{Binding FechaReporte, StringFormat='Registrado el {0:dd/MM/yyyy HH:mm}'}"
+                                       FontSize="12"
+                                       TextColor="#94A3B8" />
+
                             </VerticalStackLayout>
 
-                            <Button Grid.Column="2" 
-                                    Text="✔ Encontrada" 
-                                    BackgroundColor="#2B0B98" 
-                                    TextColor="White"
-                                    FontSize="12"
-                                    FontAttributes="Bold"
-                                    HeightRequest="40"
-                                    VerticalOptions="Center"
-                                    Clicked="OnMascotaEncontradaClicked"
-                                    CommandParameter="{Binding .}" />
+                            <!-- Acciones -->
+                            <Grid Grid.Column="1"
+                                  Grid.Row="1"
+                                  ColumnDefinitions="*,Auto"
+                                  Margin="0,10,0,0">
+
+                                <Label Text="{Binding EstadoReporte}"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="#0F766E"
+                                       VerticalOptions="Center" />
+
+                                <Button Grid.Column="1"
+                                        Text="Marcar resuelto"
+                                        BackgroundColor="#2B0B98"
+                                        TextColor="White"
+                                        FontSize="12"
+                                        FontAttributes="Bold"
+                                        CornerRadius="14"
+                                        HeightRequest="40"
+                                        Padding="12,0"
+                                        Clicked="OnMarcarResueltoClicked"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+
                         </Grid>
                     </Border>
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

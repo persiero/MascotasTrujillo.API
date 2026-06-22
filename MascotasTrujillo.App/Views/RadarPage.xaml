@@ -1,67 +1,257 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
-             x:Class="MascotasTrujillo.App.Views.RadarPage"
-             Title="Radar Activo">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
+    x:Class="MascotasTrujillo.App.Views.RadarPage"
+    Title="Radar Comunitario"
+    BackgroundColor="#F8FAFC">
 
-    <Grid RowDefinitions="*,Auto,250">
+    <Grid RowDefinitions="Auto,*,Auto,260">
 
-        <maps:Map x:Name="MapaMascotas" 
-                  Grid.Row="0"
-                  IsShowingUser="True" />
+        <!-- Encabezado -->
+        <Border Grid.Row="0"
+                BackgroundColor="#FFFFFF"
+                Stroke="Transparent"
+                Padding="18,16">
 
-        <HorizontalStackLayout Grid.Row="1" Padding="10" Spacing="15" HorizontalOptions="Center">
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Opacity="0.08"
+                        Offset="0,2"
+                        Radius="8" />
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Radar Comunitario"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="#1E1B4B" />
+
+                <Label Text="Visualiza reportes activos de mascotas perdidas o encontradas cerca de tu ubicación."
+                       FontSize="13"
+                       TextColor="#64748B"
+                       LineBreakMode="WordWrap" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Mapa -->
+        <Border Grid.Row="1"
+                Margin="14,14,14,8"
+                Stroke="Transparent"
+                BackgroundColor="#E2E8F0">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18" />
+            </Border.StrokeShape>
+
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Opacity="0.12"
+                        Offset="0,4"
+                        Radius="10" />
+            </Border.Shadow>
+
+            <maps:Map x:Name="MapaMascotas"
+                      IsShowingUser="True" />
+        </Border>
+
+        <!-- Botones de acción -->
+        <Grid Grid.Row="2"
+              Padding="14,6,14,8"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="10">
+
             <Button x:Name="BtnActualizar"
-                    Text="🔄 Actualizar Radar" 
-                    Clicked="OnActualizarClicked" 
-                    HeightRequest="45" 
-                    BackgroundColor="#2B0B98" 
-                    TextColor="White" 
-                    CornerRadius="10" 
-                    Padding="15,0"/>
+                    Grid.Column="0"
+                    Text="🔄 Actualizar"
+                    Clicked="OnActualizarClicked"
+                    HeightRequest="48"
+                    BackgroundColor="#2B0B98"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="16" />
 
-            <Button Text="➕ Reportar Mascota" 
-                    Clicked="OnIrAReportarClicked" 
-                    HeightRequest="45" 
-                    BackgroundColor="#E0E0E0" 
-                    TextColor="#2B0B98" 
-                    CornerRadius="10" 
-                    Padding="15,0"/>
-        </HorizontalStackLayout>
+            <Button Grid.Column="1"
+                    Text="➕ Reportar"
+                    Clicked="OnIrAReportarClicked"
+                    HeightRequest="48"
+                    BackgroundColor="#EEF2FF"
+                    TextColor="#2B0B98"
+                    FontAttributes="Bold"
+                    CornerRadius="16" />
 
-        <CollectionView x:Name="MascotasList" 
-                        Grid.Row="2" 
-                        Margin="10" 
-                        SelectionMode="Single"
-                        SelectionChanged="OnMascotaSeleccionada">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border Margin="0,0,0,10" 
-                            Padding="10" 
-                            Stroke="Transparent" 
-                            BackgroundColor="White">
+        </Grid>
+
+        <!-- Lista de reportes -->
+        <Border Grid.Row="3"
+                Margin="14,0,14,14"
+                Padding="12"
+                Stroke="Transparent"
+                BackgroundColor="#FFFFFF">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
+
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Opacity="0.08"
+                        Offset="0,3"
+                        Radius="8" />
+            </Border.Shadow>
+
+            <Grid RowDefinitions="Auto,*">
+
+                <Grid Grid.Row="0"
+                      ColumnDefinitions="*,Auto"
+                      Margin="0,0,0,8">
+
+                    <VerticalStackLayout>
+                        <Label Text="Reportes cercanos"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#1E293B" />
+
+                        <Label Text="Selecciona un reporte para ver más detalles."
+                               FontSize="12"
+                               TextColor="#64748B" />
+                    </VerticalStackLayout>
+
+                    <Border Grid.Column="1"
+                            BackgroundColor="#EEF2FF"
+                            Stroke="Transparent"
+                            Padding="10,5"
+                            VerticalOptions="Center">
 
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10" />
+                            <RoundRectangle CornerRadius="12" />
                         </Border.StrokeShape>
 
-                        <Border.Shadow>
-                            <Shadow Brush="Black" Opacity="0.15" Offset="0,3" Radius="5" />
-                        </Border.Shadow>
-
-                        <Grid ColumnDefinitions="100,*">
-                            <Image Grid.Column="0" Source="{Binding FotoUrl}" HeightRequest="80" WidthRequest="80" Aspect="AspectFill" />
-
-                            <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0" VerticalOptions="Center">
-                                <Label Text="{Binding Descripcion}" FontAttributes="Bold" FontSize="16" />
-                                <Label Text="{Binding DistanciaMetros, StringFormat='A {0:N0} metros de ti'}" TextColor="#2B0B98" FontSize="14" Margin="0,5,0,0"/>
-                            </VerticalStackLayout>
-                        </Grid>
+                        <Label Text="Activo"
+                               TextColor="#2B0B98"
+                               FontSize="12"
+                               FontAttributes="Bold" />
                     </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                </Grid>
+
+                <CollectionView x:Name="MascotasList"
+                                Grid.Row="1"
+                                SelectionMode="Single"
+                                SelectionChanged="OnMascotaSeleccionada">
+
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Padding="20"
+                                             Spacing="8"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center">
+                            <Label Text="🐾"
+                                   FontSize="38"
+                                   HorizontalOptions="Center" />
+
+                            <Label Text="No hay reportes cercanos"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"
+                                   HorizontalOptions="Center" />
+
+                            <Label Text="Actualiza el radar o registra un nuevo reporte."
+                                   FontSize="13"
+                                   TextColor="#64748B"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border Margin="0,0,0,10"
+                                    Padding="10"
+                                    Stroke="#E2E8F0"
+                                    BackgroundColor="#FFFFFF">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Grid ColumnDefinitions="86,*"
+                                      ColumnSpacing="12">
+
+                                    <Border Grid.Column="0"
+                                            Stroke="Transparent"
+                                            BackgroundColor="#F1F5F9"
+                                            HeightRequest="78"
+                                            WidthRequest="78">
+
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="14" />
+                                        </Border.StrokeShape>
+
+                                        <Image Source="{Binding FotoUrl}"
+                                               HeightRequest="78"
+                                               WidthRequest="78"
+                                               Aspect="AspectFill" />
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Spacing="4"
+                                                         VerticalOptions="Center">
+
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Text="{Binding Titulo}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="15"
+                                                   TextColor="#1E293B"
+                                                   LineBreakMode="TailTruncation" />
+
+                                            <Border Grid.Column="1"
+                                                    BackgroundColor="#FEE2E2"
+                                                    Stroke="Transparent"
+                                                    Padding="8,3"
+                                                    Margin="6,0,0,0">
+
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10" />
+                                                </Border.StrokeShape>
+
+                                                <Label Text="{Binding TipoReporte}"
+                                                       FontSize="11"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#991B1B" />
+                                            </Border>
+                                        </Grid>
+
+                                        <Label Text="{Binding Descripcion}"
+                                               FontSize="13"
+                                               TextColor="#64748B"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2" />
+
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              Margin="0,4,0,0">
+
+                                            <Label Text="{Binding DistanciaMetros, StringFormat='📍 A {0:N0} metros de ti'}"
+                                                   TextColor="#2B0B98"
+                                                   FontSize="13"
+                                                   FontAttributes="Bold" />
+
+                                            <Label Grid.Column="1"
+                                                   Text="Ver detalle"
+                                                   TextColor="#0F766E"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold" />
+                                        </Grid>
+
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </Grid>
+        </Border>
 
     </Grid>
 </ContentPage>

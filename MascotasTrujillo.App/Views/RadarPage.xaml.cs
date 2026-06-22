@@ -1,6 +1,7 @@
+using MascotasTrujillo.App.Models;
 using MascotasTrujillo.App.Services;
-using Microsoft.Maui.Devices.Sensors;
 using Microsoft.Maui.Controls.Maps;
+using Microsoft.Maui.Devices.Sensors;
 using Microsoft.Maui.Maps;
 
 namespace MascotasTrujillo.App.Views;
@@ -9,7 +10,6 @@ public partial class RadarPage : ContentPage
 {
     private readonly ApiService _apiService;
 
-    // Pedimos el ApiService en el constructor
     public RadarPage(ApiService apiService)
     {
         InitializeComponent();
@@ -21,34 +21,34 @@ public partial class RadarPage : ContentPage
         BtnActualizar.Text = "Buscando...";
         BtnActualizar.IsEnabled = false;
 
-        // Simulamos que el usuario está en el centro de Trujillo
         double miLatitud = -8.1118;
         double miLongitud = -79.0287;
 
-        // ¡Disparamos la petición a tu API!
-        var mascotasCercanas = await _apiService.ObtenerCercanosAsync(miLatitud, miLongitud);
+        var reportesCercanos = await _apiService.ObtenerReportesCercanosAsync(miLatitud, miLongitud,100000);
 
-        // 1. Limpiamos pines anteriores
         MapaMascotas.Pins.Clear();
 
-        // 2. Agregamos un Pin por cada mascota encontrada
-        foreach (var m in mascotasCercanas)
+        foreach (var r in reportesCercanos)
         {
             var pin = new Pin
             {
-                Label = m.Descripcion ?? "Mascota reportada",
-                Address = $"A {m.DistanciaMetros:N0} metros",
+                Label = r.Titulo,
+                Address = $"A {r.DistanciaMetros:N0} metros",
                 Type = PinType.Place,
-                Location = new Location(m.Latitud, m.Longitud)
+                Location = new Location(r.Latitud, r.Longitud)
             };
+
             MapaMascotas.Pins.Add(pin);
         }
 
-        // 3. Centramos el mapa en tu ubicación
-        var region = MapSpan.FromCenterAndRadius(new Location(miLatitud, miLongitud), Distance.FromKilometers(1.5));
+        var region = MapSpan.FromCenterAndRadius(
+            new Location(miLatitud, miLongitud),
+            Distance.FromKilometers(1.5)
+        );
+
         MapaMascotas.MoveToRegion(region);
 
-        MascotasList.ItemsSource = mascotasCercanas;
+        MascotasList.ItemsSource = reportesCercanos;
 
         BtnActualizar.Text = "Actualizar Radar";
         BtnActualizar.IsEnabled = true;
@@ -56,20 +56,17 @@ public partial class RadarPage : ContentPage
 
     private async void OnIrAReportarClicked(object? sender, EventArgs e)
     {
-        // Navegamos a la nueva pantalla
         await Navigation.PushAsync(new ReportarPage(_apiService));
     }
 
     private async void OnMascotaSeleccionada(object sender, SelectionChangedEventArgs e)
     {
-        // Si el usuario seleccionó algo válido
-        if (e.CurrentSelection.FirstOrDefault() is Models.Avistamiento mascotaSeleccionada)
+        if (e.CurrentSelection.FirstOrDefault() is Reporte reporteSeleccionado)
         {
-            // Quitamos el color de selección gris feo por defecto
             MascotasList.SelectedItem = null;
 
-            // ¡Hacemos el viaje a la nueva pantalla llevándonos la mascota!
-            await Navigation.PushAsync(new MascotaDetailPage(mascotaSeleccionada));
+
+            await Navigation.PushAsync(new DetalleReportePage(_apiService, reporteSeleccionado));
         }
     }
 }

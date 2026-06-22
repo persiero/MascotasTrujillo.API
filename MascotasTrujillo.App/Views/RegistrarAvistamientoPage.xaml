@@ -2,8 +2,8 @@
 <ContentPage 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="MascotasTrujillo.App.Views.ReportarPage"
-    Title="Nuevo Reporte"
+    x:Class="MascotasTrujillo.App.Views.RegistrarAvistamientoPage"
+    Title="Registrar Avistamiento"
     BackgroundColor="#F8FAFC">
 
     <ScrollView>
@@ -26,133 +26,46 @@
                 </Border.Shadow>
 
                 <VerticalStackLayout Spacing="6">
-                    <Label Text="Nuevo Reporte"
+                    <Label Text="Registrar Avistamiento"
                            FontSize="26"
                            FontAttributes="Bold"
                            TextColor="#1E1B4B" />
 
-                    <Label Text="Registra una mascota perdida o encontrada para ayudar a la comunidad."
+                    <Label x:Name="LblReporteTitulo"
+                           Text="Ayuda indicando dónde viste a la mascota reportada."
                            FontSize="14"
                            TextColor="#64748B"
                            LineBreakMode="WordWrap" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Tipo de reporte -->
+            <!-- Descripción -->
             <Border BackgroundColor="#FFFFFF"
                     Stroke="Transparent"
-                    Padding="16">
+                    Padding="18">
 
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="10">
-
-                    <Label Text="Tipo de reporte"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Picker x:Name="TipoReportePicker"
-                            Title="Selecciona una opción"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B">
-                        <Picker.Items>
-                            <x:String>Mascota perdida</x:String>
-                            <x:String>Mascota encontrada</x:String>
-                        </Picker.Items>
-                    </Picker>
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Datos principales -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Información del reporte"
+                    <Label Text="Detalle del avistamiento"
                            FontSize="16"
                            FontAttributes="Bold"
                            TextColor="#1E293B" />
 
-                    <Entry x:Name="TituloEntry"
-                           Placeholder="Ej. Se perdió mi perro / Mascota encontrada"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Editor x:Name="DescripcionEntry"
-                            Placeholder="Describe la situación, características visibles o detalles importantes..."
+                    <Editor x:Name="DescripcionEditor"
+                            Placeholder="Ej. La vi cerca del parque, caminando hacia la avenida..."
                             AutoSize="TextChanges"
-                            HeightRequest="100"
+                            HeightRequest="110"
                             BackgroundColor="#F1F5F9"
                             TextColor="#1E293B" />
 
                     <Entry x:Name="DireccionReferenciaEntry"
-                           Placeholder="Referencia del lugar. Ej. Cerca del parque, avenida, mercado..."
+                           Placeholder="Referencia del lugar. Ej. Cerca del mercado, parque, avenida..."
                            BackgroundColor="#F1F5F9"
                            TextColor="#1E293B" />
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Datos referenciales de la mascota -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Label Text="Datos de la mascota"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Label Text="Completa estos datos si no estás asociando el reporte a una mascota registrada."
-                           FontSize="12"
-                           TextColor="#64748B" />
-
-                    <Entry x:Name="NombreMascotaEntry"
-                           Placeholder="Nombre de la mascota, si se conoce"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="EspecieEntry"
-                           Placeholder="Especie. Ej. Perro, gato"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="RazaEntry"
-                           Placeholder="Raza, si se conoce"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="ColorEntry"
-                           Placeholder="Color principal"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Picker x:Name="SexoPicker"
-                            Title="Sexo, si se conoce"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B">
-                        <Picker.Items>
-                            <x:String>Macho</x:String>
-                            <x:String>Hembra</x:String>
-                            <x:String>No identificado</x:String>
-                        </Picker.Items>
-                    </Picker>
 
                 </VerticalStackLayout>
             </Border>
@@ -160,20 +73,20 @@
             <!-- Foto -->
             <Border BackgroundColor="#FFFFFF"
                     Stroke="Transparent"
-                    Padding="16">
+                    Padding="18">
 
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Fotografía del reporte"
+                    <Label Text="Foto del avistamiento"
                            FontSize="16"
                            FontAttributes="Bold"
                            TextColor="#1E293B" />
 
-                    <Label Text="Agrega una foto para que sea más fácil identificar a la mascota."
+                    <Label Text="Agrega una foto si lograste capturar evidencia del avistamiento."
                            FontSize="12"
                            TextColor="#64748B" />
 
@@ -224,16 +137,31 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Botón enviar -->
-            <Button x:Name="BtnEnviar"
-                    Text="📍 Enviar reporte con GPS"
-                    Clicked="OnEnviarClicked"
-                    BackgroundColor="#2B0B98"
+            <!-- Nota GPS -->
+            <Border BackgroundColor="#EEF2FF"
+                    Stroke="Transparent"
+                    Padding="14">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+
+                <Label Text="Se usará tu ubicación GPS actual para registrar el punto del avistamiento."
+                       FontSize="12"
+                       TextColor="#2B0B98"
+                       HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" />
+            </Border>
+
+            <!-- Botón guardar -->
+            <Button x:Name="BtnGuardarAvistamiento"
+                    Text="📍 Guardar avistamiento"
+                    Clicked="OnGuardarAvistamientoClicked"
+                    BackgroundColor="#0F766E"
                     TextColor="White"
                     FontAttributes="Bold"
                     CornerRadius="18"
-                    HeightRequest="54"
-                    IsEnabled="False" />
+                    HeightRequest="54" />
 
             <ActivityIndicator x:Name="LoadingIndicator"
                                IsRunning="False"

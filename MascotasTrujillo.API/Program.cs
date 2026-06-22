@@ -22,7 +22,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<R2StorageService>();
 
 // 1. Activar Identity (El gestor de usuarios)
-builder.Services.AddIdentity<Usuario, IdentityRole>()
+builder.Services.AddIdentity<Usuario, IdentityRole<long>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 

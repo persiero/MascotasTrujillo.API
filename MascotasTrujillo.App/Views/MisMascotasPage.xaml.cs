@@ -1,7 +1,7 @@
-using MascotasTrujillo.App.Services;
 using MascotasTrujillo.App.Models;
-using Microsoft.Maui.Maps;
+using MascotasTrujillo.App.Services;
 using Microsoft.Maui.Controls.Maps;
+using Microsoft.Maui.Maps;
 
 namespace MascotasTrujillo.App.Views;
 
@@ -9,7 +9,9 @@ public partial class MisMascotasPage : ContentPage
 {
     private readonly ApiService _apiService;
     private Mascota? _mascotaSeleccionada;
-    private bool _isTimerRunning = true;
+
+    private bool _rastreoActivo = false;
+    private bool _timerIniciado = false;
 
     public MisMascotasPage(ApiService apiService)
     {
@@ -20,88 +22,156 @@ public partial class MisMascotasPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        _rastreoActivo = true;
+
         await CargarMascotas();
-        IniciarMotorDeRastreo();
+
+        if (!_timerIniciado)
+        {
+            IniciarSeguimientoGpsPrivado();
+            _timerIniciado = true;
+        }
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        _isTimerRunning = false;
+
+        _rastreoActivo = false;
     }
 
     private async Task CargarMascotas()
     {
-        var lista = await _apiService.GetMisMascotasAsync();
-        if (lista != null && lista.Count > 0)
+        try
         {
-            MascotasCarousel.ItemsSource = lista;
-            MascotasCarousel.SelectedItem = lista.First();
+            var lista = await _apiService.GetMisMascotasAsync();
+
+            if (lista != null && lista.Count > 0)
+            {
+                MascotasCarousel.ItemsSource = lista;
+
+                if (_mascotaSeleccionada == null)
+                {
+                    MascotasCarousel.SelectedItem = lista.First();
+                }
+            }
+            else
+            {
+                MascotasCarousel.ItemsSource = null;
+                MascotaMap.Pins.Clear();
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Error", $"No se pudieron cargar tus mascotas: {ex.Message}", "OK");
         }
     }
 
-    private void OnMascotaSelected(object sender, SelectionChangedEventArgs e)
+    private async void OnMascotaSelected(object sender, SelectionChangedEventArgs e)
     {
         _mascotaSeleccionada = e.CurrentSelection.FirstOrDefault() as Mascota;
-        if (_mascotaSeleccionada != null && _mascotaSeleccionada.Latitud.HasValue)
+
+        if (_mascotaSeleccionada == null)
+            return;
+
+        if (_mascotaSeleccionada.Latitud.HasValue && _mascotaSeleccionada.Longitud.HasValue)
         {
             ActualizarMapa();
         }
+        else
+        {
+            MascotaMap.Pins.Clear();
+
+            await DisplayAlertAsync(
+                "Sin ubicación GPS",
+                "Esta mascota todavía no tiene una ubicación GPS registrada.",
+                "OK"
+            );
+        }
     }
 
-    private void IniciarMotorDeRastreo()
+    private void IniciarSeguimientoGpsPrivado()
     {
-        _isTimerRunning = true;
         Dispatcher.StartTimer(TimeSpan.FromSeconds(10), () =>
         {
+            if (!_rastreoActivo)
+                return true;
+
             Task.Run(async () =>
             {
-                var listaActualizada = await _apiService.GetMisMascotasAsync();
-
-                if (listaActualizada != null)
+                try
                 {
-                    // SOLUCIÓN DE NULOS: Copia local segura para evitar cambios asíncronos externos
+                    var listaActualizada = await _apiService.GetMisMascotasAsync();
+
+                    if (listaActualizada == null)
+                        return;
+
                     var mascotaActual = _mascotaSeleccionada;
 
-                    if (mascotaActual != null)
+                    if (mascotaActual == null)
+                        return;
+
+                    var mascotaActualizada = listaActualizada.FirstOrDefault(x => x.Id == mascotaActual.Id);
+
+                    if (mascotaActualizada == null)
+                        return;
+
+                    MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        var pet = listaActualizada.FirstOrDefault(x => x.Id == mascotaActual.Id);
-                        if (pet != null)
+                        mascotaActual.Latitud = mascotaActualizada.Latitud;
+                        mascotaActual.Longitud = mascotaActualizada.Longitud;
+                        mascotaActual.UltimaActualizacion = mascotaActualizada.UltimaActualizacion;
+                        mascotaActual.DispositivoId = mascotaActualizada.DispositivoId;
+
+                        if (mascotaActual.Latitud.HasValue && mascotaActual.Longitud.HasValue)
                         {
-                            MainThread.BeginInvokeOnMainThread(() =>
-                            {
-                                mascotaActual.Latitud = pet.Latitud;
-                                mascotaActual.Longitud = pet.Longitud;
-                                ActualizarMapa();
-                            });
+                            ActualizarMapa();
                         }
-                    }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error actualizando ubicación GPS: {ex.Message}");
                 }
             });
-            return _isTimerRunning;
+
+            return true;
         });
     }
 
     private void ActualizarMapa()
     {
-        // SOLUCIÓN DE NULOS: Evaluamos la copia local de la mascota de forma estricta
         var mascotaActual = _mascotaSeleccionada;
-        if (mascotaActual?.Latitud == null || mascotaActual.Longitud == null) return;
 
-        var loc = new Location(mascotaActual.Latitud.Value, mascotaActual.Longitud.Value);
+        if (mascotaActual?.Latitud == null || mascotaActual.Longitud == null)
+            return;
+
+        var ubicacion = new Location(
+            mascotaActual.Latitud.Value,
+            mascotaActual.Longitud.Value
+        );
 
         MascotaMap.Pins.Clear();
+
         MascotaMap.Pins.Add(new Pin
         {
             Label = mascotaActual.Nombre,
-            Location = loc,
+            Address = mascotaActual.UltimaActualizacion.HasValue
+                ? $"Última actualización: {mascotaActual.UltimaActualizacion.Value:dd/MM/yyyy HH:mm}"
+                : "Última ubicación registrada",
+            Location = ubicacion,
             Type = PinType.Place
         });
 
-        MascotaMap.MoveToRegion(MapSpan.FromCenterAndRadius(loc, Distance.FromKilometers(0.5)));
+        MascotaMap.MoveToRegion(
+            MapSpan.FromCenterAndRadius(
+                ubicacion,
+                Distance.FromKilometers(0.5)
+            )
+        );
     }
 
-    // NUEVO MÉTODO: Agregado al final de tu MisMascotasPage.xaml.cs
     private async void OnAbrirRegistroMascotaClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new RegistrarMascotaPage(_apiService));

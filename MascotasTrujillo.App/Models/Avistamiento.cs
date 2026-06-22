@@ -6,12 +6,21 @@ namespace MascotasTrujillo.App.Models
 {
     public class Avistamiento
     {
-        public int Id { get; set; }
-        public string FotoUrl { get; set; } = string.Empty;
+        public long Id { get; set; }
+
+        public long ReporteId { get; set; }
+        public long UsuarioId { get; set; }
+
+        public string? ReporteTitulo { get; set; }
+
         public string? Descripcion { get; set; }
+        public string? DireccionReferencia { get; set; }
+
+        public DateTime FechaAvistamiento { get; set; }
+
         public double Latitud { get; set; }
         public double Longitud { get; set; }
-        public double DistanciaMetros { get; set; } // ¡El cálculo mágico de PostGIS!
-        public DateTime FechaHora { get; set; }
+
+        public string? FotoUrl { get; set; }
     }
 }

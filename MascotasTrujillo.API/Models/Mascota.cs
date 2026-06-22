@@ -6,16 +6,16 @@ namespace MascotasTrujillo.API.Models
     public class Mascota
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        public string UsuarioId { get; set; } = string.Empty;
+        public long UsuarioId { get; set; }
         public Usuario? Usuario { get; set; }
 
         [Required, MaxLength(50)]
         public string Nombre { get; set; } = string.Empty;
 
-        [MaxLength(30)]
-        public string? Especie { get; set; } // Perro, Gato
+        [Required, MaxLength(30)]
+        public string Especie { get; set; } = string.Empty;
 
         [MaxLength(50)]
         public string? Raza { get; set; }
@@ -23,18 +23,22 @@ namespace MascotasTrujillo.API.Models
         [MaxLength(30)]
         public string? ColorPrincipal { get; set; }
 
+        [MaxLength(20)]
+        public string? Sexo { get; set; }
+
+        [MaxLength(50)]
+        public string? EdadAproximada { get; set; }
+
         public string? RasgosParticulares { get; set; }
-        public string? FotoPerfilUrl { get; set; }
 
-        // ==========================================
-        // NUEVOS CAMPOS PARA EL MONITOREO GPS / IoT
-        // ==========================================
+        public bool EstaActiva { get; set; } = true;
 
-        [MaxLength(100)]
-        public string? DispositivoId { get; set; } // IMEI o ID único del collar
+        public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
 
-        public Point? UltimaUbicacion { get; set; } // Coordenada geográfica exacta (PostGIS)
-
-        public DateTime? UltimaActualizacion { get; set; } // Cuándo mandó señal por última vez
+        // Relaciones
+        public InformacionSaludMascota? InformacionSalud { get; set; }
+        public List<FotoMascota> Fotos { get; set; } = new();
+        public List<Reporte> Reportes { get; set; } = new();
+        public List<DispositivoGps> DispositivosGps { get; set; } = new();
     }
 }

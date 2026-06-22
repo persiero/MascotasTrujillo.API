@@ -3,9 +3,9 @@
 namespace MascotasTrujillo.API.DTOs
 {
     public class AvistamientoCreateDTO
-    {        
+    {
         [Required]
-        public IFormFile Foto { get; set; } = null!;
+        public long ReporteId { get; set; }
 
         public string? Descripcion { get; set; }
 
@@ -14,5 +14,9 @@ namespace MascotasTrujillo.API.DTOs
 
         [Required]
         public double Longitud { get; set; }
+
+        public string? DireccionReferencia { get; set; }
+
+        public IFormFile? Foto { get; set; }
     }
 }

@@ -7,13 +7,13 @@ namespace MascotasTrujillo.App.Views;
 public partial class MisReportesPage : ContentPage
 {
     private readonly ApiService _apiService;
-    private ObservableCollection<Avistamiento> _misPublicaciones;
+    private ObservableCollection<Reporte> _misPublicaciones;
 
     public MisReportesPage(ApiService apiService)
     {
         InitializeComponent();
         _apiService = apiService;
-        _misPublicaciones = new ObservableCollection<Avistamiento>();
+        _misPublicaciones = new ObservableCollection<Reporte>();
         MisReportesList.ItemsSource = _misPublicaciones;
     }
 
@@ -34,10 +34,12 @@ public partial class MisReportesPage : ContentPage
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     _misPublicaciones.Clear();
+
                     foreach (var reporte in reportesServidor)
                     {
                         _misPublicaciones.Add(reporte);
                     }
+
                     MisReportesList.ItemsSource = null;
                     MisReportesList.ItemsSource = _misPublicaciones;
                 });
@@ -49,24 +51,34 @@ public partial class MisReportesPage : ContentPage
         }
     }
 
-    private async void OnMascotaEncontradaClicked(object sender, EventArgs e)
+    private async void OnMarcarResueltoClicked(object sender, EventArgs e)
     {
         var boton = (Button)sender;
-        var mascota = (Avistamiento)boton.CommandParameter;
+        var reporte = boton.CommandParameter as Reporte;
 
-        if (mascota == null) return;
+        if (reporte == null) return;
 
-        bool respuesta = await DisplayAlertAsync("¡Qué alegría!", "¿Confirmas que encontraste a la mascota?", "Sí, Encontrada", "Cancelar");
+        bool respuesta = await DisplayAlertAsync(
+            "Confirmar",
+            "¿Confirmas que este reporte ya fue resuelto?",
+            "Sí, resolver",
+            "Cancelar"
+        );
 
         if (respuesta)
         {
             try
             {
-                bool exito = await _apiService.MarcarComoResueltoAsync(mascota.Id);
+                bool exito = await _apiService.MarcarReporteComoResueltoAsync(reporte.Id);
+
                 if (exito)
                 {
-                    await DisplayAlertAsync("Éxito", "El caso ha sido cerrado.", "OK");
+                    await DisplayAlertAsync("Éxito", "El reporte ha sido cerrado.", "OK");
                     await CargarMisReportes();
+                }
+                else
+                {
+                    await DisplayAlertAsync("Error", "No se pudo cerrar el reporte.", "OK");
                 }
             }
             catch (Exception ex)

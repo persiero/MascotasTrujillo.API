@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MascotasTrujillo.App.Views.DetalleReportePage"
+    Title="Detalle del Reporte"
+    BackgroundColor="#F8FAFC">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="18" Spacing="16">
+
+            <!-- Imagen principal -->
+            <Border BackgroundColor="#E2E8F0"
+                    Stroke="Transparent"
+                    HeightRequest="260">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="22" />
+                </Border.StrokeShape>
+
+                <Grid>
+                    <Image x:Name="FotoReporteImage"
+                           Source="{Binding FotoUrl}"
+                           Aspect="AspectFill" />
+
+                    <Border BackgroundColor="#CC000000"
+                            Stroke="Transparent"
+                            Padding="10,5"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Start"
+                            Margin="12">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+
+                        <Label Text="{Binding TipoReporte}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Información principal -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                            Opacity="0.08"
+                            Offset="0,3"
+                            Radius="8" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="10">
+
+                    <Label Text="{Binding Titulo}"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#1E1B4B" />
+
+                    <Label Text="{Binding Descripcion}"
+                           FontSize="14"
+                           TextColor="#475569"
+                           LineBreakMode="WordWrap" />
+
+                    <Grid ColumnDefinitions="Auto,*"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnSpacing="10"
+                          RowSpacing="8"
+                          Margin="0,8,0,0">
+
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Text="📍"
+                               FontSize="16" />
+
+                        <Label x:Name="LblDistancia"
+                               Grid.Row="0"
+                               Grid.Column="1"
+                               FontSize="13"
+                               TextColor="#2B0B98"
+                               FontAttributes="Bold" />
+
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Text="📅"
+                               FontSize="16" />
+
+                        <Label Text="{Binding FechaReporte, StringFormat='Registrado el {0:dd/MM/yyyy HH:mm}'}"
+                               Grid.Row="1"
+                               Grid.Column="1"
+                               FontSize="13"
+                               TextColor="#64748B" />
+
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Text="📌"
+                               FontSize="16" />
+
+                        <Label Text="{Binding EstadoReporte}"
+                               Grid.Row="2"
+                               Grid.Column="1"
+                               FontSize="13"
+                               TextColor="#0F766E"
+                               FontAttributes="Bold" />
+
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Datos referenciales de la mascota -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="10">
+
+                    <Label Text="Datos de la mascota"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Grid ColumnDefinitions="*,*"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnSpacing="10"
+                          RowSpacing="8">
+
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                            <Label Text="Nombre"
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
+                            <Label x:Name="LblNombreMascota"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                            <Label Text="Especie"
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
+                            <Label x:Name="LblEspecie"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                            <Label Text="Raza"
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
+                            <Label x:Name="LblRaza"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                            <Label Text="Color"
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
+                            <Label x:Name="LblColor"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="0">
+                            <Label Text="Sexo"
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
+                            <Label x:Name="LblSexo"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155" />
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Acciones -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Acciones"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Button Text="📍 Ver ubicación en mapa"
+                            Clicked="OnVerUbicacionClicked"
+                            BackgroundColor="#EEF2FF"
+                            TextColor="#2B0B98"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            HeightRequest="48" />
+
+                    <Button x:Name="BtnRegistrarAvistamiento"
+                        Text="👀 Registrar avistamiento"
+                        Clicked="OnRegistrarAvistamientoClicked"
+                        BackgroundColor="#0F766E"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="16"
+                        HeightRequest="48" />
+
+                    <Label x:Name="LblAvistamientoNoDisponible"
+                       Text="Los avistamientos solo pueden registrarse en reportes activos de mascotas perdidas."
+                       FontSize="12"
+                       TextColor="#64748B"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="False" />
+
+                    <Button Text="💬 Contactar por WhatsApp"
+                            Clicked="OnWhatsAppClicked"
+                            BackgroundColor="#22C55E"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            HeightRequest="48" />
+
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

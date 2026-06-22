@@ -7,7 +7,10 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.TabBarBackgroundColor="#FFFFFF"
     Shell.TabBarTitleColor="#2B0B98"
-    Shell.TabBarUnselectedColor="#94A3B8">
+    Shell.TabBarUnselectedColor="#94A3B8"
+    Shell.TabBarForegroundColor="#2B0B98"
+    Shell.BackgroundColor="#FFFFFF"
+    Shell.TitleColor="#1E1B4B">
 
     <TabBar>
 
@@ -15,12 +18,12 @@
             <ShellContent ContentTemplate="{DataTemplate views:RadarPage}" />
         </Tab>
 
-        <Tab Title="Mis Mascotas" Icon="icon_paw.png">
-            <ShellContent ContentTemplate="{DataTemplate views:MisMascotasPage}" />
-        </Tab>
-
         <Tab Title="Mis Reportes" Icon="icon_clipboard.png">
             <ShellContent ContentTemplate="{DataTemplate views:MisReportesPage}" />
+        </Tab>
+
+        <Tab Title="Mis Mascotas" Icon="icon_paw.png">
+            <ShellContent ContentTemplate="{DataTemplate views:MisMascotasPage}" />
         </Tab>
 
         <Tab Title="Perfil" Icon="icon_user.png">

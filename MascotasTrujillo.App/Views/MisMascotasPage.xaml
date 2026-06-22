@@ -1,44 +1,239 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
-             x:Class="MascotasTrujillo.App.Views.MisMascotasPage"
-             Title="Mis Mascotas"
-             BackgroundColor="#F4F6FA">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
+    x:Class="MascotasTrujillo.App.Views.MisMascotasPage"
+    Title="Mis Mascotas"
+    BackgroundColor="#F8FAFC">
 
-    <Grid RowDefinitions="Auto, 160, *">
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          Padding="18"
+          RowSpacing="14">
 
-        <Button Grid.Row="0"
-                Text="+ Nueva Mascota" 
-                Clicked="OnAbrirRegistroMascotaClicked" 
-                BackgroundColor="#2B0B98" 
-                TextColor="White" 
-                FontAttributes="Bold"
-                CornerRadius="10"
-                Margin="15,15,15,5"/>
+        <!-- Encabezado -->
+        <Border Grid.Row="0"
+                BackgroundColor="#FFFFFF"
+                Stroke="Transparent"
+                Padding="18">
 
-        <CollectionView Grid.Row="1" x:Name="MascotasCarousel" 
-                        SelectionMode="Single"
-                        SelectionChanged="OnMascotaSelected"
-                        ItemsLayout="HorizontalList"
-                        Margin="0,10,0,0">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <VerticalStackLayout Padding="10" Spacing="5" WidthRequest="120">
-                        <Border Stroke="#2B0B98" StrokeThickness="2" HeightRequest="80" WidthRequest="80">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="40" />
-                            </Border.StrokeShape>
-                            <Image Source="{Binding FotoPerfilUrl}" Aspect="AspectFill" />
-                        </Border>
-                        <Label Text="{Binding Nombre}" HorizontalOptions="Center" FontAttributes="Bold" />
-                        <Label Text="En línea" FontSize="10" TextColor="Green" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
 
-        <maps:Map Grid.Row="2" x:Name="MascotaMap" IsShowingUser="True" />
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Opacity="0.08"
+                        Offset="0,3"
+                        Radius="8" />
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="12">
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Mis Mascotas"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="#1E1B4B" />
+
+                    <Label Text="Administra tus mascotas registradas y consulta su última ubicación GPS."
+                           FontSize="14"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+
+                <Button Grid.Column="1"
+                        Text="+"
+                        Clicked="OnAbrirRegistroMascotaClicked"
+                        BackgroundColor="#2B0B98"
+                        TextColor="White"
+                        FontSize="26"
+                        FontAttributes="Bold"
+                        CornerRadius="18"
+                        HeightRequest="52"
+                        WidthRequest="52"
+                        VerticalOptions="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Lista horizontal de mascotas -->
+        <Border Grid.Row="1"
+                BackgroundColor="#FFFFFF"
+                Stroke="Transparent"
+                Padding="12">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
+
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Opacity="0.06"
+                        Offset="0,2"
+                        Radius="7" />
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="10">
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Mascotas registradas"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Label Grid.Column="1"
+                           Text="Selecciona una"
+                           FontSize="12"
+                           TextColor="#64748B"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <CollectionView x:Name="MascotasCarousel"
+                                SelectionMode="Single"
+                                SelectionChanged="OnMascotaSelected"
+                                ItemsLayout="HorizontalList"
+                                HeightRequest="150">
+
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Padding="20"
+                                             Spacing="6"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center">
+
+                            <Label Text="🐾"
+                                   FontSize="34"
+                                   HorizontalOptions="Center" />
+
+                            <Label Text="Aún no tienes mascotas registradas"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"
+                                   HorizontalOptions="Center" />
+
+                            <Label Text="Registra tu primera mascota para iniciar el seguimiento."
+                                   FontSize="12"
+                                   TextColor="#64748B"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border Margin="0,0,10,0"
+                                    Padding="10"
+                                    WidthRequest="130"
+                                    BackgroundColor="#F8FAFC"
+                                    Stroke="#E2E8F0">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="18" />
+                                </Border.StrokeShape>
+
+                                <VerticalStackLayout Spacing="6"
+                                                     HorizontalOptions="Center">
+
+                                    <Border Stroke="#2B0B98"
+                                            StrokeThickness="2"
+                                            BackgroundColor="#EEF2FF"
+                                            HeightRequest="76"
+                                            WidthRequest="76">
+
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="38" />
+                                        </Border.StrokeShape>
+
+                                        <Image Source="{Binding FotoPerfilUrl}"
+                                               HeightRequest="76"
+                                               WidthRequest="76"
+                                               Aspect="AspectFill" />
+                                    </Border>
+
+                                    <Label Text="{Binding Nombre}"
+                                           HorizontalOptions="Center"
+                                           FontAttributes="Bold"
+                                           FontSize="14"
+                                           TextColor="#1E293B"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="1" />
+
+                                    <Label Text="{Binding Especie}"
+                                           FontSize="11"
+                                           TextColor="#64748B"
+                                           HorizontalOptions="Center" />
+
+                                    <Label Text="{Binding EstadoGpsTexto}"
+                                           FontSize="10"
+                                           TextColor="#0F766E"
+                                           HorizontalOptions="Center"
+                                           LineBreakMode="TailTruncation" />
+
+                                </VerticalStackLayout>
+                            </Border>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Mapa -->
+        <Border Grid.Row="2"
+                BackgroundColor="#E2E8F0"
+                Stroke="Transparent">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="22" />
+            </Border.StrokeShape>
+
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Opacity="0.10"
+                        Offset="0,4"
+                        Radius="10" />
+            </Border.Shadow>
+
+            <Grid>
+                <maps:Map x:Name="MascotaMap"
+                          IsShowingUser="True" />
+
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="Transparent"
+                        Padding="12,8"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Start"
+                        Margin="12">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+
+                    <Label Text="Última ubicación GPS"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#2B0B98" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Nota inferior -->
+        <Border Grid.Row="3"
+                BackgroundColor="#EEF2FF"
+                Stroke="Transparent"
+                Padding="12">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16" />
+            </Border.StrokeShape>
+
+            <Label Text="El seguimiento GPS es privado y solo es visible para el dueño de la mascota."
+                   FontSize="12"
+                   TextColor="#2B0B98"
+                   HorizontalTextAlignment="Center"
+                   FontAttributes="Bold" />
+        </Border>
 
     </Grid>
 </ContentPage>

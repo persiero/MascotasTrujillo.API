@@ -1,78 +1,98 @@
 ﻿using MascotasTrujillo.API.Data;
 using MascotasTrujillo.API.DTOs;
 using MascotasTrujillo.API.Models;
-using MascotasTrujillo.API.Services; // IMPORTANTE: Para usar tu R2StorageService
+using MascotasTrujillo.API.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
-using NetTopologySuite.Geometries; // IMPORTANTE: Para la lógica de Point
+using NetTopologySuite.Geometries;
 using System.Security.Claims;
 
 namespace MascotasTrujillo.API.Controllers
 {
-    [Authorize] // Asegura que los endpoints de usuario requieran token VIP
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MascotasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly R2StorageService _storageService; // Inyectamos tu servicio de Cloudflare R2
+        private readonly R2StorageService _storageService;
 
-        // Constructor actualizado con doble inyección
         public MascotasController(ApplicationDbContext context, R2StorageService storageService)
         {
             _context = context;
             _storageService = storageService;
         }
 
-        // 1. ENDPOINT: OBTENER MIS MASCOTAS (GET)
-        // MODIFICACIÓN: Cambiado para que solo devuelva los animales del dueño autenticado
+        // GET: api/mascotas/mis-mascotas
         [HttpGet("mis-mascotas")]
         public async Task<IActionResult> GetMisMascotas()
         {
-            var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(usuarioId)) return Unauthorized();
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Buscamos solo las mascotas que le pertenecen a este usuario en PostgreSQL
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
             var mascotas = await _context.Mascotas
-                .Where(m => m.UsuarioId == usuarioId)
-                .Select(m => new
+                .Where(m => m.UsuarioId == usuarioId && m.EstaActiva)
+                .Include(m => m.Fotos)
+                .Include(m => m.DispositivosGps)
+                    .ThenInclude(d => d.Ubicaciones)
+                .ToListAsync();
+
+            var resultado = mascotas.Select(m =>
+            {
+                var fotoPrincipal = m.Fotos
+                    .OrderByDescending(f => f.EsPrincipal)
+                    .ThenByDescending(f => f.FechaRegistro)
+                    .FirstOrDefault();
+
+                var dispositivoActivo = m.DispositivosGps
+                    .Where(d => d.Activo)
+                    .OrderByDescending(d => d.FechaAsociacion)
+                    .FirstOrDefault();
+
+                var ultimaUbicacion = dispositivoActivo?.Ubicaciones
+                    .OrderByDescending(u => u.FechaRegistro)
+                    .FirstOrDefault();
+
+                return new
                 {
                     m.Id,
                     m.Nombre,
                     m.Especie,
                     m.Raza,
                     m.ColorPrincipal,
+                    m.Sexo,
+                    m.EdadAproximada,
                     m.RasgosParticulares,
-                    m.FotoPerfilUrl,
-                    m.DispositivoId,
-                    m.UltimaActualizacion,
-                    // Convertimos el punto geográfico a coordenadas sueltas legibles para MAUI
-                    Latitud = m.UltimaUbicacion != null ? (double?)m.UltimaUbicacion.Y : null,
-                    Longitud = m.UltimaUbicacion != null ? (double?)m.UltimaUbicacion.X : null
-                })
-                .ToListAsync();
+                    FotoPerfilUrl = fotoPrincipal?.UrlFoto,
+                    DispositivoId = dispositivoActivo?.CodigoDispositivo,
+                    UltimaActualizacion = ultimaUbicacion?.FechaRegistro,
+                    Latitud = ultimaUbicacion?.Ubicacion != null ? (double?)ultimaUbicacion.Ubicacion.Y : null,
+                    Longitud = ultimaUbicacion?.Ubicacion != null ? (double?)ultimaUbicacion.Ubicacion.X : null
+                };
+            });
 
-            return Ok(mascotas);
+            return Ok(resultado);
         }
 
-        // 2. ENDPOINT: REGISTRAR UNA NUEVA MASCOTA (POST)
-        // MODIFICACIÓN: Usamos [FromForm] para recibir la foto de la cámara/galería
+        // POST: api/mascotas
         [HttpPost]
         public async Task<IActionResult> CrearMascota([FromForm] MascotaCreateDTO mascotaDto)
         {
-            // ¡LA MAGIA AQUÍ! Extraemos el ID del dueño directamente desde su Token VIP
-            var usuarioIdDelToken = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (string.IsNullOrEmpty(usuarioIdDelToken))
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
             {
-                return Unauthorized("No se pudo identificar al usuario desde el token.");
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
             }
 
-            // Subimos la foto a R2 si es que el usuario seleccionó una imagen desde la app
             string? urlFotoReal = null;
+
             if (mascotaDto.Foto != null)
             {
                 urlFotoReal = await _storageService.SubirFotoAsync(mascotaDto.Foto);
@@ -84,44 +104,75 @@ namespace MascotasTrujillo.API.Controllers
                 Especie = mascotaDto.Especie,
                 Raza = mascotaDto.Raza,
                 ColorPrincipal = mascotaDto.ColorPrincipal,
+                Sexo = mascotaDto.Sexo,
+                EdadAproximada = mascotaDto.EdadAproximada,
                 RasgosParticulares = mascotaDto.RasgosParticulares,
-                DispositivoId = mascotaDto.DispositivoId, // Vinculamos el hardware
-                FotoPerfilUrl = urlFotoReal, // Guardamos el enlace de Cloudflare
-                UsuarioId = usuarioIdDelToken // Asignación automática y segura
+                UsuarioId = usuarioId,
+                EstaActiva = true,
+                FechaRegistro = DateTime.UtcNow
             };
+
+            if (!string.IsNullOrWhiteSpace(urlFotoReal))
+            {
+                nuevaMascota.Fotos.Add(new FotoMascota
+                {
+                    UrlFoto = urlFotoReal,
+                    EsPrincipal = true,
+                    FechaRegistro = DateTime.UtcNow
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(mascotaDto.DispositivoId))
+            {
+                nuevaMascota.DispositivosGps.Add(new DispositivoGps
+                {
+                    CodigoDispositivo = mascotaDto.DispositivoId,
+                    NombreDispositivo = "Collar GPS",
+                    EstadoConexion = "Desconectado",
+                    Activo = true,
+                    FechaAsociacion = DateTime.UtcNow
+                });
+            }
 
             _context.Mascotas.Add(nuevaMascota);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Mensaje = "¡Mascota registrada con éxito!", Id = nuevaMascota.Id });
+            return Ok(new
+            {
+                Mensaje = "¡Mascota registrada con éxito!",
+                Id = nuevaMascota.Id
+            });
         }
 
-        // 3. ENDPOINT IoT: ACTUALIZAR UBICACIÓN DESDE EL COLLAR GPS (POST)
-        // CRÍTICO: Usamos [AllowAnonymous] para que el chip de celular del collar pueda
-        // conectarse de forma pública sin requerir un token JWT.
+        // POST: api/mascotas/actualizar-ubicacion-iot
         [AllowAnonymous]
         [HttpPost("actualizar-ubicacion-iot")]
         public async Task<IActionResult> ActualizarUbicacionIoT([FromBody] MascotaUbicacionIoTRequest request)
         {
-            // Buscamos a qué mascota le pertenece este collar por su ID único
-            var mascota = await _context.Mascotas
-                .FirstOrDefaultAsync(m => m.DispositivoId == request.DispositivoId);
+            var dispositivo = await _context.DispositivosGps
+                .FirstOrDefaultAsync(d => d.CodigoDispositivo == request.DispositivoId && d.Activo);
 
-            if (mascota == null)
+            if (dispositivo == null)
             {
                 return NotFound(new { Mensaje = "El identificador del dispositivo no está registrado." });
             }
 
-            // LA MAGIA ESPACIAL: Reconstruimos el Punto geográfico (SRID 4326 = GPS Estándar)
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-            mascota.UltimaUbicacion = geometryFactory.CreatePoint(new Coordinate(request.Longitud, request.Latitud));
-            mascota.UltimaActualizacion = DateTime.UtcNow;
 
-            _context.Entry(mascota).State = EntityState.Modified;
+            var nuevaUbicacion = new UbicacionGps
+            {
+                DispositivoGpsId = dispositivo.Id,
+                Ubicacion = geometryFactory.CreatePoint(new Coordinate(request.Longitud, request.Latitud)),
+                Bateria = request.Bateria,
+                FechaRegistro = DateTime.UtcNow
+            };
+
+            dispositivo.EstadoConexion = "Conectado";
+
+            _context.UbicacionesGps.Add(nuevaUbicacion);
             await _context.SaveChangesAsync();
 
-            // Respuesta limpia y sin peso para no consumir el plan de datos del chip IoT
-            return Ok();
+            return Ok(new { Mensaje = "Ubicación actualizada correctamente." });
         }
     }
 }

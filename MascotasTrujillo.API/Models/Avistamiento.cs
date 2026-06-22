@@ -6,21 +6,24 @@ namespace MascotasTrujillo.API.Models
     public class Avistamiento
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        public string UsuarioId { get; set; } = string.Empty;
-        public Usuario? Usuario { get; set; } // Quién lo reporta
+        public long ReporteId { get; set; }
+        public Reporte? Reporte { get; set; }
 
-        public string FotoUrl { get; set; } = string.Empty; // Asumimos que la foto es obligatoria// URL de Amazon/Cloudflare R2
-        public string? ThumbnailUrl { get; set; }
+        public long UsuarioId { get; set; }
+        public Usuario? Usuario { get; set; }
 
         public string? Descripcion { get; set; }
-        public DateTime FechaHora { get; set; } = DateTime.UtcNow;
 
-        // ESTE ES EL CAMPO GEOGRÁFICO
-        public Point Ubicacion { get; set; } = null!; // null! le dice al compilador: "Tranquilo, yo me encargo de que esto nunca sea nulo al guardar"
+        public Point Ubicacion { get; set; } = null!;
 
-        // NUEVO CAMPO: Controla si el caso ya fue cerrado
-        public bool IsResolved { get; set; } = false;
+        public string? DireccionReferencia { get; set; }
+
+        public DateTime FechaAvistamiento { get; set; } = DateTime.UtcNow;
+
+        public bool Visible { get; set; } = true;
+
+        public List<FotoAvistamiento> Fotos { get; set; } = new();
     }
 }

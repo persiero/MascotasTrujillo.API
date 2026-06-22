@@ -3,7 +3,6 @@ using MascotasTrujillo.API.DTOs;
 using MascotasTrujillo.API.Models;
 using MascotasTrujillo.API.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
@@ -12,7 +11,7 @@ using System.Security.Claims;
 
 namespace MascotasTrujillo.API.Controllers
 {
-    [Authorize] // Solo usuarios autenticados pueden reportar avistamientos
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AvistamientosController : ControllerBase
@@ -26,131 +25,204 @@ namespace MascotasTrujillo.API.Controllers
             _storageService = storageService;
         }
 
+        // POST: api/avistamientos
         [HttpPost]
-        public async Task<IActionResult> ReportarAvistamiento([FromForm] AvistamientoCreateDTO dto)
+        public async Task<IActionResult> RegistrarAvistamiento([FromForm] AvistamientoCreateDTO dto)
         {
-            var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(usuarioId)) return Unauthorized();
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            string urlFotoReal = await _storageService.SubirFotoAsync(dto.Foto);
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
+            var reporte = await _context.Reportes
+                .FirstOrDefaultAsync(r => r.Id == dto.ReporteId && r.Visible);
+
+            if (reporte == null)
+            {
+                return NotFound(new { Mensaje = "El reporte asociado no existe." });
+            }
+
+            // Solo reportes activos
+            if (reporte.EstadoReporteId != 1)
+            {
+                return BadRequest(new { Mensaje = "Solo se pueden registrar avistamientos en reportes activos." });
+            }
+
+            // Solo reportes de mascota perdida
+            if (reporte.TipoReporteId != 1)
+            {
+                return BadRequest(new { Mensaje = "Los avistamientos solo aplican a reportes de mascotas perdidas." });
+            }
 
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
             var ubicacionPoint = geometryFactory.CreatePoint(new Coordinate(dto.Longitud, dto.Latitud));
 
             var nuevoAvistamiento = new Avistamiento
             {
+                ReporteId = dto.ReporteId,
                 UsuarioId = usuarioId,
-                FotoUrl = urlFotoReal,
                 Descripcion = dto.Descripcion,
                 Ubicacion = ubicacionPoint,
-                FechaHora = DateTime.UtcNow,
-                IsResolved = false // Explícito por seguridad
+                DireccionReferencia = dto.DireccionReferencia,
+                FechaAvistamiento = DateTime.UtcNow,
+                Visible = true
             };
+
+            if (dto.Foto != null)
+            {
+                var urlFotoReal = await _storageService.SubirFotoAsync(dto.Foto);
+
+                nuevoAvistamiento.Fotos.Add(new FotoAvistamiento
+                {
+                    UrlFoto = urlFotoReal,
+                    FechaRegistro = DateTime.UtcNow
+                });
+            }
 
             _context.Avistamientos.Add(nuevoAvistamiento);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Mensaje = "¡Avistamiento reportado con éxito!", Id = nuevoAvistamiento.Id });
+            return Ok(new
+            {
+                Mensaje = "¡Avistamiento registrado con éxito!",
+                Id = nuevoAvistamiento.Id
+            });
         }
 
-        // Endpoint extra para ver todos los avistamientos activos
-        [HttpGet]
-        public async Task<IActionResult> ObtenerTodos()
+        // GET: api/avistamientos/reporte/5
+        // Consulta los avistamientos asociados a un reporte.
+        [HttpGet("reporte/{reporteId:long}")]
+        public async Task<IActionResult> ObtenerPorReporte(long reporteId)
         {
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
+            var reporte = await _context.Reportes
+                .FirstOrDefaultAsync(r => r.Id == reporteId);
+
+            if (reporte == null)
+            {
+                return NotFound(new { Mensaje = "El reporte no existe." });
+            }
+
+            // Versión controlada: solo el creador del reporte puede ver todos los avistamientos recibidos.
+            if (reporte.UsuarioId != usuarioId)
+            {
+                return Forbid();
+            }
+
             var avistamientos = await _context.Avistamientos
-                .Where(a => !a.IsResolved) // MODIFICACIÓN: Solo traer los NO resueltos
+                .Where(a => a.ReporteId == reporteId && a.Visible)
                 .Select(a => new
                 {
                     a.Id,
+                    a.ReporteId,
                     a.UsuarioId,
-                    a.FotoUrl,
                     a.Descripcion,
-                    a.FechaHora,
+                    a.DireccionReferencia,
+                    a.FechaAvistamiento,
                     Latitud = a.Ubicacion.Y,
-                    Longitud = a.Ubicacion.X
+                    Longitud = a.Ubicacion.X,
+                    FotoUrl = a.Fotos
+                        .OrderByDescending(f => f.FechaRegistro)
+                        .Select(f => f.UrlFoto)
+                        .FirstOrDefault()
                 })
+                .OrderByDescending(a => a.FechaAvistamiento)
                 .ToListAsync();
 
             return Ok(avistamientos);
         }
 
-        // NUEVO ENDPOINT: Obtiene solo los avistamientos del usuario autenticado
-        [HttpGet("mis-reportes")]
-        public async Task<IActionResult> ObtenerMisReportes()
+        // GET: api/avistamientos/mis-avistamientos
+        [HttpGet("mis-avistamientos")]
+        public async Task<IActionResult> ObtenerMisAvistamientos()
         {
-            // 1. Extraemos el ID del usuario directamente desde su Token JWT (Su firma digital)
-            var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(usuarioId)) return Unauthorized();
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // 2. Filtramos en PostgreSQL: que pertenezcan a este usuario Y que no estén resueltos
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
             var misAvistamientos = await _context.Avistamientos
-                .Where(a => a.UsuarioId == usuarioId && !a.IsResolved)
+                .Where(a => a.UsuarioId == usuarioId && a.Visible)
                 .Select(a => new
                 {
                     a.Id,
-                    a.UsuarioId,
-                    a.FotoUrl,
+                    a.ReporteId,
+                    ReporteTitulo = a.Reporte != null ? a.Reporte.Titulo : null,
                     a.Descripcion,
-                    a.FechaHora,
+                    a.DireccionReferencia,
+                    a.FechaAvistamiento,
                     Latitud = a.Ubicacion.Y,
-                    Longitud = a.Ubicacion.X
+                    Longitud = a.Ubicacion.X,
+                    FotoUrl = a.Fotos
+                        .OrderByDescending(f => f.FechaRegistro)
+                        .Select(f => f.UrlFoto)
+                        .FirstOrDefault()
                 })
+                .OrderByDescending(a => a.FechaAvistamiento)
                 .ToListAsync();
 
             return Ok(misAvistamientos);
         }
 
-        [HttpGet("cercanos")]
-        public async Task<IActionResult> ObtenerCercanos(double latitud, double longitud, double radioMetros = 3000)
+        // GET: api/avistamientos/10
+        [HttpGet("{id:long}")]
+        public async Task<IActionResult> ObtenerDetalle(long id)
         {
-            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-            var miUbicacion = geometryFactory.CreatePoint(new Coordinate(longitud, latitud));
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var cercanos = await _context.Avistamientos
-                .Where(a => !a.IsResolved && a.Ubicacion.IsWithinDistance(miUbicacion, radioMetros)) // MODIFICACIÓN: Incluye !a.IsResolved
-                .OrderBy(a => a.Ubicacion.Distance(miUbicacion))
-                .Select(a => new
-                {
-                    a.Id,
-                    a.FotoUrl,
-                    a.Descripcion,
-                    a.FechaHora,
-                    Latitud = a.Ubicacion.Y,
-                    Longitud = a.Ubicacion.X,
-                    DistanciaMetros = Math.Round(a.Ubicacion.Distance(miUbicacion), 2)
-                })
-                .ToListAsync();
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
 
-            return Ok(cercanos);
-        }
-
-        // NUEVO ENDPOINT: Cambia el estado del reporte a resuelto
-        [HttpPut("{id}/resolver")]
-        public async Task<IActionResult> MarcarComoResuelto(int id)
-        {
-            // 1. Buscamos el reporte en PostgreSQL
-            var avistamiento = await _context.Avistamientos.FindAsync(id);
+            var avistamiento = await _context.Avistamientos
+                .Include(a => a.Reporte)
+                .Include(a => a.Fotos)
+                .FirstOrDefaultAsync(a => a.Id == id && a.Visible);
 
             if (avistamiento == null)
             {
-                return NotFound(new { Mensaje = "El reporte de avistamiento no existe." });
+                return NotFound(new { Mensaje = "El avistamiento no existe." });
             }
 
-            // Opcional: Validar que el usuario que lo resuelve sea el mismo dueño del reporte
-            var usuarioActualId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (avistamiento.UsuarioId != usuarioActualId)
+            // Puede verlo quien creó el avistamiento o quien creó el reporte.
+            if (avistamiento.UsuarioId != usuarioId &&
+                avistamiento.Reporte != null &&
+                avistamiento.Reporte.UsuarioId != usuarioId)
             {
-                return Forbid(); // No puede resolver un reporte ajeno
+                return Forbid();
             }
 
-            // 2. Modificamos el estado
-            avistamiento.IsResolved = true;
-
-            // 3. Guardamos los cambios en la BD
-            _context.Entry(avistamiento).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return Ok(new { Mensaje = "Mascota marcada como encontrada con éxito." });
+            return Ok(new
+            {
+                avistamiento.Id,
+                avistamiento.ReporteId,
+                ReporteTitulo = avistamiento.Reporte?.Titulo,
+                avistamiento.UsuarioId,
+                avistamiento.Descripcion,
+                avistamiento.DireccionReferencia,
+                avistamiento.FechaAvistamiento,
+                Latitud = avistamiento.Ubicacion.Y,
+                Longitud = avistamiento.Ubicacion.X,
+                Fotos = avistamiento.Fotos
+                    .OrderByDescending(f => f.FechaRegistro)
+                    .Select(f => new
+                    {
+                        f.Id,
+                        f.UrlFoto,
+                        f.FechaRegistro
+                    })
+            });
         }
     }
 }

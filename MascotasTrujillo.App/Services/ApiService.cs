@@ -119,98 +119,196 @@ namespace MascotasTrujillo.App.Services
             }
         }
 
-        // Agrega esto debajo de tu método LoginAsync
-        public async Task<List<Models.Avistamiento>> ObtenerCercanosAsync(double latitud, double longitud, double radioMetros = 3000)
-        {
-            try
-            {
-                // Llamamos a tu endpoint de PostGIS
-                var response = await _httpClient.GetAsync($"Avistamientos/cercanos?latitud={latitud}&longitud={longitud}&radioMetros={radioMetros}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Convertimos el JSON en nuestra lista de C#
-                    var lista = await response.Content.ReadFromJsonAsync<List<Models.Avistamiento>>();
-                    return lista ?? new List<Models.Avistamiento>();
-                }
-                return new List<Models.Avistamiento>();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error en el radar: {ex.Message}");
-                return new List<Models.Avistamiento>();
-            }
-        }
-
-        // NUEVO MÉTODO: Enviar foto y datos a la API
-        public async Task<bool> ReportarAvistamientoAsync(FileResult foto, string descripcion, double latitud, double longitud)
+        public async Task<(bool Exito, string Mensaje)> CrearReporteAsync(
+            long? mascotaId,
+            short tipoReporteId,
+            string titulo,
+            string descripcion,
+            double latitud,
+            double longitud,
+            string? direccionReferencia,
+            FileResult? foto = null,
+            string? nombreMascotaReferencial = null,
+            string? especieReferencial = null,
+            string? razaReferencial = null,
+            string? colorReferencial = null,
+            string? sexoReferencial = null)
         {
             try
             {
                 using var content = new MultipartFormDataContent();
 
-                // 1. Empaquetamos los textos
-                content.Add(new StringContent(descripcion ?? ""), "Descripcion");
-                content.Add(new StringContent(latitud.ToString()), "Latitud");
-                content.Add(new StringContent(longitud.ToString()), "Longitud");
+                if (mascotaId.HasValue)
+                    content.Add(new StringContent(mascotaId.Value.ToString()), "MascotaId");
 
-                // 2. Empaquetamos el archivo (La foto)
-                var stream = await foto.OpenReadAsync();
-                var fileContent = new StreamContent(stream);
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue(foto.ContentType);
+                content.Add(new StringContent(tipoReporteId.ToString()), "TipoReporteId");
+                content.Add(new StringContent(titulo), "Titulo");
+                content.Add(new StringContent(descripcion), "Descripcion");
+                content.Add(new StringContent(latitud.ToString(System.Globalization.CultureInfo.InvariantCulture)), "Latitud");
+                content.Add(new StringContent(longitud.ToString(System.Globalization.CultureInfo.InvariantCulture)), "Longitud");
 
-                // OJO: "Foto" debe coincidir exactamente con el nombre de la propiedad en tu DTO de la API
-                content.Add(fileContent, "Foto", foto.FileName);
+                if (!string.IsNullOrWhiteSpace(direccionReferencia))
+                    content.Add(new StringContent(direccionReferencia), "DireccionReferencia");
 
-                // 3. ¡Enviamos el paquete!
-                var response = await _httpClient.PostAsync("Avistamientos", content);
+                if (!string.IsNullOrWhiteSpace(nombreMascotaReferencial))
+                    content.Add(new StringContent(nombreMascotaReferencial), "NombreMascotaReferencial");
 
-                return response.IsSuccessStatusCode;
+                if (!string.IsNullOrWhiteSpace(especieReferencial))
+                    content.Add(new StringContent(especieReferencial), "EspecieReferencial");
+
+                if (!string.IsNullOrWhiteSpace(razaReferencial))
+                    content.Add(new StringContent(razaReferencial), "RazaReferencial");
+
+                if (!string.IsNullOrWhiteSpace(colorReferencial))
+                    content.Add(new StringContent(colorReferencial), "ColorReferencial");
+
+                if (!string.IsNullOrWhiteSpace(sexoReferencial))
+                    content.Add(new StringContent(sexoReferencial), "SexoReferencial");
+
+                if (foto != null)
+                {
+                    var stream = await foto.OpenReadAsync();
+                    var fileContent = new StreamContent(stream);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(foto.ContentType ?? "image/jpeg");
+                    content.Add(fileContent, "Foto", foto.FileName);
+                }
+
+                var response = await _httpClient.PostAsync("Reportes", content);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, "Reporte registrado exitosamente.");
+
+                var errorInfo = await response.Content.ReadAsStringAsync();
+                return (false, $"Error del servidor: {errorInfo}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al reportar: {ex.Message}");
-                return false;
+                return (false, $"Error de conexión: {ex.Message}");
             }
         }
 
-        // Añade estos métodos dentro de tu clase ApiService
-
-        public async Task<List<Avistamiento>?> GetMisReportesAsync()
+        // Agrega esto debajo de tu método LoginAsync
+        public async Task<List<Reporte>> ObtenerReportesCercanosAsync(double latitud, double longitud, double radioMetros = 3000)
         {
             try
             {
-                var response = await _httpClient.GetAsync("Avistamientos/mis-reportes");
+                var response = await _httpClient.GetAsync(
+                    $"Reportes/cercanos?latitud={latitud}&longitud={longitud}&radioMetros={radioMetros}"
+                );
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var lista = await response.Content.ReadFromJsonAsync<List<Reporte>>(_jsonOptions);
+                    return lista ?? new List<Reporte>();
+                }
+
+                return new List<Reporte>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en el radar: {ex.Message}");
+                return new List<Reporte>();
+            }
+        }
+
+        // NUEVO MÉTODO: Enviar foto y datos a la API
+        public async Task<(bool Exito, string Mensaje)> RegistrarAvistamientoAsync(
+            long reporteId,
+            string? descripcion,
+            double latitud,
+            double longitud,
+            string? direccionReferencia,
+            FileResult? foto = null)
+        {
+            try
+            {
+                using var content = new MultipartFormDataContent();
+
+                content.Add(new StringContent(reporteId.ToString()), "ReporteId");
+
+                if (!string.IsNullOrWhiteSpace(descripcion))
+                    content.Add(new StringContent(descripcion), "Descripcion");
+
+                content.Add(new StringContent(latitud.ToString(System.Globalization.CultureInfo.InvariantCulture)), "Latitud");
+                content.Add(new StringContent(longitud.ToString(System.Globalization.CultureInfo.InvariantCulture)), "Longitud");
+
+                if (!string.IsNullOrWhiteSpace(direccionReferencia))
+                    content.Add(new StringContent(direccionReferencia), "DireccionReferencia");
+
+                if (foto != null)
+                {
+                    var stream = await foto.OpenReadAsync();
+                    var fileContent = new StreamContent(stream);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(foto.ContentType ?? "image/jpeg");
+                    content.Add(fileContent, "Foto", foto.FileName);
+                }
+
+                var response = await _httpClient.PostAsync("Avistamientos", content);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, "Avistamiento registrado exitosamente.");
+
+                var errorInfo = await response.Content.ReadAsStringAsync();
+                return (false, $"Error del servidor: {errorInfo}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<List<Avistamiento>?> ObtenerAvistamientosPorReporteAsync(long reporteId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"Avistamientos/reporte/{reporteId}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     return JsonSerializer.Deserialize<List<Avistamiento>>(json, _jsonOptions);
                 }
-                else
-                {
-                    // SI LA API NOS RECHAZA, ATRAPAMOS EL MOTIVO EXACTO
-                    string errorInfo = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"El servidor rechazó la petición. Código: {response.StatusCode}. Detalle: {errorInfo}");
-                }
+
+                return null;
             }
             catch (Exception ex)
             {
-                // Esta excepción viajará hasta tu pantalla y la mostrará en una alerta
+                Console.WriteLine($"Error al obtener avistamientos: {ex.Message}");
+                return null;
+            }
+        }
+
+        // Añade estos métodos dentro de tu clase ApiService
+
+        public async Task<List<Reporte>?> GetMisReportesAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("Reportes/mis-reportes");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<List<Reporte>>(json, _jsonOptions);
+                }
+
+                string errorInfo = await response.Content.ReadAsStringAsync();
+                throw new Exception($"El servidor rechazó la petición. Código: {response.StatusCode}. Detalle: {errorInfo}");
+            }
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }
 
-        public async Task<bool> MarcarComoResueltoAsync(int mascotaId)
+        public async Task<bool> MarcarReporteComoResueltoAsync(long reporteId)
         {
             try
             {
-                // Enviamos una solicitud PUT o PATCH para actualizar el campo 'is_resolved' o 'status'
-                var response = await _httpClient.PutAsync($"Avistamientos/{mascotaId}/resolver", null);
-
+                var response = await _httpClient.PutAsync($"Reportes/{reporteId}/resolver", null);
                 return response.IsSuccessStatusCode;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -244,46 +342,61 @@ namespace MascotasTrujillo.App.Services
         // NUEVO: Registrar una mascota con foto (Multipart/Form-Data)
         // =======================================================
         public async Task<(bool Exito, string Mensaje)> RegistrarMascotaAsync(
-            string nombre, string especie, string raza, string color,
-            string rasgos, string dispositivoId, string rutaFotoLocal)
+            string nombre,
+            string especie,
+            string raza,
+            string color,
+            string sexo,
+            string edadAproximada,
+            string rasgos,
+            string dispositivoId,
+            string rutaFotoLocal)
         {
             try
             {
                 using var content = new MultipartFormDataContent();
 
-                // 1. Agregamos los textos al formulario
                 content.Add(new StringContent(nombre), "Nombre");
-                if (!string.IsNullOrEmpty(especie)) content.Add(new StringContent(especie), "Especie");
-                if (!string.IsNullOrEmpty(raza)) content.Add(new StringContent(raza), "Raza");
-                if (!string.IsNullOrEmpty(color)) content.Add(new StringContent(color), "ColorPrincipal");
-                if (!string.IsNullOrEmpty(rasgos)) content.Add(new StringContent(rasgos), "RasgosParticulares");
-                if (!string.IsNullOrEmpty(dispositivoId)) content.Add(new StringContent(dispositivoId), "DispositivoId");
+                content.Add(new StringContent(especie), "Especie");
 
-                // 2. Adjuntamos la foto si el usuario tomó una
-                if (!string.IsNullOrEmpty(rutaFotoLocal) && File.Exists(rutaFotoLocal))
+                if (!string.IsNullOrWhiteSpace(raza))
+                    content.Add(new StringContent(raza), "Raza");
+
+                if (!string.IsNullOrWhiteSpace(color))
+                    content.Add(new StringContent(color), "ColorPrincipal");
+
+                if (!string.IsNullOrWhiteSpace(sexo))
+                    content.Add(new StringContent(sexo), "Sexo");
+
+                if (!string.IsNullOrWhiteSpace(edadAproximada))
+                    content.Add(new StringContent(edadAproximada), "EdadAproximada");
+
+                if (!string.IsNullOrWhiteSpace(rasgos))
+                    content.Add(new StringContent(rasgos), "RasgosParticulares");
+
+                if (!string.IsNullOrWhiteSpace(dispositivoId))
+                    content.Add(new StringContent(dispositivoId), "DispositivoId");
+
+                if (!string.IsNullOrWhiteSpace(rutaFotoLocal) && File.Exists(rutaFotoLocal))
                 {
                     var fileStream = File.OpenRead(rutaFotoLocal);
                     var streamContent = new StreamContent(fileStream);
 
-                    // Asignamos el MIME type genérico para imágenes
-                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+                    streamContent.Headers.ContentType =
+                        new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
 
-                    // El nombre del parámetro "Foto" DEBE coincidir con el IFormFile de tu DTO en la API
                     content.Add(streamContent, "Foto", Path.GetFileName(rutaFotoLocal));
                 }
 
-                // 3. Enviamos el paquete completo
                 var response = await _httpClient.PostAsync("Mascotas", content);
 
                 if (response.IsSuccessStatusCode)
                 {
                     return (true, "Mascota registrada exitosamente.");
                 }
-                else
-                {
-                    string errorInfo = await response.Content.ReadAsStringAsync();
-                    return (false, $"Error del servidor: {errorInfo}");
-                }
+
+                string errorInfo = await response.Content.ReadAsStringAsync();
+                return (false, $"Error del servidor: {errorInfo}");
             }
             catch (Exception ex)
             {

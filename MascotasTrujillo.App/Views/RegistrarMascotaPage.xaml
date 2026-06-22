@@ -1,93 +1,256 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MascotasTrujillo.App.Views.RegistrarMascotaPage"
-             Title="Registrar Mi Mascota"
-             BackgroundColor="#F4F6FA">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MascotasTrujillo.App.Views.RegistrarMascotaPage"
+    Title="Registrar Mascota"
+    BackgroundColor="#F8FAFC">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="15" Padding="25" VerticalOptions="Start">
+        <VerticalStackLayout Spacing="16"
+                             Padding="18"
+                             VerticalOptions="Start">
 
-            <Label Text="Nueva Mascota" FontSize="26" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#2B0B98" />
-            <Label Text="Registra a tu compañero para activar su rastreo" FontSize="14" HorizontalOptions="Center" TextColor="#666666" Margin="0,0,0,10" />
+            <!-- Encabezado -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
 
-            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Margin="0,0,0,10">
-                <Border Stroke="#2B0B98" StrokeThickness="2" HeightRequest="130" WidthRequest="130">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="65" />
-                    </Border.StrokeShape>
-                    <Image x:Name="FotoMascotaImage" 
-                           Source="https://cdn-icons-png.flaticon.com/512/616/616408.png" 
-                           Aspect="AspectFill" 
-                           HeightRequest="130" 
-                           WidthRequest="130" />
-                </Border>
-
-                <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
-                    <Button Text="📷 Cámara" Clicked="OnTomarFotoClicked" BackgroundColor="#2B0B98" TextColor="White" HeightRequest="38" CornerRadius="8" FontSize="13"/>
-                    <Button Text="🖼️ Galería" Clicked="OnSeleccionarFotoClicked" BackgroundColor="#666666" TextColor="White" HeightRequest="38" CornerRadius="8" FontSize="13"/>
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
-
-            <Label Text="Nombre de la Mascota *" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
-            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
-                <Entry x:Name="NombreEntry" Placeholder="Ej: Firulais" TextColor="#333333" BackgroundColor="Transparent" />
+
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                            Opacity="0.08"
+                            Offset="0,3"
+                            Radius="8" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Registrar Mascota"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="#1E1B4B" />
+
+                    <Label Text="Agrega los datos de tu mascota para administrarla y, si cuenta con collar GPS, consultar su ubicación privada."
+                           FontSize="14"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
             </Border>
 
-            <Label Text="Especie" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
-            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+            <!-- Foto -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
-                <Entry x:Name="EspecieEntry" Placeholder="Ej: Perro, Gato" TextColor="#333333" BackgroundColor="Transparent" />
+
+                <VerticalStackLayout Spacing="12"
+                                     HorizontalOptions="Center">
+
+                    <Label Text="Foto de la mascota"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B"
+                           HorizontalOptions="Center" />
+
+                    <Border Stroke="#2B0B98"
+                            StrokeThickness="2"
+                            BackgroundColor="#EEF2FF"
+                            HeightRequest="140"
+                            WidthRequest="140">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="70" />
+                        </Border.StrokeShape>
+
+                        <Image x:Name="FotoMascotaImage"
+                               Source="https://cdn-icons-png.flaticon.com/512/616/616408.png"
+                               Aspect="AspectFill"
+                               HeightRequest="140"
+                               WidthRequest="140" />
+                    </Border>
+
+                    <HorizontalStackLayout Spacing="10"
+                                           HorizontalOptions="Center">
+
+                        <Button Text="📷 Cámara"
+                                Clicked="OnTomarFotoClicked"
+                                BackgroundColor="#2B0B98"
+                                TextColor="White"
+                                CornerRadius="14"
+                                HeightRequest="40"
+                                Padding="16,0"
+                                FontSize="13" />
+
+                        <Button Text="🖼️ Galería"
+                                Clicked="OnSeleccionarFotoClicked"
+                                BackgroundColor="#EEF2FF"
+                                TextColor="#2B0B98"
+                                CornerRadius="14"
+                                HeightRequest="40"
+                                Padding="16,0"
+                                FontSize="13" />
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
             </Border>
 
-            <Label Text="Raza" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
-            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+            <!-- Datos principales -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
-                <Entry x:Name="RazaEntry" Placeholder="Ej: Labrador, Siamés" TextColor="#333333" BackgroundColor="Transparent" />
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Datos principales"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Entry x:Name="NombreEntry"
+                           Placeholder="Nombre de la mascota *"
+                           BackgroundColor="#F1F5F9"
+                           TextColor="#1E293B" />
+
+                    <Entry x:Name="EspecieEntry"
+                           Placeholder="Especie. Ej. Perro, gato *"
+                           BackgroundColor="#F1F5F9"
+                           TextColor="#1E293B" />
+
+                    <Entry x:Name="RazaEntry"
+                           Placeholder="Raza. Ej. Labrador, siamés"
+                           BackgroundColor="#F1F5F9"
+                           TextColor="#1E293B" />
+
+                    <Entry x:Name="ColorEntry"
+                           Placeholder="Color principal. Ej. Marrón con blanco"
+                           BackgroundColor="#F1F5F9"
+                           TextColor="#1E293B" />
+
+                    <Grid ColumnDefinitions="*,*"
+                          ColumnSpacing="10">
+
+                        <Picker x:Name="SexoPicker"
+                                Grid.Column="0"
+                                Title="Sexo"
+                                BackgroundColor="#F1F5F9"
+                                TextColor="#1E293B">
+                            <Picker.Items>
+                                <x:String>Macho</x:String>
+                                <x:String>Hembra</x:String>
+                                <x:String>No especificado</x:String>
+                            </Picker.Items>
+                        </Picker>
+
+                        <Entry x:Name="EdadEntry"
+                               Grid.Column="1"
+                               Placeholder="Edad aprox."
+                               BackgroundColor="#F1F5F9"
+                               TextColor="#1E293B" />
+                    </Grid>
+
+                </VerticalStackLayout>
             </Border>
 
-            <Label Text="Color Principal" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
-            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+            <!-- Rasgos -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
-                <Entry x:Name="ColorEntry" Placeholder="Ej: Marrón con blanco" TextColor="#333333" BackgroundColor="Transparent" />
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Rasgos particulares"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Label Text="Describe señales que ayuden a identificarla."
+                           FontSize="12"
+                           TextColor="#64748B" />
+
+                    <Editor x:Name="RasgosEditor"
+                            Placeholder="Ej. Tiene una mancha en el ojo derecho, collar rojo, cola corta..."
+                            AutoSize="TextChanges"
+                            HeightRequest="95"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B" />
+
+                </VerticalStackLayout>
             </Border>
 
-            <Label Text="ID del Dispositivo / Collar GPS" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
-            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
+            <!-- GPS -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
-                <Entry x:Name="DispositivoIdEntry" Placeholder="Ej: GPS-TRU-001" TextColor="#333333" BackgroundColor="Transparent" />
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Collar GPS privado"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Label Text="Este dato es opcional. Si tu mascota tiene un collar GPS, ingresa el código del dispositivo para consultar su última ubicación."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
+
+                    <Entry x:Name="DispositivoIdEntry"
+                           Placeholder="Código del dispositivo. Ej. GPS-TRU-001"
+                           BackgroundColor="#F1F5F9"
+                           TextColor="#1E293B" />
+
+                    <Border BackgroundColor="#EEF2FF"
+                            Stroke="Transparent"
+                            Padding="12">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+
+                        <Label Text="La ubicación GPS solo será visible para el dueño de la mascota."
+                               FontSize="12"
+                               TextColor="#2B0B98"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" />
+                    </Border>
+
+                </VerticalStackLayout>
             </Border>
 
-            <Label Text="Rasgos Particulares" FontAttributes="Bold" TextColor="#2B0B98" FontSize="14" Margin="5,0,0,0"/>
-            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="15,5">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
-                </Border.StrokeShape>
-                <Editor x:Name="RasgosEditor" Placeholder="Ej: Tiene una mancha en el ojo derecho..." AutoSize="TextChanges" HeightRequest="80" TextColor="#333333" BackgroundColor="Transparent" />
-            </Border>
-
-            <Button Text="Guardar Registro" 
-                    Clicked="OnGuardarMascotaClicked" 
-                    BackgroundColor="#2B0B98" 
-                    TextColor="White" 
+            <!-- Guardar -->
+            <Button x:Name="BtnGuardar"
+                    Text="Guardar mascota"
+                    Clicked="OnGuardarMascotaClicked"
+                    BackgroundColor="#2B0B98"
+                    TextColor="White"
                     FontAttributes="Bold"
                     FontSize="16"
-                    CornerRadius="12" 
-                    HeightRequest="55" 
-                    Margin="0,15,0,0"/>
+                    CornerRadius="18"
+                    HeightRequest="54"
+                    Margin="0,8,0,0" />
 
-            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#2B0B98"/>
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="False"
+                               IsVisible="False"
+                               Color="#2B0B98" />
 
         </VerticalStackLayout>
     </ScrollView>

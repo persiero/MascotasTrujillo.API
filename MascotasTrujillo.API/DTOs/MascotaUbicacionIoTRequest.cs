@@ -12,5 +12,6 @@ namespace MascotasTrujillo.API.DTOs
 
         [Required]
         public double Longitud { get; set; }
+        public decimal? Bateria { get; set; }
     }
 }

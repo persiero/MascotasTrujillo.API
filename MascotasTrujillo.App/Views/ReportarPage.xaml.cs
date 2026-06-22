@@ -64,8 +64,6 @@ public partial class ReportarPage : ContentPage
 
     private async void OnEnviarClicked(object? sender, EventArgs e)
     {
-        if (_fotoCapturada == null) return;
-
         LoadingIndicator.IsRunning = true;
         LoadingIndicator.IsVisible = true;
         BtnEnviar.IsEnabled = false;
@@ -73,37 +71,85 @@ public partial class ReportarPage : ContentPage
 
         try
         {
-            // ¡Obtenemos las coordenadas reales del celular!
-            var location = await Geolocation.Default.GetLocationAsync(new GeolocationRequest(GeolocationAccuracy.Medium));
-
-            if (location != null)
+            if (TipoReportePicker.SelectedIndex == -1)
             {
-                string descripcion = DescripcionEntry.Text;
+                await DisplayAlertAsync("Dato requerido", "Selecciona el tipo de reporte.", "OK");
+                return;
+            }
 
-                // Enviamos todo a tu API
-                bool exito = await _apiService.ReportarAvistamientoAsync(_fotoCapturada, descripcion, location.Latitude, location.Longitude);
+            string titulo = TituloEntry.Text?.Trim() ?? string.Empty;
+            string descripcion = DescripcionEntry.Text?.Trim() ?? string.Empty;
 
-                if (exito)
-                {
-                    await DisplayAlertAsync("¡Éxito!", "La mascota ha sido reportada. Revisa el radar.", "OK");
-                    await Navigation.PopAsync(); // Regresamos al Radar
-                }
-                else
-                {
-                    await DisplayAlertAsync("Error", "Hubo un problema al subir la foto.", "OK");
-                }
+            if (string.IsNullOrWhiteSpace(titulo))
+            {
+                await DisplayAlertAsync("Dato requerido", "Ingresa un título para el reporte.", "OK");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(descripcion))
+            {
+                await DisplayAlertAsync("Dato requerido", "Ingresa una descripción para el reporte.", "OK");
+                return;
+            }
+
+            var location = await Geolocation.Default.GetLocationAsync(
+                new GeolocationRequest(GeolocationAccuracy.Medium)
+            );
+
+            if (location == null)
+            {
+                await DisplayAlertAsync("Error GPS", "No se pudo obtener la ubicación actual.", "OK");
+                return;
+            }
+
+            short tipoReporteId = TipoReportePicker.SelectedIndex == 0
+                ? (short)1   // Mascota perdida
+                : (short)2;  // Mascota encontrada
+
+            string? sexoSeleccionado = SexoPicker.SelectedIndex >= 0
+                ? SexoPicker.Items[SexoPicker.SelectedIndex]
+                : null;
+
+            var resultado = await _apiService.CrearReporteAsync(
+                mascotaId: null,
+                tipoReporteId: tipoReporteId,
+                titulo: titulo,
+                descripcion: descripcion,
+                latitud: location.Latitude,
+                longitud: location.Longitude,
+                direccionReferencia: DireccionReferenciaEntry.Text,
+                foto: _fotoCapturada,
+                nombreMascotaReferencial: NombreMascotaEntry.Text,
+                especieReferencial: EspecieEntry.Text,
+                razaReferencial: RazaEntry.Text,
+                colorReferencial: ColorEntry.Text,
+                sexoReferencial: sexoSeleccionado
+            );
+
+            if (resultado.Exito)
+            {
+                await DisplayAlertAsync("¡Éxito!", "El reporte ha sido registrado correctamente.", "OK");
+                await Navigation.PopAsync();
+            }
+            else
+            {
+                await DisplayAlertAsync("Error", resultado.Mensaje, "OK");
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            await DisplayAlertAsync("Error GPS", "No se pudo obtener la ubicación. Asegúrate de tener el GPS encendido.", "OK");
+            await DisplayAlertAsync(
+                "Error",
+                $"No se pudo registrar el reporte: {ex.Message}",
+                "OK"
+            );
         }
         finally
         {
             LoadingIndicator.IsRunning = false;
             LoadingIndicator.IsVisible = false;
             BtnEnviar.IsEnabled = true;
-            BtnEnviar.Text = "📍 Enviar Reporte con GPS";
+            BtnEnviar.Text = "📍 Enviar reporte con GPS";
         }
     }
 }
