@@ -176,6 +176,33 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
+                <Grid ColumnDefinitions="*,*"
+                      ColumnSpacing="10"
+                      Margin="0,4,0,0">
+
+                    <Button x:Name="BtnEditarMascota"
+                            Grid.Column="0"
+                            Text="Editar"
+                            Clicked="OnEditarMascotaClicked"
+                            BackgroundColor="#EEF2FF"
+                            TextColor="#2B0B98"
+                            FontAttributes="Bold"
+                            CornerRadius="14"
+                            HeightRequest="44"
+                            IsEnabled="False" />
+
+                    <Button x:Name="BtnDesactivarMascota"
+                            Grid.Column="1"
+                            Text="Desactivar"
+                            Clicked="OnDesactivarMascotaClicked"
+                            BackgroundColor="#FEE2E2"
+                            TextColor="#B91C1C"
+                            FontAttributes="Bold"
+                            CornerRadius="14"
+                            HeightRequest="44"
+                            IsEnabled="False" />
+                </Grid>
+
             </VerticalStackLayout>
         </Border>
 

@@ -56,6 +56,7 @@
 
                     <Picker x:Name="TipoReportePicker"
                             Title="Selecciona una opción"
+                            SelectedIndexChanged="OnTipoReporteChanged"
                             BackgroundColor="#F1F5F9"
                             TextColor="#1E293B">
                         <Picker.Items>
@@ -67,8 +68,58 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Seleccionar mascota registrada -->
+            <Border x:Name="SeleccionMascotaBorder"
+                    BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="16"
+                    IsVisible="False">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Seleccionar mi mascota"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Label Text="Para reportar una mascota perdida, selecciona una mascota que ya tengas registrada."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
+
+                    <Picker x:Name="MisMascotasPicker"
+                            Title="Selecciona una mascota"
+                            ItemDisplayBinding="{Binding Nombre}"
+                            SelectedIndexChanged="OnMascotaRegistradaSeleccionada"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B" />
+
+                    <Border BackgroundColor="#EEF2FF"
+                            Stroke="Transparent"
+                            Padding="12">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+
+                        <Label x:Name="LblResumenMascotaSeleccionada"
+                               Text="Los datos y la foto se cargarán automáticamente desde tu mascota registrada."
+                               FontSize="12"
+                               TextColor="#2B0B98"
+                               FontAttributes="Bold"
+                               LineBreakMode="WordWrap" />
+                    </Border>
+
+                </VerticalStackLayout>
+            </Border>
+
             <!-- Datos principales -->
-            <Border BackgroundColor="#FFFFFF"
+            <Border x:Name="DatosMascotaBorder"
+                    BackgroundColor="#FFFFFF"
                     Stroke="Transparent"
                     Padding="16">
 

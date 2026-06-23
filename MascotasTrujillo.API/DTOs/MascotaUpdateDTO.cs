@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http; // IMPORTANTE: Para el manejo de archivos
+using Microsoft.AspNetCore.Http;
 
 namespace MascotasTrujillo.API.DTOs
 {
-    public class MascotaCreateDTO
+    public class MascotaUpdateDTO
     {
         [Required, MaxLength(50)]
         public string Nombre { get; set; } = string.Empty;

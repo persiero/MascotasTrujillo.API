@@ -1,5 +1,6 @@
 using MascotasTrujillo.App.Models;
 using MascotasTrujillo.App.Services;
+using System.Collections.ObjectModel;
 
 
 namespace MascotasTrujillo.App.Views;
@@ -10,6 +11,8 @@ public partial class DetalleReportePage : ContentPage
 
     private readonly ApiService _apiService;
 
+    private readonly ObservableCollection<Avistamiento> _avistamientos = new();
+
     public DetalleReportePage(ApiService apiService, Reporte reporte)
     {
         InitializeComponent();
@@ -17,6 +20,8 @@ public partial class DetalleReportePage : ContentPage
         _apiService = apiService;
         _reporteActual = reporte;
         BindingContext = reporte;
+
+        AvistamientosList.ItemsSource = _avistamientos;
 
         CargarDatos();
     }
@@ -59,19 +64,38 @@ public partial class DetalleReportePage : ContentPage
         LblColor.Text = TextoONoRegistrado(_reporteActual.ColorReferencial);
         LblSexo.Text = TextoONoRegistrado(_reporteActual.SexoReferencial);
 
+        SeccionSalud.IsVisible = EsReportePerdida() && _reporteActual.TieneInformacionSalud;
+
+        LblEnfermedades.Text = TextoONoRegistrado(_reporteActual.Enfermedades);
+        LblDiscapacidades.Text = TextoONoRegistrado(_reporteActual.Discapacidades);
+        LblTratamientos.Text = TextoONoRegistrado(_reporteActual.Tratamientos);
+        LblNecesidadesEspeciales.Text = TextoONoRegistrado(_reporteActual.NecesidadesEspeciales);
+        LblObservacionesSalud.Text = TextoONoRegistrado(_reporteActual.ObservacionesSalud);
+
         bool puedeRegistrarAvistamiento = PuedeRegistrarAvistamiento();
 
         BtnRegistrarAvistamiento.IsVisible = puedeRegistrarAvistamiento;
         LblAvistamientoNoDisponible.IsVisible = !puedeRegistrarAvistamiento;
 
-        DisplayAlert(
-            "DEBUG REPORTE",
-            $"Tipo: {_reporteActual.TipoReporte}\nEstado: {_reporteActual.EstadoReporte}",
-            "OK"
-        );
+        SeccionAvistamientos.IsVisible = EsReportePerdida();
+
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
 
+        await CargarAvistamientosAsync();
+    }
+
+    private bool EsReportePerdida()
+    {
+        string tipo = _reporteActual.TipoReporte?.Trim() ?? string.Empty;
+
+        return tipo.Equals("Perdida", StringComparison.OrdinalIgnoreCase) ||
+               tipo.Equals("Mascota perdida", StringComparison.OrdinalIgnoreCase) ||
+               tipo.Contains("perdid", StringComparison.OrdinalIgnoreCase);
+    }
 
     private string TextoONoRegistrado(string? valor)
     {
@@ -105,6 +129,40 @@ public partial class DetalleReportePage : ContentPage
         }
 
         await Navigation.PushAsync(new RegistrarAvistamientoPage(_apiService, _reporteActual));
+    }
+
+    private async Task CargarAvistamientosAsync()
+    {
+        if (!EsReportePerdida())
+        {
+            SeccionAvistamientos.IsVisible = false;
+            return;
+        }
+
+        SeccionAvistamientos.IsVisible = true;
+
+        var lista = await _apiService.ObtenerAvistamientosPorReporteAsync(_reporteActual.Id);
+
+        _avistamientos.Clear();
+
+        if (lista != null && lista.Count > 0)
+        {
+            foreach (var avistamiento in lista)
+            {
+                _avistamientos.Add(avistamiento);
+            }
+
+            LblAvistamientosResumen.Text = $"{lista.Count} avistamiento(s) registrado(s) para este reporte.";
+        }
+        else
+        {
+            LblAvistamientosResumen.Text = "Aún no hay avistamientos registrados para este reporte.";
+        }
+    }
+
+    private async void OnActualizarAvistamientosClicked(object sender, EventArgs e)
+    {
+        await CargarAvistamientosAsync();
     }
 
     private async void OnWhatsAppClicked(object sender, EventArgs e)

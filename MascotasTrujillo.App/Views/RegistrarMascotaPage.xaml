@@ -191,6 +191,81 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Información de salud -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Información de salud"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Label Text="Registra enfermedades, tratamientos o cuidados especiales. Esta información puede ayudar si tu mascota se pierde."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
+
+                    <Editor x:Name="EnfermedadesEditor"
+                            Placeholder="Enfermedades. Ej. Epilepsia, alergias, problemas renales..."
+                            AutoSize="TextChanges"
+                            HeightRequest="75"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B" />
+
+                    <Editor x:Name="DiscapacidadesEditor"
+                            Placeholder="Discapacidades. Ej. No ve de un ojo, dificultad para caminar..."
+                            AutoSize="TextChanges"
+                            HeightRequest="75"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B" />
+
+                    <Editor x:Name="TratamientosEditor"
+                            Placeholder="Tratamientos. Ej. Medicación diaria, gotas, dieta especial..."
+                            AutoSize="TextChanges"
+                            HeightRequest="75"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B" />
+
+                    <Editor x:Name="NecesidadesEspecialesEditor"
+                            Placeholder="Necesidades especiales. Ej. No cargar bruscamente, evitar ciertos alimentos..."
+                            AutoSize="TextChanges"
+                            HeightRequest="75"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B" />
+
+                    <Editor x:Name="ObservacionesSaludEditor"
+                            Placeholder="Observaciones adicionales de salud"
+                            AutoSize="TextChanges"
+                            HeightRequest="75"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B" />
+
+                    <Border BackgroundColor="#FEF3C7"
+                            Stroke="Transparent"
+                            Padding="12">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+
+                        <Label Text="Esta información es importante para que una persona que encuentre a tu mascota sepa cómo cuidarla."
+                               FontSize="12"
+                               TextColor="#92400E"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               LineBreakMode="WordWrap" />
+                    </Border>
+
+                </VerticalStackLayout>
+            </Border>
+
             <!-- GPS -->
             <Border BackgroundColor="#FFFFFF"
                     Stroke="Transparent"

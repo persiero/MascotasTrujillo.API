@@ -41,6 +41,14 @@ public partial class MisMascotasPage : ContentPage
         _rastreoActivo = false;
     }
 
+    private void ActualizarEstadoBotonesMascota()
+    {
+        bool hayMascotaSeleccionada = _mascotaSeleccionada != null;
+
+        BtnEditarMascota.IsEnabled = hayMascotaSeleccionada;
+        BtnDesactivarMascota.IsEnabled = hayMascotaSeleccionada;
+    }
+
     private async Task CargarMascotas()
     {
         try
@@ -60,6 +68,9 @@ public partial class MisMascotasPage : ContentPage
             {
                 MascotasCarousel.ItemsSource = null;
                 MascotaMap.Pins.Clear();
+
+                _mascotaSeleccionada = null;
+                ActualizarEstadoBotonesMascota();
             }
         }
         catch (Exception ex)
@@ -71,6 +82,8 @@ public partial class MisMascotasPage : ContentPage
     private async void OnMascotaSelected(object sender, SelectionChangedEventArgs e)
     {
         _mascotaSeleccionada = e.CurrentSelection.FirstOrDefault() as Mascota;
+
+        ActualizarEstadoBotonesMascota();
 
         if (_mascotaSeleccionada == null)
             return;
@@ -89,6 +102,64 @@ public partial class MisMascotasPage : ContentPage
                 "OK"
             );
         }
+    }
+
+    private async void OnDesactivarMascotaClicked(object sender, EventArgs e)
+    {
+        if (_mascotaSeleccionada == null)
+        {
+            await DisplayAlertAsync("Aviso", "Selecciona una mascota primero.", "OK");
+            return;
+        }
+
+        bool confirmar = await DisplayAlertAsync(
+            "Desactivar mascota",
+            $"¿Deseas desactivar a {_mascotaSeleccionada.Nombre}? Ya no aparecerá en tu lista de mascotas.",
+            "Sí, desactivar",
+            "Cancelar"
+        );
+
+        if (!confirmar)
+            return;
+
+        try
+        {
+            var resultado = await _apiService.DesactivarMascotaAsync(_mascotaSeleccionada.Id);
+
+            if (resultado.Exito)
+            {
+                await DisplayAlertAsync("Éxito", "La mascota fue desactivada correctamente.", "OK");
+
+                _mascotaSeleccionada = null;
+                MascotaMap.Pins.Clear();
+                ActualizarEstadoBotonesMascota();
+
+                await CargarMascotas();
+            }
+            else
+            {
+                await DisplayAlertAsync(
+                    "No se pudo desactivar",
+                    resultado.Mensaje,
+                    "OK"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Error", $"No se pudo desactivar la mascota: {ex.Message}", "OK");
+        }
+    }
+
+    private async void OnEditarMascotaClicked(object sender, EventArgs e)
+    {
+        if (_mascotaSeleccionada == null)
+        {
+            await DisplayAlertAsync("Aviso", "Selecciona una mascota primero.", "OK");
+            return;
+        }
+
+        await Navigation.PushAsync(new RegistrarMascotaPage(_apiService, _mascotaSeleccionada));
     }
 
     private void IniciarSeguimientoGpsPrivado()

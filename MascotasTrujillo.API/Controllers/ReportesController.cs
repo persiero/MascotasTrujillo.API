@@ -41,17 +41,54 @@ namespace MascotasTrujillo.API.Controllers
                 return BadRequest(new { Mensaje = "El tipo de reporte no es válido. Use 1 para Perdida o 2 para Encontrada." });
             }
 
-            if (dto.MascotaId.HasValue)
-            {
-                var mascotaExiste = await _context.Mascotas
-                    .AnyAsync(m => m.Id == dto.MascotaId.Value &&
-                                   m.UsuarioId == usuarioId &&
-                                   m.EstaActiva);
+            Mascota? mascotaSeleccionada = null;
 
-                if (!mascotaExiste)
+            if (dto.TipoReporteId == 1)
+            {
+                if (!dto.MascotaId.HasValue)
                 {
-                    return BadRequest(new { Mensaje = "La mascota indicada no existe o no pertenece al usuario autenticado." });
+                    return BadRequest(new
+                    {
+                        Mensaje = "Para reportar una mascota perdida debes seleccionar una mascota registrada."
+                    });
                 }
+
+                mascotaSeleccionada = await _context.Mascotas
+                    .Include(m => m.Fotos)
+                    .Include(m => m.InformacionSalud)
+                    .FirstOrDefaultAsync(m => m.Id == dto.MascotaId.Value &&
+                                              m.UsuarioId == usuarioId &&
+                                              m.EstaActiva);
+
+                if (mascotaSeleccionada == null)
+                {
+                    return BadRequest(new
+                    {
+                        Mensaje = "La mascota seleccionada no existe o no pertenece al usuario autenticado."
+                    });
+                }
+
+                bool yaTieneReporteActivo = await _context.Reportes
+                    .AnyAsync(r => r.MascotaId == mascotaSeleccionada.Id &&
+                                   r.TipoReporteId == 1 &&
+                                   r.EstadoReporteId == 1 &&
+                                   r.Visible);
+
+                if (yaTieneReporteActivo)
+                {
+                    return BadRequest(new
+                    {
+                        Mensaje = "Esta mascota ya tiene un reporte activo de pérdida."
+                    });
+                }
+            }
+
+            if (dto.TipoReporteId == 2 && dto.MascotaId.HasValue)
+            {
+                return BadRequest(new
+                {
+                    Mensaje = "Un reporte de mascota encontrada no debe asociarse a una mascota propia registrada."
+                });
             }
 
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
@@ -60,16 +97,32 @@ namespace MascotasTrujillo.API.Controllers
             var nuevoReporte = new Reporte
             {
                 UsuarioId = usuarioId,
-                MascotaId = dto.MascotaId,
+                MascotaId = mascotaSeleccionada?.Id,
                 TipoReporteId = dto.TipoReporteId,
                 EstadoReporteId = 1, // Activo
                 Titulo = dto.Titulo,
                 Descripcion = dto.Descripcion,
-                NombreMascotaReferencial = dto.NombreMascotaReferencial,
-                EspecieReferencial = dto.EspecieReferencial,
-                RazaReferencial = dto.RazaReferencial,
-                ColorReferencial = dto.ColorReferencial,
-                SexoReferencial = dto.SexoReferencial,
+
+                NombreMascotaReferencial = mascotaSeleccionada != null
+                    ? mascotaSeleccionada.Nombre
+                    : dto.NombreMascotaReferencial,
+
+                EspecieReferencial = mascotaSeleccionada != null
+                    ? mascotaSeleccionada.Especie
+                    : dto.EspecieReferencial,
+
+                RazaReferencial = mascotaSeleccionada != null
+                    ? mascotaSeleccionada.Raza
+                    : dto.RazaReferencial,
+
+                ColorReferencial = mascotaSeleccionada != null
+                    ? mascotaSeleccionada.ColorPrincipal
+                    : dto.ColorReferencial,
+
+                SexoReferencial = mascotaSeleccionada != null
+                    ? mascotaSeleccionada.Sexo
+                    : dto.SexoReferencial,
+
                 Ubicacion = ubicacionPoint,
                 DireccionReferencia = dto.DireccionReferencia,
                 FechaReporte = DateTime.UtcNow,
@@ -85,6 +138,22 @@ namespace MascotasTrujillo.API.Controllers
                     UrlFoto = urlFotoReal,
                     FechaRegistro = DateTime.UtcNow
                 });
+            }
+            else if (mascotaSeleccionada != null)
+            {
+                var fotoPrincipalMascota = mascotaSeleccionada.Fotos
+                    .OrderByDescending(f => f.EsPrincipal)
+                    .ThenByDescending(f => f.FechaRegistro)
+                    .FirstOrDefault();
+
+                if (fotoPrincipalMascota != null)
+                {
+                    nuevoReporte.Fotos.Add(new FotoReporte
+                    {
+                        UrlFoto = fotoPrincipalMascota.UrlFoto,
+                        FechaRegistro = DateTime.UtcNow
+                    });
+                }
             }
 
             _context.Reportes.Add(nuevoReporte);
@@ -117,11 +186,32 @@ namespace MascotasTrujillo.API.Controllers
                     r.RazaReferencial,
                     r.ColorReferencial,
                     r.SexoReferencial,
+
+                    Enfermedades = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Enfermedades
+                        : null,
+
+                    Discapacidades = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Discapacidades
+                        : null,
+
+                    Tratamientos = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Tratamientos
+                        : null,
+
+                    NecesidadesEspeciales = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.NecesidadesEspeciales
+                        : null,
+
+                    ObservacionesSalud = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Observaciones
+                        : null,
+
                     FotoUrl = r.Fotos
                         .OrderByDescending(f => f.FechaRegistro)
                         .Select(f => f.UrlFoto)
                         .FirstOrDefault(),
-                    r.FechaReporte,
+                    r.FechaReporte,       
                     Ubicacion = r.Ubicacion
                 })
                 .ToListAsync();
@@ -140,8 +230,15 @@ namespace MascotasTrujillo.API.Controllers
                 r.RazaReferencial,
                 r.ColorReferencial,
                 r.SexoReferencial,
+
+                r.Enfermedades,
+                r.Discapacidades,
+                r.Tratamientos,
+                r.NecesidadesEspeciales,
+                r.ObservacionesSalud,
+
                 r.FotoUrl,
-                r.FechaReporte,
+                r.FechaReporte,                        
                 Latitud = r.Ubicacion.Y,
                 Longitud = r.Ubicacion.X
             });
@@ -175,6 +272,27 @@ namespace MascotasTrujillo.API.Controllers
                     r.RazaReferencial,
                     r.ColorReferencial,
                     r.SexoReferencial,
+
+                    Enfermedades = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Enfermedades
+                        : null,
+
+                    Discapacidades = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Discapacidades
+                        : null,
+
+                    Tratamientos = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Tratamientos
+                        : null,
+
+                    NecesidadesEspeciales = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.NecesidadesEspeciales
+                        : null,
+
+                    ObservacionesSalud = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Observaciones
+                        : null,
+
                     FotoUrl = r.Fotos
                         .OrderByDescending(f => f.FechaRegistro)
                         .Select(f => f.UrlFoto)
@@ -198,6 +316,13 @@ namespace MascotasTrujillo.API.Controllers
                 r.RazaReferencial,
                 r.ColorReferencial,
                 r.SexoReferencial,
+
+                r.Enfermedades,
+                r.Discapacidades,
+                r.Tratamientos,
+                r.NecesidadesEspeciales,
+                r.ObservacionesSalud,
+
                 r.FotoUrl,
                 r.FechaReporte,
                 r.FechaResolucion,
@@ -233,6 +358,27 @@ namespace MascotasTrujillo.API.Controllers
                     r.EspecieReferencial,
                     r.RazaReferencial,
                     r.ColorReferencial,
+
+                    Enfermedades = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Enfermedades
+                        : null,
+
+                    Discapacidades = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Discapacidades
+                        : null,
+
+                    Tratamientos = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Tratamientos
+                        : null,
+
+                    NecesidadesEspeciales = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.NecesidadesEspeciales
+                        : null,
+
+                    ObservacionesSalud = r.Mascota != null && r.Mascota.InformacionSalud != null
+                        ? r.Mascota.InformacionSalud.Observaciones
+                        : null,
+
                     FotoUrl = r.Fotos
                         .OrderByDescending(f => f.FechaRegistro)
                         .Select(f => f.UrlFoto)
@@ -256,6 +402,13 @@ namespace MascotasTrujillo.API.Controllers
                 r.EspecieReferencial,
                 r.RazaReferencial,
                 r.ColorReferencial,
+
+                r.Enfermedades,
+                r.Discapacidades,
+                r.Tratamientos,
+                r.NecesidadesEspeciales,
+                r.ObservacionesSalud,
+
                 r.FotoUrl,
                 r.FechaReporte,
                 Latitud = r.Ubicacion.Y,
@@ -279,7 +432,7 @@ namespace MascotasTrujillo.API.Controllers
 
             var reporte = await _context.Reportes.FindAsync(id);
 
-            if (reporte == null)
+            if (reporte == null || !reporte.Visible)
             {
                 return NotFound(new { Mensaje = "El reporte no existe." });
             }
@@ -289,6 +442,11 @@ namespace MascotasTrujillo.API.Controllers
                 return Forbid();
             }
 
+            if (reporte.EstadoReporteId != 1)
+            {
+                return BadRequest(new { Mensaje = "Solo se pueden resolver reportes activos." });
+            }
+
             reporte.EstadoReporteId = 2; // Resuelto
             reporte.FechaResolucion = DateTime.UtcNow;
 
@@ -296,5 +454,74 @@ namespace MascotasTrujillo.API.Controllers
 
             return Ok(new { Mensaje = "Reporte marcado como resuelto correctamente." });
         }
+
+        [HttpPut("{id:long}/suspender")]
+        public async Task<IActionResult> SuspenderReporte(long id)
+        {
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
+            var reporte = await _context.Reportes.FindAsync(id);
+
+            if (reporte == null || !reporte.Visible)
+            {
+                return NotFound(new { Mensaje = "El reporte no existe." });
+            }
+
+            if (reporte.UsuarioId != usuarioId)
+            {
+                return Forbid();
+            }
+
+            if (reporte.EstadoReporteId != 1)
+            {
+                return BadRequest(new { Mensaje = "Solo se pueden suspender reportes activos." });
+            }
+
+            reporte.EstadoReporteId = 3; // Suspendido
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Mensaje = "Reporte suspendido correctamente." });
+        }
+
+        [HttpPut("{id:long}/reactivar")]
+        public async Task<IActionResult> ReactivarReporte(long id)
+        {
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
+            var reporte = await _context.Reportes.FindAsync(id);
+
+            if (reporte == null || !reporte.Visible)
+            {
+                return NotFound(new { Mensaje = "El reporte no existe." });
+            }
+
+            if (reporte.UsuarioId != usuarioId)
+            {
+                return Forbid();
+            }
+
+            if (reporte.EstadoReporteId != 3)
+            {
+                return BadRequest(new { Mensaje = "Solo se pueden reactivar reportes suspendidos." });
+            }
+
+            reporte.EstadoReporteId = 1; // Activo
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Mensaje = "Reporte reactivado correctamente." });
+        }
+
     }
 }

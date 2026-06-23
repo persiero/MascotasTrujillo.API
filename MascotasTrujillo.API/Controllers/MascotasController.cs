@@ -39,6 +39,7 @@ namespace MascotasTrujillo.API.Controllers
             var mascotas = await _context.Mascotas
                 .Where(m => m.UsuarioId == usuarioId && m.EstaActiva)
                 .Include(m => m.Fotos)
+                .Include(m => m.InformacionSalud)
                 .Include(m => m.DispositivosGps)
                     .ThenInclude(d => d.Ubicaciones)
                 .ToListAsync();
@@ -69,7 +70,14 @@ namespace MascotasTrujillo.API.Controllers
                     m.Sexo,
                     m.EdadAproximada,
                     m.RasgosParticulares,
+                    
+                    Enfermedades = m.InformacionSalud?.Enfermedades,
+                    Discapacidades = m.InformacionSalud?.Discapacidades,
+                    Tratamientos = m.InformacionSalud?.Tratamientos,
+                    NecesidadesEspeciales = m.InformacionSalud?.NecesidadesEspeciales,
+
                     FotoPerfilUrl = fotoPrincipal?.UrlFoto,
+                    ObservacionesSalud = m.InformacionSalud?.Observaciones,
                     DispositivoId = dispositivoActivo?.CodigoDispositivo,
                     UltimaActualizacion = ultimaUbicacion?.FechaRegistro,
                     Latitud = ultimaUbicacion?.Ubicacion != null ? (double?)ultimaUbicacion.Ubicacion.Y : null,
@@ -134,6 +142,25 @@ namespace MascotasTrujillo.API.Controllers
                 });
             }
 
+            bool tieneInformacionSalud =
+                !string.IsNullOrWhiteSpace(mascotaDto.Enfermedades) ||
+                !string.IsNullOrWhiteSpace(mascotaDto.Discapacidades) ||
+                !string.IsNullOrWhiteSpace(mascotaDto.Tratamientos) ||
+                !string.IsNullOrWhiteSpace(mascotaDto.NecesidadesEspeciales) ||
+                !string.IsNullOrWhiteSpace(mascotaDto.ObservacionesSalud);
+
+            if (tieneInformacionSalud)
+            {
+                nuevaMascota.InformacionSalud = new InformacionSaludMascota
+                {
+                    Enfermedades = mascotaDto.Enfermedades,
+                    Discapacidades = mascotaDto.Discapacidades,
+                    Tratamientos = mascotaDto.Tratamientos,
+                    NecesidadesEspeciales = mascotaDto.NecesidadesEspeciales,
+                    Observaciones = mascotaDto.ObservacionesSalud
+                };
+            }
+
             _context.Mascotas.Add(nuevaMascota);
             await _context.SaveChangesAsync();
 
@@ -142,6 +169,201 @@ namespace MascotasTrujillo.API.Controllers
                 Mensaje = "¡Mascota registrada con éxito!",
                 Id = nuevaMascota.Id
             });
+        }
+
+        // PUT: api/mascotas/5
+        [HttpPut("{id:long}")]
+        public async Task<IActionResult> ActualizarMascota(long id, [FromForm] MascotaUpdateDTO mascotaDto)
+        {
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
+            var mascota = await _context.Mascotas
+                .Include(m => m.Fotos)
+                .Include(m => m.DispositivosGps)
+                .Include(m => m.InformacionSalud)
+                .FirstOrDefaultAsync(m => m.Id == id &&
+                                          m.UsuarioId == usuarioId &&
+                                          m.EstaActiva);
+            if (mascota == null)
+            {
+                return NotFound(new { Mensaje = "La mascota no existe o no pertenece al usuario autenticado." });
+            }
+
+            mascota.Nombre = mascotaDto.Nombre;
+            mascota.Especie = mascotaDto.Especie;
+            mascota.Raza = mascotaDto.Raza;
+            mascota.ColorPrincipal = mascotaDto.ColorPrincipal;
+            mascota.Sexo = mascotaDto.Sexo;
+            mascota.EdadAproximada = mascotaDto.EdadAproximada;
+            mascota.RasgosParticulares = mascotaDto.RasgosParticulares;
+
+            if (mascotaDto.Foto != null)
+            {
+                var urlFotoReal = await _storageService.SubirFotoAsync(mascotaDto.Foto);
+
+                foreach (var foto in mascota.Fotos)
+                {
+                    foto.EsPrincipal = false;
+                }
+
+                mascota.Fotos.Add(new FotoMascota
+                {
+                    UrlFoto = urlFotoReal,
+                    EsPrincipal = true,
+                    FechaRegistro = DateTime.UtcNow
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(mascotaDto.DispositivoId))
+            {
+                var dispositivoActivo = mascota.DispositivosGps
+                    .Where(d => d.Activo)
+                    .OrderByDescending(d => d.FechaAsociacion)
+                    .FirstOrDefault();
+
+                if (dispositivoActivo == null)
+                {
+                    mascota.DispositivosGps.Add(new DispositivoGps
+                    {
+                        CodigoDispositivo = mascotaDto.DispositivoId,
+                        NombreDispositivo = "Collar GPS",
+                        EstadoConexion = "Desconectado",
+                        Activo = true,
+                        FechaAsociacion = DateTime.UtcNow
+                    });
+                }
+                else if (dispositivoActivo.CodigoDispositivo != mascotaDto.DispositivoId)
+                {
+                    dispositivoActivo.Activo = false;
+
+                    mascota.DispositivosGps.Add(new DispositivoGps
+                    {
+                        CodigoDispositivo = mascotaDto.DispositivoId,
+                        NombreDispositivo = "Collar GPS",
+                        EstadoConexion = "Desconectado",
+                        Activo = true,
+                        FechaAsociacion = DateTime.UtcNow
+                    });
+                }
+            }
+
+            bool tieneInformacionSalud =
+                !string.IsNullOrWhiteSpace(mascotaDto.Enfermedades) ||
+                !string.IsNullOrWhiteSpace(mascotaDto.Discapacidades) ||
+                !string.IsNullOrWhiteSpace(mascotaDto.Tratamientos) ||
+                !string.IsNullOrWhiteSpace(mascotaDto.NecesidadesEspeciales) ||
+                !string.IsNullOrWhiteSpace(mascotaDto.ObservacionesSalud);
+
+            if (tieneInformacionSalud)
+            {
+                if (mascota.InformacionSalud == null)
+                {
+                    mascota.InformacionSalud = new InformacionSaludMascota
+                    {
+                        MascotaId = mascota.Id
+                    };
+                }
+
+                mascota.InformacionSalud.Enfermedades = mascotaDto.Enfermedades;
+                mascota.InformacionSalud.Discapacidades = mascotaDto.Discapacidades;
+                mascota.InformacionSalud.Tratamientos = mascotaDto.Tratamientos;
+                mascota.InformacionSalud.NecesidadesEspeciales = mascotaDto.NecesidadesEspeciales;
+                mascota.InformacionSalud.Observaciones = mascotaDto.ObservacionesSalud;
+            }
+            else if (mascota.InformacionSalud != null)
+            {
+                _context.InformacionSaludMascotas.Remove(mascota.InformacionSalud);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                Mensaje = "Mascota actualizada correctamente.",
+                Id = mascota.Id
+            });
+        }
+
+        // PUT: api/mascotas/5/desactivar
+        [HttpPut("{id:long}/desactivar")]
+        public async Task<IActionResult> DesactivarMascota(long id)
+        {
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
+            var mascota = await _context.Mascotas
+                .Include(m => m.DispositivosGps)
+                .FirstOrDefaultAsync(m => m.Id == id &&
+                                          m.UsuarioId == usuarioId &&
+                                          m.EstaActiva);
+
+            if (mascota == null)
+            {
+                return NotFound(new { Mensaje = "La mascota no existe o no pertenece al usuario autenticado." });
+            }
+
+            bool tieneReporteActivo = await _context.Reportes
+                .AnyAsync(r => r.MascotaId == id &&
+                               r.UsuarioId == usuarioId &&
+                               r.EstadoReporteId == 1 &&
+                               r.Visible);
+
+            if (tieneReporteActivo)
+            {
+                return BadRequest(new
+                {
+                    Mensaje = "No puedes desactivar esta mascota porque tiene un reporte activo. Primero resuelve o suspende el reporte."
+                });
+            }
+
+            mascota.EstaActiva = false;
+
+            foreach (var dispositivo in mascota.DispositivosGps)
+            {
+                dispositivo.Activo = false;
+                dispositivo.EstadoConexion = "Desconectado";
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Mensaje = "Mascota desactivada correctamente." });
+        }
+
+        // PUT: api/mascotas/5/reactivar
+        [HttpPut("{id:long}/reactivar")]
+        public async Task<IActionResult> ReactivarMascota(long id)
+        {
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
+            var mascota = await _context.Mascotas
+                .FirstOrDefaultAsync(m => m.Id == id &&
+                                          m.UsuarioId == usuarioId &&
+                                          !m.EstaActiva);
+
+            if (mascota == null)
+            {
+                return NotFound(new { Mensaje = "La mascota no existe, no pertenece al usuario o ya está activa." });
+            }
+
+            mascota.EstaActiva = true;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Mensaje = "Mascota reactivada correctamente." });
         }
 
         // POST: api/mascotas/actualizar-ubicacion-iot

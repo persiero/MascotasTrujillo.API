@@ -117,8 +117,9 @@ namespace MascotasTrujillo.API.Controllers
                 return Forbid();
             }
 
-            var avistamientos = await _context.Avistamientos
+            var avistamientosDb = await _context.Avistamientos
                 .Where(a => a.ReporteId == reporteId && a.Visible)
+                .OrderByDescending(a => a.FechaAvistamiento)
                 .Select(a => new
                 {
                     a.Id,
@@ -127,15 +128,26 @@ namespace MascotasTrujillo.API.Controllers
                     a.Descripcion,
                     a.DireccionReferencia,
                     a.FechaAvistamiento,
-                    Latitud = a.Ubicacion.Y,
-                    Longitud = a.Ubicacion.X,
+                    Ubicacion = a.Ubicacion,
                     FotoUrl = a.Fotos
                         .OrderByDescending(f => f.FechaRegistro)
                         .Select(f => f.UrlFoto)
                         .FirstOrDefault()
                 })
-                .OrderByDescending(a => a.FechaAvistamiento)
                 .ToListAsync();
+
+            var avistamientos = avistamientosDb.Select(a => new
+            {
+                a.Id,
+                a.ReporteId,
+                a.UsuarioId,
+                a.Descripcion,
+                a.DireccionReferencia,
+                a.FechaAvistamiento,
+                Latitud = a.Ubicacion.Y,
+                Longitud = a.Ubicacion.X,
+                a.FotoUrl
+            });
 
             return Ok(avistamientos);
         }

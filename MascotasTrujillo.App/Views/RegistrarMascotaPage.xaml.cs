@@ -1,3 +1,4 @@
+using MascotasTrujillo.App.Models;
 using MascotasTrujillo.App.Services;
 
 namespace MascotasTrujillo.App.Views;
@@ -5,12 +6,66 @@ namespace MascotasTrujillo.App.Views;
 public partial class RegistrarMascotaPage : ContentPage
 {
     private readonly ApiService _apiService;
+    private readonly Mascota? _mascotaEditar;
+
     private string _rutaFotoLocal = string.Empty;
+
+    private bool EsModoEdicion => _mascotaEditar != null;
 
     public RegistrarMascotaPage(ApiService apiService)
     {
         InitializeComponent();
         _apiService = apiService;
+    }
+
+    public RegistrarMascotaPage(ApiService apiService, Mascota mascotaEditar)
+    {
+        InitializeComponent();
+
+        _apiService = apiService;
+        _mascotaEditar = mascotaEditar;
+
+        CargarDatosParaEdicion();
+    }
+
+    private void CargarDatosParaEdicion()
+    {
+        if (_mascotaEditar == null)
+            return;
+
+        Title = "Editar Mascota";
+
+        NombreEntry.Text = _mascotaEditar.Nombre;
+        EspecieEntry.Text = _mascotaEditar.Especie;
+        RazaEntry.Text = _mascotaEditar.Raza;
+        ColorEntry.Text = _mascotaEditar.ColorPrincipal;
+        EdadEntry.Text = _mascotaEditar.EdadAproximada;
+        RasgosEditor.Text = _mascotaEditar.RasgosParticulares;
+
+        EnfermedadesEditor.Text = _mascotaEditar.Enfermedades;
+        DiscapacidadesEditor.Text = _mascotaEditar.Discapacidades;
+        TratamientosEditor.Text = _mascotaEditar.Tratamientos;
+        NecesidadesEspecialesEditor.Text = _mascotaEditar.NecesidadesEspeciales;
+        ObservacionesSaludEditor.Text = _mascotaEditar.ObservacionesSalud;
+
+        DispositivoIdEntry.Text = _mascotaEditar.DispositivoId;
+
+        if (!string.IsNullOrWhiteSpace(_mascotaEditar.FotoPerfilUrl))
+        {
+            FotoMascotaImage.Source = _mascotaEditar.FotoPerfilUrl;
+        }
+
+        if (!string.IsNullOrWhiteSpace(_mascotaEditar.Sexo))
+        {
+            int index = SexoPicker.Items.IndexOf(_mascotaEditar.Sexo);
+
+            if (index >= 0)
+            {
+                SexoPicker.SelectedIndex = index;
+            }
+        }
+
+        BtnGuardar.Text = "Actualizar mascota";
     }
 
     private async void OnTomarFotoClicked(object sender, EventArgs e)
@@ -95,33 +150,80 @@ public partial class RegistrarMascotaPage : ContentPage
         LoadingIndicator.IsRunning = true;
         LoadingIndicator.IsVisible = true;
         BtnGuardar.IsEnabled = false;
-        BtnGuardar.Text = "Guardando...";
+        BtnGuardar.Text = EsModoEdicion ? "Actualizando..." : "Guardando...";
 
-        var resultado = await _apiService.RegistrarMascotaAsync(
-            nombre: nombre,
-            especie: especie,
-            raza: RazaEntry.Text?.Trim() ?? string.Empty,
-            color: ColorEntry.Text?.Trim() ?? string.Empty,
-            sexo: sexoSeleccionado ?? string.Empty,
-            edadAproximada: EdadEntry.Text?.Trim() ?? string.Empty,
-            rasgos: RasgosEditor.Text?.Trim() ?? string.Empty,
-            dispositivoId: DispositivoIdEntry.Text?.Trim() ?? string.Empty,
-            rutaFotoLocal: _rutaFotoLocal
-        );
-
-        LoadingIndicator.IsRunning = false;
-        LoadingIndicator.IsVisible = false;
-        BtnGuardar.IsEnabled = true;
-        BtnGuardar.Text = "Guardar mascota";
-
-        if (resultado.Exito)
+        try
         {
-            await DisplayAlertAsync("¡Éxito!", "Mascota registrada correctamente.", "OK");
-            await Navigation.PopAsync();
+            if (EsModoEdicion && _mascotaEditar != null)
+            {
+                var resultado = await _apiService.ActualizarMascotaAsync(
+                    mascotaId: _mascotaEditar.Id,
+                    nombre: nombre,
+                    especie: especie,
+                    raza: RazaEntry.Text?.Trim() ?? string.Empty,
+                    color: ColorEntry.Text?.Trim() ?? string.Empty,
+                    sexo: sexoSeleccionado ?? string.Empty,
+                    edadAproximada: EdadEntry.Text?.Trim() ?? string.Empty,
+                    rasgos: RasgosEditor.Text?.Trim() ?? string.Empty,
+
+                    enfermedades: EnfermedadesEditor.Text?.Trim() ?? string.Empty,
+                    discapacidades: DiscapacidadesEditor.Text?.Trim() ?? string.Empty,
+                    tratamientos: TratamientosEditor.Text?.Trim() ?? string.Empty,
+                    necesidadesEspeciales: NecesidadesEspecialesEditor.Text?.Trim() ?? string.Empty,
+                    observacionesSalud: ObservacionesSaludEditor.Text?.Trim() ?? string.Empty,
+
+                    dispositivoId: DispositivoIdEntry.Text?.Trim() ?? string.Empty,
+                    rutaFotoLocal: _rutaFotoLocal
+                );
+
+                if (resultado.Exito)
+                {
+                    await DisplayAlertAsync("¡Éxito!", "Mascota actualizada correctamente.", "OK");
+                    await Navigation.PopAsync();
+                }
+                else
+                {
+                    await DisplayAlertAsync("Error al actualizar", resultado.Mensaje, "OK");
+                }
+            }
+            else
+            {
+                var resultado = await _apiService.RegistrarMascotaAsync(
+                    nombre: nombre,
+                    especie: especie,
+                    raza: RazaEntry.Text?.Trim() ?? string.Empty,
+                    color: ColorEntry.Text?.Trim() ?? string.Empty,
+                    sexo: sexoSeleccionado ?? string.Empty,
+                    edadAproximada: EdadEntry.Text?.Trim() ?? string.Empty,
+                    rasgos: RasgosEditor.Text?.Trim() ?? string.Empty,
+
+                    enfermedades: EnfermedadesEditor.Text?.Trim() ?? string.Empty,
+                    discapacidades: DiscapacidadesEditor.Text?.Trim() ?? string.Empty,
+                    tratamientos: TratamientosEditor.Text?.Trim() ?? string.Empty,
+                    necesidadesEspeciales: NecesidadesEspecialesEditor.Text?.Trim() ?? string.Empty,
+                    observacionesSalud: ObservacionesSaludEditor.Text?.Trim() ?? string.Empty,
+
+                    dispositivoId: DispositivoIdEntry.Text?.Trim() ?? string.Empty,
+                    rutaFotoLocal: _rutaFotoLocal
+                );
+
+                if (resultado.Exito)
+                {
+                    await DisplayAlertAsync("¡Éxito!", "Mascota registrada correctamente.", "OK");
+                    await Navigation.PopAsync();
+                }
+                else
+                {
+                    await DisplayAlertAsync("Error de registro", resultado.Mensaje, "OK");
+                }
+            }
         }
-        else
+        finally
         {
-            await DisplayAlertAsync("Error de registro", resultado.Mensaje, "OK");
+            LoadingIndicator.IsRunning = false;
+            LoadingIndicator.IsVisible = false;
+            BtnGuardar.IsEnabled = true;
+            BtnGuardar.Text = EsModoEdicion ? "Actualizar mascota" : "Guardar mascota";
         }
     }
 }
