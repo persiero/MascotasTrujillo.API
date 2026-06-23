@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MascotasTrujillo.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260622141109_InitialCreate")]
+    [Migration("20260623010757_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
