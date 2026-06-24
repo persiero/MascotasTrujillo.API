@@ -169,11 +169,25 @@ public partial class DetalleReportePage : ContentPage
     {
         try
         {
-            // Número temporal para pruebas.
-            // Luego lo ideal será traer el teléfono del usuario que creó el reporte desde la API.
-            string numeroTelefono = "51915391298";
+            string numeroTelefono = LimpiarNumeroWhatsapp(_reporteActual.TelefonoContacto);
 
-            string mensaje = $"¡Hola! Vi tu reporte '{_reporteActual.Titulo}' en Mascotas Trujillo. ¿Me puedes brindar más información?";
+            if (string.IsNullOrWhiteSpace(numeroTelefono))
+            {
+                await DisplayAlertAsync(
+                    "Teléfono no disponible",
+                    "El usuario que creó este reporte no tiene un número de WhatsApp registrado.",
+                    "OK"
+                );
+
+                return;
+            }
+
+            string nombreContacto = string.IsNullOrWhiteSpace(_reporteActual.NombreContacto)
+                ? "el usuario"
+                : _reporteActual.NombreContacto;
+
+            string mensaje =
+                $"¡Hola {nombreContacto}! Vi tu reporte \"{_reporteActual.Titulo}\" en Mascotas Trujillo. ¿Me puedes brindar más información?";
 
             string mensajeCodificado = Uri.EscapeDataString(mensaje);
             string url = $"https://wa.me/{numeroTelefono}?text={mensajeCodificado}";
@@ -188,6 +202,25 @@ public partial class DetalleReportePage : ContentPage
                 "OK"
             );
         }
+    }
+
+    private string LimpiarNumeroWhatsapp(string? telefono)
+    {
+        if (string.IsNullOrWhiteSpace(telefono))
+            return string.Empty;
+
+        string numeroLimpio = new string(
+            telefono.Where(char.IsDigit).ToArray()
+        );
+
+        if (string.IsNullOrWhiteSpace(numeroLimpio))
+            return string.Empty;
+
+        // Si el usuario guardó solo 9 dígitos peruanos, agregamos código de país 51.
+        if (numeroLimpio.Length == 9)
+            numeroLimpio = "51" + numeroLimpio;
+
+        return numeroLimpio;
     }
 
 }

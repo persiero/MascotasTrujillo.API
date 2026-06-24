@@ -7,7 +7,7 @@
     Title="Radar Comunitario"
     BackgroundColor="#F8FAFC">
 
-    <Grid RowDefinitions="Auto,*,Auto,260">
+    <Grid RowDefinitions="Auto,*,Auto,Auto,260">
 
         <!-- Encabezado -->
         <Border Grid.Row="0"
@@ -56,8 +56,71 @@
                       IsShowingUser="True" />
         </Border>
 
+        <!-- Filtros -->
+        <Border Grid.Row="2"
+                Margin="14,0,14,6"
+                Padding="12"
+                Stroke="Transparent"
+                BackgroundColor="#FFFFFF">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18" />
+            </Border.StrokeShape>
+
+            <Grid ColumnDefinitions="*,*"
+                    ColumnSpacing="10">
+
+                <VerticalStackLayout Grid.Column="0"
+                                        Spacing="4">
+
+                    <Label Text="Tipo"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#64748B" />
+
+                    <Picker x:Name="FiltroTipoPicker"
+                            Title="Tipo de reporte"
+                            SelectedIndexChanged="OnFiltroTipoChanged"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B"
+                            SelectedIndex="0">
+
+                        <Picker.Items>
+                            <x:String>Todos</x:String>
+                            <x:String>Perdidas</x:String>
+                            <x:String>Encontradas</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1"
+                                        Spacing="4">
+
+                    <Label Text="Radio"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#64748B" />
+
+                    <Picker x:Name="RadioPicker"
+                            Title="Radio"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#1E293B"
+                            SelectedIndex="2">
+
+                        <Picker.Items>
+                            <x:String>1 km</x:String>
+                            <x:String>3 km</x:String>
+                            <x:String>5 km</x:String>
+                            <x:String>10 km</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+
+            </Grid>
+        </Border>
+
         <!-- Botones de acción -->
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="3"
               Padding="14,6,14,8"
               ColumnDefinitions="*,*"
               ColumnSpacing="10">
@@ -84,7 +147,7 @@
         </Grid>
 
         <!-- Lista de reportes -->
-        <Border Grid.Row="3"
+        <Border Grid.Row="4"
                 Margin="14,0,14,14"
                 Padding="12"
                 Stroke="Transparent"
@@ -128,7 +191,8 @@
                             <RoundRectangle CornerRadius="12" />
                         </Border.StrokeShape>
 
-                        <Label Text="Activo"
+                        <Label x:Name="LblResumenFiltro"
+                               Text="0 reportes"
                                TextColor="#2B0B98"
                                FontSize="12"
                                FontAttributes="Bold" />

@@ -53,18 +53,25 @@ public partial class LoginPage : ContentPage
         string password = PasswordEntry.Text;
 
         // ¡Llamamos a nuestra API!
-        string? token = await _apiService.LoginAsync(email, password);
+        var loginResponse = await _apiService.LoginAsync(email, password);
 
         // Ocultamos el círculo de carga
         LoadingIndicator.IsRunning = false;
         LoadingIndicator.IsVisible = false;
 
-        if (!string.IsNullOrEmpty(token))
+        if (loginResponse != null && !string.IsNullOrWhiteSpace(loginResponse.Token))
         {
-            _apiService.SetToken(token); // Guardamos el token JWT en la sesión activa
+            _apiService.SetToken(loginResponse.Token);
+            await SecureStorage.Default.SetAsync("auth_token", loginResponse.Token);
 
-            // NUEVA ACCIÓN: Guardamos el token permanentemente en la memoria segura del móvil
-            await SecureStorage.Default.SetAsync("auth_token", token);
+            if (!string.IsNullOrWhiteSpace(loginResponse.NombreCompleto))
+                await SecureStorage.Default.SetAsync("usuario_nombre", loginResponse.NombreCompleto);
+
+            if (!string.IsNullOrWhiteSpace(loginResponse.Email))
+                await SecureStorage.Default.SetAsync("usuario_email", loginResponse.Email);
+
+            if (!string.IsNullOrWhiteSpace(loginResponse.Telefono))
+                await SecureStorage.Default.SetAsync("usuario_telefono", loginResponse.Telefono);
 
             // Sintaxis moderna y segura para .NET 8/9 (Soporte Multi-ventana)
             if (Application.Current?.Windows.Count > 0)

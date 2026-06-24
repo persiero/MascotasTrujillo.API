@@ -3,59 +3,158 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MascotasTrujillo.App.Views.PerfilPage"
              Title="Mi Perfil"
-             BackgroundColor="#F4F6FA">
+             BackgroundColor="#F8FAFC">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="25" Padding="20">
+        <VerticalStackLayout Spacing="18" Padding="20">
 
-            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Margin="0,20,0,10">
-                <Border Stroke="#2B0B98" StrokeThickness="3" HeightRequest="120" WidthRequest="120">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="60" />
-                    </Border.StrokeShape>
-                    <Image Source="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" Aspect="AspectFill" />
-                </Border>
-                <Label Text="Percy Rojas" FontSize="24" FontAttributes="Bold" TextColor="#2B0B98" HorizontalOptions="Center" />
-                <Label Text="percy.rojas@email.com" FontSize="14" TextColor="Gray" HorizontalOptions="Center" />
-            </VerticalStackLayout>
+            <!-- Encabezado -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="20">
 
-            <Label Text="Ajustes de Cuenta" FontSize="14" FontAttributes="Bold" TextColor="#888888" Margin="5,0,0,-15" />
-            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="0">
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="15" />
+                    <RoundRectangle CornerRadius="22" />
                 </Border.StrokeShape>
-                <VerticalStackLayout>
 
-                    <Grid ColumnDefinitions="50, *, 30" Padding="15" BackgroundColor="Transparent">
-                        <Label Grid.Column="0" Text="👤" FontSize="20" VerticalOptions="Center" HorizontalOptions="Center"/>
-                        <Label Grid.Column="1" Text="Información Personal" FontSize="16" TextColor="#333" VerticalOptions="Center"/>
-                        <Label Grid.Column="2" Text="›" FontSize="24" TextColor="#CCCCCC" VerticalOptions="Center" HorizontalOptions="End"/>
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnEditarDatosTapped" />
-                        </Grid.GestureRecognizers>
-                    </Grid>
+                <VerticalStackLayout Spacing="10"
+                                     HorizontalOptions="Center">
 
-                    <BoxView HeightRequest="1" Color="#F0F0F0" />
-                    <Grid ColumnDefinitions="50, *, 30" Padding="15" BackgroundColor="Transparent">
-                        <Label Grid.Column="0" Text="🔒" FontSize="20" VerticalOptions="Center" HorizontalOptions="Center"/>
-                        <Label Grid.Column="1" Text="Seguridad y Contraseña" FontSize="16" TextColor="#333" VerticalOptions="Center"/>
-                        <Label Grid.Column="2" Text="›" FontSize="24" TextColor="#CCCCCC" VerticalOptions="Center" HorizontalOptions="End"/>
-                    </Grid>
+                    <Border Stroke="#2B0B98"
+                            StrokeThickness="3"
+                            BackgroundColor="#EEF2FF"
+                            HeightRequest="120"
+                            WidthRequest="120">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="60" />
+                        </Border.StrokeShape>
+
+                        <Image Source="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                               Aspect="AspectFill" />
+                    </Border>
+
+                    <Label x:Name="LblNombrePerfil"
+                           Text="Cargando..."
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#2B0B98"
+                           HorizontalOptions="Center" />
+
+                    <Label x:Name="LblEmailPerfil"
+                           Text=""
+                           FontSize="14"
+                           TextColor="#64748B"
+                           HorizontalOptions="Center" />
 
                 </VerticalStackLayout>
             </Border>
 
-            <Label Text="Sistema" FontSize="14" FontAttributes="Bold" TextColor="#888888" Margin="5,10,0,-15" />
-            <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="0">
+            <!-- Datos personales -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
+
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="15" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Información personal"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Label Text="Estos datos se usarán para que otros usuarios puedan contactarte si publicas un reporte."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
+
+                    <Entry x:Name="NombreEntry"
+                           Placeholder="Nombre completo"
+                           BackgroundColor="#F1F5F9"
+                           TextColor="#1E293B" />
+
+                    <Entry x:Name="EmailEntry"
+                           Placeholder="Correo electrónico"
+                           IsEnabled="False"
+                           BackgroundColor="#E2E8F0"
+                           TextColor="#64748B" />
+
+                    <Entry x:Name="TelefonoEntry"
+                           Placeholder="Teléfono / WhatsApp. Ej. 51987654321"
+                           Keyboard="Telephone"
+                           BackgroundColor="#F1F5F9"
+                           TextColor="#1E293B" />
+
+                    <Border BackgroundColor="#EEF2FF"
+                            Stroke="Transparent"
+                            Padding="12">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+
+                        <Label Text="Recomendación: guarda tu número con código de país. Para Perú: 51 + número."
+                               FontSize="12"
+                               TextColor="#2B0B98"
+                               FontAttributes="Bold"
+                               LineBreakMode="WordWrap" />
+                    </Border>
+
+                    <Button x:Name="BtnGuardarPerfil"
+                            Text="Guardar cambios"
+                            Clicked="OnGuardarPerfilClicked"
+                            BackgroundColor="#2B0B98"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            HeightRequest="50" />
+
+                    <ActivityIndicator x:Name="LoadingIndicator"
+                                       IsRunning="False"
+                                       IsVisible="False"
+                                       Color="#2B0B98" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sistema -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="0">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
                 <VerticalStackLayout>
 
-                    <Grid ColumnDefinitions="50, *, 30" Padding="15" BackgroundColor="Transparent">
-                        <Label Grid.Column="0" Text="🚪" FontSize="20" VerticalOptions="Center" HorizontalOptions="Center"/>
-                        <Label Grid.Column="1" Text="Cerrar Sesión" FontSize="16" TextColor="#E63946" FontAttributes="Bold" VerticalOptions="Center"/>
-                        <Label Grid.Column="2" Text="›" FontSize="24" TextColor="#CCCCCC" VerticalOptions="Center" HorizontalOptions="End"/>
+                    <Grid ColumnDefinitions="50, *, 30"
+                          Padding="15"
+                          BackgroundColor="Transparent">
+
+                        <Label Grid.Column="0"
+                               Text="🚪"
+                               FontSize="20"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+
+                        <Label Grid.Column="1"
+                               Text="Cerrar sesión"
+                               FontSize="16"
+                               TextColor="#E63946"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"/>
+
+                        <Label Grid.Column="2"
+                               Text="›"
+                               FontSize="24"
+                               TextColor="#CCCCCC"
+                               VerticalOptions="Center"
+                               HorizontalOptions="End"/>
+
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnCerrarSesionTapped" />
                         </Grid.GestureRecognizers>

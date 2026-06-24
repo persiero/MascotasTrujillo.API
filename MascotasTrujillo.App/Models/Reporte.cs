@@ -11,6 +11,9 @@ namespace MascotasTrujillo.App.Models
         public long UsuarioId { get; set; }
         public long? MascotaId { get; set; }
 
+        public string? NombreContacto { get; set; }
+        public string? TelefonoContacto { get; set; }
+
         public string? TipoReporte { get; set; }
         public string? EstadoReporte { get; set; }
 
