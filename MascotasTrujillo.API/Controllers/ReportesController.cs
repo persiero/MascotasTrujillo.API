@@ -358,6 +358,7 @@ namespace MascotasTrujillo.API.Controllers
                     r.EspecieReferencial,
                     r.RazaReferencial,
                     r.ColorReferencial,
+                    r.SexoReferencial,
 
                     Enfermedades = r.Mascota != null && r.Mascota.InformacionSalud != null
                         ? r.Mascota.InformacionSalud.Enfermedades
@@ -402,6 +403,7 @@ namespace MascotasTrujillo.API.Controllers
                 r.EspecieReferencial,
                 r.RazaReferencial,
                 r.ColorReferencial,
+                r.SexoReferencial,
 
                 r.Enfermedades,
                 r.Discapacidades,

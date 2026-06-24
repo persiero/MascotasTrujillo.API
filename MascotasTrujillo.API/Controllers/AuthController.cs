@@ -52,6 +52,11 @@ namespace MascotasTrujillo.API.Controllers
             if (usuario == null || !await _userManager.CheckPasswordAsync(usuario, dto.Password))
                 return Unauthorized(new { Mensaje = "Credenciales incorrectas" });
 
+            if (!usuario.EstaActivo)
+            {
+                return Unauthorized(new { Mensaje = "La cuenta se encuentra desactivada." });
+            }
+
             // 2. Si es correcto, fabricamos la "Pulsera VIP" (JWT Token)
             var authClaims = new List<Claim>
             {
@@ -74,7 +79,10 @@ namespace MascotasTrujillo.API.Controllers
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiracion = token.ValidTo,
-                UsuarioId = usuario.Id
+                UsuarioId = usuario.Id,
+                NombreCompleto = usuario.NombreCompleto,
+                Email = usuario.Email,
+                Telefono = usuario.PhoneNumber
             });
         }
     }
