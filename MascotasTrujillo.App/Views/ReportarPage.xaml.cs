@@ -1,5 +1,8 @@
 using MascotasTrujillo.App.Models;
 using MascotasTrujillo.App.Services;
+using Microsoft.Maui.Controls.Maps;
+using Microsoft.Maui.Devices.Sensors;
+using Microsoft.Maui.Maps;
 
 namespace MascotasTrujillo.App.Views;
 
@@ -11,13 +14,22 @@ public partial class ReportarPage : ContentPage
     private List<Mascota> _misMascotas = new();
     private Mascota? _mascotaSeleccionada;
 
+    private double? _latitudReporte;
+    private double? _longitudReporte;
+
+    private readonly double _latitudTrujillo = -8.1118;
+    private readonly double _longitudTrujillo = -79.0287;
+
+  
     public ReportarPage(ApiService apiService)
     {
         InitializeComponent();
         _apiService = apiService;
 
         BtnEnviar.IsEnabled = true;
+        ActualizarTextosSegunTipo();
     }
+
 
     protected override async void OnAppearing()
     {
@@ -25,6 +37,7 @@ public partial class ReportarPage : ContentPage
 
         await CargarMisMascotasAsync();
     }
+
 
     private async Task CargarMisMascotasAsync()
     {
@@ -45,10 +58,72 @@ public partial class ReportarPage : ContentPage
         }
     }
 
+    private async void OnUsarGpsActualClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var location = await Geolocation.Default.GetLocationAsync(
+                new GeolocationRequest(
+                    GeolocationAccuracy.Medium,
+                    TimeSpan.FromSeconds(10)
+                )
+            );
+
+            if (location == null)
+            {
+                await DisplayAlertAsync("GPS", "No se pudo obtener tu ubicación actual.", "OK");
+                return;
+            }
+
+            SeleccionarUbicacionReporte(
+                location.Latitude,
+                location.Longitude,
+                "Se usará tu ubicación GPS actual para el reporte."
+            );
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("GPS", $"No se pudo obtener la ubicación: {ex.Message}", "OK");
+        }
+    }
+
+    private async void OnSeleccionarMapaClicked(object sender, EventArgs e)
+    {
+        double latitudInicial = _latitudReporte ?? _latitudTrujillo;
+        double longitudInicial = _longitudReporte ?? _longitudTrujillo;
+
+        await Navigation.PushAsync(
+            new SeleccionarUbicacionPage(
+                latitudInicial,
+                longitudInicial,
+                (latitud, longitud) =>
+                {
+                    SeleccionarUbicacionReporte(
+                        latitud,
+                        longitud,
+                        "Ubicación seleccionada manualmente en el mapa."
+                    );
+                },
+                "Seleccionar ubicación del reporte"
+            )
+        );
+    }
+
+    private void SeleccionarUbicacionReporte(double latitud, double longitud, string mensaje)
+    {
+        _latitudReporte = latitud;
+        _longitudReporte = longitud;
+
+        LblUbicacionSeleccionada.Text =
+            $"{mensaje}\nLat. {latitud:F6}, Long. {longitud:F6}";
+    }
+
     private void OnTipoReporteChanged(object sender, EventArgs e)
     {
         bool esMascotaPerdida = TipoReportePicker.SelectedIndex == 0;
         bool esMascotaEncontrada = TipoReportePicker.SelectedIndex == 1;
+
+        ActualizarTextosSegunTipo();
 
         SeleccionMascotaBorder.IsVisible = esMascotaPerdida;
 
@@ -105,17 +180,39 @@ public partial class ReportarPage : ContentPage
             BotonesCaptura.IsVisible = false;
         }
 
+        if (!string.IsNullOrWhiteSpace(_mascotaSeleccionada.FotoPerfilUrl))
+        {
+            LblAyudaFotoReporte.Text =
+                "Se usará la foto principal de la mascota seleccionada.";
+        }
+        else
+        {
+            LblAyudaFotoReporte.Text =
+                "Esta mascota no tiene foto registrada. Puedes agregar una foto para el reporte.";
+            BotonesCaptura.IsVisible = true;
+        }
+
         LblResumenMascotaSeleccionada.Text =
-            $"Mascota seleccionada: {_mascotaSeleccionada.Nombre}. Sus datos y foto se usarán en el reporte.";
+            $"Mascota seleccionada: {_mascotaSeleccionada.Nombre}. Sus datos se usarán automáticamente en el reporte.";
     }
 
     private void HabilitarCamposMascota(bool habilitar)
     {
-        NombreMascotaEntry.IsEnabled = habilitar;
-        EspecieEntry.IsEnabled = habilitar;
-        RazaEntry.IsEnabled = habilitar;
-        ColorEntry.IsEnabled = habilitar;
+        NombreMascotaEntry.IsReadOnly = !habilitar;
+        EspecieEntry.IsReadOnly = !habilitar;
+        RazaEntry.IsReadOnly = !habilitar;
+        ColorEntry.IsReadOnly = !habilitar;
+
         SexoPicker.IsEnabled = habilitar;
+
+        var colorFondo = habilitar
+            ? Color.FromArgb("#F1F5F9")
+            : Color.FromArgb("#EEF2FF");
+
+        NombreMascotaEntry.BackgroundColor = colorFondo;
+        EspecieEntry.BackgroundColor = colorFondo;
+        RazaEntry.BackgroundColor = colorFondo;
+        ColorEntry.BackgroundColor = colorFondo;
     }
 
     private void LimpiarDatosMascota()
@@ -168,12 +265,55 @@ public partial class ReportarPage : ContentPage
         BotonesCaptura.IsVisible = false;
     }
 
+    private void ActualizarTextosSegunTipo()
+    {
+        if (TipoReportePicker.SelectedIndex == 0)
+        {
+            LblAyudaTipoReporte.Text =
+                "Selecciona una mascota registrada. Sus datos principales se cargarán automáticamente.";
+
+            LblTituloDatosMascota.Text = "Datos de mi mascota";
+            LblAyudaDatosMascota.Text =
+                "Estos datos se cargan desde la mascota seleccionada y se usarán para publicar el reporte.";
+
+            LblTituloFotoReporte.Text = "Fotografía del reporte";
+            LblAyudaFotoReporte.Text =
+                "Se usará la foto principal de tu mascota. Si no tiene foto registrada, puedes agregar una imagen.";
+        }
+        else if (TipoReportePicker.SelectedIndex == 1)
+        {
+            LblAyudaTipoReporte.Text =
+                "Completa manualmente la información disponible de la mascota encontrada.";
+
+            LblTituloDatosMascota.Text = "Datos referenciales de la mascota encontrada";
+            LblAyudaDatosMascota.Text =
+                "Ingresa los datos que hayas podido observar. No es necesario conocer toda la información.";
+
+            LblTituloFotoReporte.Text = "Fotografía de la mascota encontrada";
+            LblAyudaFotoReporte.Text =
+                "Agrega una foto para que el dueño pueda reconocerla con mayor facilidad.";
+        }
+        else
+        {
+            LblAyudaTipoReporte.Text =
+                "Selecciona si deseas reportar una mascota perdida o encontrada.";
+
+            LblTituloDatosMascota.Text = "Datos de la mascota";
+            LblAyudaDatosMascota.Text =
+                "Completa estos datos si no estás asociando el reporte a una mascota registrada.";
+
+            LblTituloFotoReporte.Text = "Fotografía del reporte";
+            LblAyudaFotoReporte.Text =
+                "Agrega una foto para que sea más fácil identificar a la mascota.";
+        }
+    }
+
     private async void OnEnviarClicked(object? sender, EventArgs e)
     {
         LoadingIndicator.IsRunning = true;
         LoadingIndicator.IsVisible = true;
         BtnEnviar.IsEnabled = false;
-        BtnEnviar.Text = "Calculando GPS y enviando...";
+        BtnEnviar.Text = "Publicando reporte...";
 
         try
         {
@@ -245,9 +385,14 @@ public partial class ReportarPage : ContentPage
                 new GeolocationRequest(GeolocationAccuracy.Medium)
             );
 
-            if (location == null)
+            if (!_latitudReporte.HasValue || !_longitudReporte.HasValue)
             {
-                await DisplayAlertAsync("Error GPS", "No se pudo obtener la ubicación actual.", "OK");
+                await DisplayAlertAsync(
+                    "Ubicación requerida",
+                    "Selecciona la ubicación del reporte usando tu GPS o tocando el mapa.",
+                    "OK"
+                );
+
                 return;
             }
 
@@ -260,10 +405,10 @@ public partial class ReportarPage : ContentPage
                 tipoReporteId: tipoReporteId,
                 titulo: titulo,
                 descripcion: descripcion,
-                latitud: location.Latitude,
-                longitud: location.Longitude,
+                latitud: _latitudReporte.Value,
+                longitud: _longitudReporte.Value,
                 direccionReferencia: DireccionReferenciaEntry.Text,
-                foto: esMascotaEncontrada ? _fotoCapturada : null,
+                foto: _fotoCapturada,
                 nombreMascotaReferencial: esMascotaEncontrada ? NombreMascotaEntry.Text : null,
                 especieReferencial: esMascotaEncontrada ? EspecieEntry.Text : null,
                 razaReferencial: esMascotaEncontrada ? RazaEntry.Text : null,
@@ -294,7 +439,7 @@ public partial class ReportarPage : ContentPage
             LoadingIndicator.IsRunning = false;
             LoadingIndicator.IsVisible = false;
             BtnEnviar.IsEnabled = true;
-            BtnEnviar.Text = "📍 Enviar reporte con GPS";
+            BtnEnviar.Text = "📌 Publicar reporte";
         }
     }
 }

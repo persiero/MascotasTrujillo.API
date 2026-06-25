@@ -40,5 +40,35 @@ namespace MascotasTrujillo.App.Models
             string.IsNullOrWhiteSpace(DispositivoId)
                 ? "Sin GPS asociado"
                 : $"GPS: {DispositivoId}";
+
+        public string FotoMostrar =>
+    string.IsNullOrWhiteSpace(FotoPerfilUrl)
+        ? "https://cdn-icons-png.flaticon.com/512/616/616408.png"
+        : FotoPerfilUrl;
+
+        public bool TieneUbicacionGps =>
+            Latitud.HasValue && Longitud.HasValue;
+
+        public string EstadoGpsVisual =>
+            string.IsNullOrWhiteSpace(DispositivoId)
+                ? "Sin GPS"
+                : TieneUbicacionGps
+                    ? "GPS activo"
+                    : "GPS sin ubicación";
+
+        public string EstadoGpsFondo =>
+            string.IsNullOrWhiteSpace(DispositivoId)
+                ? "#F1F5F9"
+                : TieneUbicacionGps
+                    ? "#DCFCE7"
+                    : "#FEF3C7";
+
+        public string EstadoGpsColor =>
+            string.IsNullOrWhiteSpace(DispositivoId)
+                ? "#64748B"
+                : TieneUbicacionGps
+                    ? "#0F766E"
+                    : "#92400E";
+
     }
 }

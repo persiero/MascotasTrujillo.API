@@ -47,6 +47,9 @@ public partial class MisMascotasPage : ContentPage
 
         BtnEditarMascota.IsEnabled = hayMascotaSeleccionada;
         BtnDesactivarMascota.IsEnabled = hayMascotaSeleccionada;
+
+        BtnEditarMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
+        BtnDesactivarMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
     }
 
     private async Task CargarMascotas()
@@ -57,6 +60,10 @@ public partial class MisMascotasPage : ContentPage
 
             if (lista != null && lista.Count > 0)
             {
+                LblConteoMascotas.Text = lista.Count == 1
+                    ? "1 mascota"
+                    : $"{lista.Count} mascotas";
+
                 MascotasCarousel.ItemsSource = lista;
 
                 if (_mascotaSeleccionada == null)
@@ -68,6 +75,10 @@ public partial class MisMascotasPage : ContentPage
             {
                 MascotasCarousel.ItemsSource = null;
                 MascotaMap.Pins.Clear();
+
+                LblConteoMascotas.Text = "0 mascotas";
+                LblTituloMapa.Text = "Sin mascota seleccionada";
+                LblNotaSeguimiento.Text = "Registra una mascota para consultar su seguimiento GPS privado.";
 
                 _mascotaSeleccionada = null;
                 ActualizarEstadoBotonesMascota();
@@ -94,13 +105,7 @@ public partial class MisMascotasPage : ContentPage
         }
         else
         {
-            MascotaMap.Pins.Clear();
-
-            await DisplayAlertAsync(
-                "Sin ubicación GPS",
-                "Esta mascota todavía no tiene una ubicación GPS registrada.",
-                "OK"
-            );
+            MostrarMascotaSinUbicacion();
         }
     }
 
@@ -235,10 +240,50 @@ public partial class MisMascotasPage : ContentPage
             Type = PinType.Place
         });
 
+        LblTituloMapa.Text = $"Última ubicación de {mascotaActual.Nombre}";
+
+        LblNotaSeguimiento.Text = mascotaActual.UltimaActualizacion.HasValue
+            ? $"Última actualización GPS: {mascotaActual.UltimaActualizacion.Value:dd/MM/yyyy HH:mm}"
+            : "Última ubicación GPS registrada.";
+
         MascotaMap.MoveToRegion(
             MapSpan.FromCenterAndRadius(
                 ubicacion,
                 Distance.FromKilometers(0.5)
+            )
+        );
+    }
+
+    private void MostrarMascotaSinUbicacion()
+    {
+        MascotaMap.Pins.Clear();
+
+        if (_mascotaSeleccionada == null)
+        {
+            LblTituloMapa.Text = "Sin mascota seleccionada";
+            LblNotaSeguimiento.Text = "Selecciona una mascota para consultar su última ubicación GPS.";
+            return;
+        }
+
+        LblTituloMapa.Text = "Sin ubicación GPS";
+
+        if (string.IsNullOrWhiteSpace(_mascotaSeleccionada.DispositivoId))
+        {
+            LblNotaSeguimiento.Text =
+                $"{_mascotaSeleccionada.Nombre} no tiene un collar GPS asociado.";
+        }
+        else
+        {
+            LblNotaSeguimiento.Text =
+                $"{_mascotaSeleccionada.Nombre} tiene GPS asociado, pero todavía no registra ubicación.";
+        }
+
+        var ubicacionReferencia = new Location(-8.1118, -79.0287);
+
+        MascotaMap.MoveToRegion(
+            MapSpan.FromCenterAndRadius(
+                ubicacionReferencia,
+                Distance.FromKilometers(3)
             )
         );
     }

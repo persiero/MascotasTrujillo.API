@@ -16,6 +16,8 @@ public partial class RegistrarMascotaPage : ContentPage
     {
         InitializeComponent();
         _apiService = apiService;
+
+        ConfigurarModoVisual();
     }
 
     public RegistrarMascotaPage(ApiService apiService, Mascota mascotaEditar)
@@ -26,15 +28,14 @@ public partial class RegistrarMascotaPage : ContentPage
         _mascotaEditar = mascotaEditar;
 
         CargarDatosParaEdicion();
+        ConfigurarModoVisual();
     }
 
     private void CargarDatosParaEdicion()
     {
         if (_mascotaEditar == null)
             return;
-
-        Title = "Editar Mascota";
-
+               
         NombreEntry.Text = _mascotaEditar.Nombre;
         EspecieEntry.Text = _mascotaEditar.Especie;
         RazaEntry.Text = _mascotaEditar.Raza;
@@ -64,8 +65,7 @@ public partial class RegistrarMascotaPage : ContentPage
                 SexoPicker.SelectedIndex = index;
             }
         }
-
-        BtnGuardar.Text = "Actualizar mascota";
+        
     }
 
     private async void OnTomarFotoClicked(object sender, EventArgs e)
@@ -223,7 +223,34 @@ public partial class RegistrarMascotaPage : ContentPage
             LoadingIndicator.IsRunning = false;
             LoadingIndicator.IsVisible = false;
             BtnGuardar.IsEnabled = true;
-            BtnGuardar.Text = EsModoEdicion ? "Actualizar mascota" : "Guardar mascota";
+            BtnGuardar.Text = EsModoEdicion ? "💾 Actualizar mascota" : "💾 Guardar mascota";
         }
     }
+
+    private void ConfigurarModoVisual()
+    {
+        if (EsModoEdicion)
+        {
+            Title = "Editar Mascota";
+
+            LblIconoFormulario.Text = "✏️";
+            LblTituloFormulario.Text = "Editar mascota";
+            LblSubtituloFormulario.Text =
+                "Actualiza los datos, foto, salud o collar GPS de tu mascota.";
+
+            BtnGuardar.Text = "💾 Actualizar mascota";
+        }
+        else
+        {
+            Title = "Registrar Mascota";
+
+            LblIconoFormulario.Text = "🐾";
+            LblTituloFormulario.Text = "Registrar mascota";
+            LblSubtituloFormulario.Text =
+                "Agrega los datos de tu mascota para administrarla y consultar su ubicación privada si cuenta con collar GPS.";
+
+            BtnGuardar.Text = "💾 Guardar mascota";
+        }
+    }
+
 }

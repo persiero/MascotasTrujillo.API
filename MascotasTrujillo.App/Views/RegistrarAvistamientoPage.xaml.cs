@@ -1,5 +1,6 @@
 using MascotasTrujillo.App.Models;
 using MascotasTrujillo.App.Services;
+using Microsoft.Maui.Devices.Sensors;
 
 namespace MascotasTrujillo.App.Views;
 
@@ -9,6 +10,73 @@ public partial class RegistrarAvistamientoPage : ContentPage
     private readonly Reporte _reporte;
     private FileResult? _fotoCapturada;
 
+    private double? _latitudAvistamiento;
+    private double? _longitudAvistamiento;
+
+    private readonly double _latitudTrujillo = -8.1118;
+    private readonly double _longitudTrujillo = -79.0287;
+        
+
+    private async void OnUsarGpsActualClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var location = await Geolocation.Default.GetLocationAsync(
+                new GeolocationRequest(
+                    GeolocationAccuracy.Medium,
+                    TimeSpan.FromSeconds(10)
+                )
+            );
+
+            if (location == null)
+            {
+                await DisplayAlertAsync("GPS", "No se pudo obtener tu ubicación actual.", "OK");
+                return;
+            }
+
+            SeleccionarUbicacionAvistamiento(
+                location.Latitude,
+                location.Longitude,
+                "Se usará tu ubicación GPS actual para el avistamiento."
+            );
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("GPS", $"No se pudo obtener la ubicación: {ex.Message}", "OK");
+        }
+    }
+
+    private async void OnSeleccionarMapaClicked(object sender, EventArgs e)
+    {
+        double latitudInicial = _latitudAvistamiento ?? _latitudTrujillo;
+        double longitudInicial = _longitudAvistamiento ?? _longitudTrujillo;
+
+        await Navigation.PushAsync(
+            new SeleccionarUbicacionPage(
+                latitudInicial,
+                longitudInicial,
+                (latitud, longitud) =>
+                {
+                    SeleccionarUbicacionAvistamiento(
+                        latitud,
+                        longitud,
+                        "Ubicación seleccionada manualmente en el mapa."
+                    );
+                },
+                "Seleccionar ubicación del avistamiento"
+            )
+        );
+    }
+
+    private void SeleccionarUbicacionAvistamiento(double latitud, double longitud, string mensaje)
+    {
+        _latitudAvistamiento = latitud;
+        _longitudAvistamiento = longitud;
+
+        LblUbicacionSeleccionada.Text =
+            $"Ubicación lista para publicar.\nLat. {latitud:F6}, Long. {longitud:F6}";
+    }
+
     public RegistrarAvistamientoPage(ApiService apiService, Reporte reporte)
     {
         InitializeComponent();
@@ -16,7 +84,7 @@ public partial class RegistrarAvistamientoPage : ContentPage
         _apiService = apiService;
         _reporte = reporte;
 
-        LblReporteTitulo.Text = $"Reporte: {_reporte.Titulo}";
+        LblReporteTitulo.Text = $"Avistamiento para: {_reporte.Titulo}";
     }
 
     private async void OnTomarFotoClicked(object sender, EventArgs e)
@@ -80,25 +148,27 @@ public partial class RegistrarAvistamientoPage : ContentPage
         LoadingIndicator.IsRunning = true;
         LoadingIndicator.IsVisible = true;
         BtnGuardarAvistamiento.IsEnabled = false;
-        BtnGuardarAvistamiento.Text = "Obteniendo GPS y guardando...";
+        BtnGuardarAvistamiento.Text = "Publicando avistamiento...";
 
         try
-        {
-            var location = await Geolocation.Default.GetLocationAsync(
-                new GeolocationRequest(GeolocationAccuracy.Medium)
-            );
+        {            
 
-            if (location == null)
+            if (!_latitudAvistamiento.HasValue || !_longitudAvistamiento.HasValue)
             {
-                await DisplayAlertAsync("Error GPS", "No se pudo obtener tu ubicación actual.", "OK");
+                await DisplayAlertAsync(
+                    "Ubicación requerida",
+                    "Selecciona la ubicación del avistamiento usando tu GPS o tocando el mapa.",
+                    "OK"
+                );
+
                 return;
             }
 
             var resultado = await _apiService.RegistrarAvistamientoAsync(
                 reporteId: _reporte.Id,
                 descripcion: descripcion,
-                latitud: location.Latitude,
-                longitud: location.Longitude,
+                latitud: _latitudAvistamiento.Value,
+                longitud: _longitudAvistamiento.Value,
                 direccionReferencia: direccionReferencia,
                 foto: _fotoCapturada
             );
@@ -131,7 +201,7 @@ public partial class RegistrarAvistamientoPage : ContentPage
             LoadingIndicator.IsRunning = false;
             LoadingIndicator.IsVisible = false;
             BtnGuardarAvistamiento.IsEnabled = true;
-            BtnGuardarAvistamiento.Text = "📍 Guardar avistamiento";
+            BtnGuardarAvistamiento.Text = "📌 Publicar avistamiento";
         }
     }
 }

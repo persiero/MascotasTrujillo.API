@@ -63,5 +63,81 @@ namespace MascotasTrujillo.App.Models
         public bool PuedeSuspender => EstaActivo;
 
         public bool PuedeReactivar => EstaSuspendido;
+
+        public string TipoReporteFondo
+        {
+            get
+            {
+                string tipo = TipoReporte?.Trim() ?? string.Empty;
+
+                if (tipo.Contains("perdid", StringComparison.OrdinalIgnoreCase))
+                    return "#FEE2E2";
+
+                if (tipo.Contains("encontrad", StringComparison.OrdinalIgnoreCase))
+                    return "#DCFCE7";
+
+                return "#EEF2FF";
+            }
+        }
+
+        public string TipoReporteTexto
+        {
+            get
+            {
+                string tipo = TipoReporte?.Trim() ?? string.Empty;
+
+                if (tipo.Contains("perdid", StringComparison.OrdinalIgnoreCase))
+                    return "#991B1B";
+
+                if (tipo.Contains("encontrad", StringComparison.OrdinalIgnoreCase))
+                    return "#0F766E";
+
+                return "#2B0B98";
+            }
+        }
+
+        public string EstadoReporteFondo
+        {
+            get
+            {
+                string estado = EstadoReporte?.Trim() ?? string.Empty;
+
+                if (estado.Equals("Activo", StringComparison.OrdinalIgnoreCase))
+                    return "#DCFCE7";
+
+                if (estado.Equals("Resuelto", StringComparison.OrdinalIgnoreCase))
+                    return "#E0F2FE";
+
+                if (estado.Equals("Suspendido", StringComparison.OrdinalIgnoreCase))
+                    return "#FEF3C7";
+
+                return "#EEF2FF";
+            }
+        }
+
+        public string EstadoReporteTexto
+        {
+            get
+            {
+                string estado = EstadoReporte?.Trim() ?? string.Empty;
+
+                if (estado.Equals("Activo", StringComparison.OrdinalIgnoreCase))
+                    return "#0F766E";
+
+                if (estado.Equals("Resuelto", StringComparison.OrdinalIgnoreCase))
+                    return "#0369A1";
+
+                if (estado.Equals("Suspendido", StringComparison.OrdinalIgnoreCase))
+                    return "#92400E";
+
+                return "#2B0B98";
+            }
+        }
+
+        public string FotoMostrar =>
+            string.IsNullOrWhiteSpace(FotoUrl)
+                ? "https://cdn-icons-png.flaticon.com/512/616/616408.png"
+                : FotoUrl;
+
     }
 }

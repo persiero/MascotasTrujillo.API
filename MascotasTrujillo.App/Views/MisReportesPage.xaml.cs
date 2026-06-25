@@ -40,8 +40,9 @@ public partial class MisReportesPage : ContentPage
                         _misPublicaciones.Add(reporte);
                     }
 
-                    MisReportesList.ItemsSource = null;
-                    MisReportesList.ItemsSource = _misPublicaciones;
+                    LblConteoReportes.Text = _misPublicaciones.Count == 1
+                        ? "1 reporte"
+                        : $"{_misPublicaciones.Count} reportes";
                 });
             }
         }

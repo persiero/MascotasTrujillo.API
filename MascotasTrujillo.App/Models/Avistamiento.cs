@@ -22,5 +22,10 @@ namespace MascotasTrujillo.App.Models
         public double Longitud { get; set; }
 
         public string? FotoUrl { get; set; }
+
+        public string FotoMostrar =>
+            string.IsNullOrWhiteSpace(FotoUrl)
+                ? "https://cdn-icons-png.flaticon.com/512/616/616408.png"
+                : FotoUrl;
     }
 }

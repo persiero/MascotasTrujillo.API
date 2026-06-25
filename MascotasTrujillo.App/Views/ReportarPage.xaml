@@ -64,6 +64,12 @@
                             <x:String>Mascota encontrada</x:String>
                         </Picker.Items>
                     </Picker>
+                    
+                    <Label x:Name="LblAyudaTipoReporte"
+                           Text="Selecciona si deseas reportar una mascota perdida o encontrada."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
 
                 </VerticalStackLayout>
             </Border>
@@ -154,6 +160,70 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Ubicación del reporte -->
+            <Border BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="16">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Ubicación del reporte"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Label Text="Puedes usar tu GPS actual o abrir el mapa para marcar el punto exacto donde se perdió o encontró la mascota."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
+
+                    <Grid ColumnDefinitions="*,*"
+                            ColumnSpacing="10">
+
+                        <Button Grid.Column="0"
+                                Text="📍 Usar mi GPS"
+                                Clicked="OnUsarGpsActualClicked"
+                                BackgroundColor="#2B0B98"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="14"
+                                HeightRequest="44" />
+
+                        <Button Grid.Column="1"
+                                Text="🗺️ Elegir en mapa"
+                                Clicked="OnSeleccionarMapaClicked"
+                                BackgroundColor="#EEF2FF"
+                                TextColor="#2B0B98"
+                                FontAttributes="Bold"
+                                CornerRadius="14"
+                                HeightRequest="44" />
+
+                    </Grid>
+
+                    <Border BackgroundColor="#EEF2FF"
+                            Stroke="Transparent"
+                            Padding="12">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+
+                        <Label x:Name="LblUbicacionSeleccionada"
+                               Text="Aún no has seleccionado una ubicación para el reporte."
+                               FontSize="12"
+                               TextColor="#2B0B98"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               LineBreakMode="WordWrap" />
+                    </Border>
+
+                </VerticalStackLayout>
+            </Border>
+
             <!-- Datos referenciales de la mascota -->
             <Border BackgroundColor="#FFFFFF"
                     Stroke="Transparent"
@@ -165,14 +235,17 @@
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Datos de la mascota"
+                    <Label x:Name="LblTituloDatosMascota"
+                           Text="Datos de la mascota"
                            FontSize="16"
                            FontAttributes="Bold"
                            TextColor="#1E293B" />
 
-                    <Label Text="Completa estos datos si no estás asociando el reporte a una mascota registrada."
+                    <Label x:Name="LblAyudaDatosMascota"
+                           Text="Completa estos datos si no estás asociando el reporte a una mascota registrada."
                            FontSize="12"
-                           TextColor="#64748B" />
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
 
                     <Entry x:Name="NombreMascotaEntry"
                            Placeholder="Nombre de la mascota, si se conoce"
@@ -219,14 +292,17 @@
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Fotografía del reporte"
+                    <Label x:Name="LblTituloFotoReporte"
+                           Text="Fotografía del reporte"
                            FontSize="16"
                            FontAttributes="Bold"
                            TextColor="#1E293B" />
 
-                    <Label Text="Agrega una foto para que sea más fácil identificar a la mascota."
+                    <Label x:Name="LblAyudaFotoReporte"
+                           Text="Agrega una foto para que sea más fácil identificar a la mascota."
                            FontSize="12"
-                           TextColor="#64748B" />
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
 
                     <Border BackgroundColor="#F1F5F9"
                             HeightRequest="240"
@@ -277,7 +353,7 @@
 
             <!-- Botón enviar -->
             <Button x:Name="BtnEnviar"
-                    Text="📍 Enviar reporte con GPS"
+                    Text="📌 Publicar reporte"
                     Clicked="OnEnviarClicked"
                     BackgroundColor="#2B0B98"
                     TextColor="White"

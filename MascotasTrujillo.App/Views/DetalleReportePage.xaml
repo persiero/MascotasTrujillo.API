@@ -12,18 +12,25 @@
             <!-- Imagen principal -->
             <Border BackgroundColor="#E2E8F0"
                     Stroke="Transparent"
-                    HeightRequest="260">
+                    HeightRequest="250">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="22" />
                 </Border.StrokeShape>
+
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                            Opacity="0.12"
+                            Offset="0,4"
+                            Radius="10" />
+                </Border.Shadow>
 
                 <Grid>
                     <Image x:Name="FotoReporteImage"
                            Source="{Binding FotoUrl}"
                            Aspect="AspectFill" />
 
-                    <Border BackgroundColor="#CC000000"
+                    <Border BackgroundColor="{Binding TipoReporteFondo}"
                             Stroke="Transparent"
                             Padding="10,5"
                             HorizontalOptions="Start"
@@ -37,7 +44,7 @@
                         <Label Text="{Binding TipoReporte}"
                                FontSize="12"
                                FontAttributes="Bold"
-                               TextColor="White" />
+                               TextColor="{Binding TipoReporteTexto}" />
                     </Border>
                 </Grid>
             </Border>
@@ -104,12 +111,22 @@
                                Text="📌"
                                FontSize="16" />
 
-                        <Label Text="{Binding EstadoReporte}"
-                               Grid.Row="2"
-                               Grid.Column="1"
-                               FontSize="13"
-                               TextColor="#0F766E"
-                               FontAttributes="Bold" />
+                        <Border Grid.Row="2"
+                                Grid.Column="1"
+                                BackgroundColor="{Binding EstadoReporteFondo}"
+                                Stroke="Transparent"
+                                Padding="10,4"
+                                HorizontalOptions="Start">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <Label Text="{Binding EstadoReporte}"
+                                   FontSize="12"
+                                   TextColor="{Binding EstadoReporteTexto}"
+                                   FontAttributes="Bold" />
+                        </Border>
 
                     </Grid>
                 </VerticalStackLayout>
@@ -192,10 +209,10 @@
 
             <!-- Información de salud -->
             <Border x:Name="SeccionSalud"
-        BackgroundColor="#FFFFFF"
-        Stroke="Transparent"
-        Padding="18"
-        IsVisible="False">
+                    BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18"
+                    IsVisible="False">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
@@ -204,116 +221,116 @@
                 <VerticalStackLayout Spacing="12">
 
                     <Label Text="Información importante de salud"
-               FontSize="18"
-               FontAttributes="Bold"
-               TextColor="#1E293B" />
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
 
                     <Label Text="Estos datos ayudan a cuidar mejor a la mascota en caso sea encontrada."
-               FontSize="12"
-               TextColor="#64748B"
-               LineBreakMode="WordWrap" />
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
 
                     <Grid ColumnDefinitions="Auto,*"
-              RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-              ColumnSpacing="10"
-              RowSpacing="10">
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                          ColumnSpacing="10"
+                          RowSpacing="10">
 
                         <Label Grid.Row="0"
-                   Grid.Column="0"
-                   Text="🩺"
-                   FontSize="16" />
+                               Grid.Column="0"
+                               Text="🩺"
+                               FontSize="16" />
 
                         <VerticalStackLayout Grid.Row="0" Grid.Column="1">
                             <Label Text="Enfermedades"
-                       FontSize="11"
-                       TextColor="#94A3B8" />
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
                             <Label x:Name="LblEnfermedades"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="#334155"
-                       LineBreakMode="WordWrap" />
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"
+                                   LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
 
                         <Label Grid.Row="1"
-                   Grid.Column="0"
-                   Text="♿"
-                   FontSize="16" />
+                               Grid.Column="0"
+                               Text="♿"
+                               FontSize="16" />
 
                         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
                             <Label Text="Discapacidades"
-                       FontSize="11"
-                       TextColor="#94A3B8" />
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
                             <Label x:Name="LblDiscapacidades"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="#334155"
-                       LineBreakMode="WordWrap" />
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"
+                                   LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
 
                         <Label Grid.Row="2"
-                   Grid.Column="0"
-                   Text="💊"
-                   FontSize="16" />
+                               Grid.Column="0"
+                               Text="💊"
+                               FontSize="16" />
 
                         <VerticalStackLayout Grid.Row="2" Grid.Column="1">
                             <Label Text="Tratamientos"
-                       FontSize="11"
-                       TextColor="#94A3B8" />
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
                             <Label x:Name="LblTratamientos"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="#334155"
-                       LineBreakMode="WordWrap" />
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"
+                                   LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
 
                         <Label Grid.Row="3"
-                   Grid.Column="0"
-                   Text="⚠️"
-                   FontSize="16" />
+                               Grid.Column="0"
+                               Text="⚠️"
+                               FontSize="16" />
 
                         <VerticalStackLayout Grid.Row="3" Grid.Column="1">
                             <Label Text="Necesidades especiales"
-                       FontSize="11"
-                       TextColor="#94A3B8" />
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
                             <Label x:Name="LblNecesidadesEspeciales"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="#334155"
-                       LineBreakMode="WordWrap" />
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"
+                                   LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
 
                         <Label Grid.Row="4"
-                   Grid.Column="0"
-                   Text="📝"
-                   FontSize="16" />
+                               Grid.Column="0"
+                               Text="📝"
+                               FontSize="16" />
 
                         <VerticalStackLayout Grid.Row="4" Grid.Column="1">
                             <Label Text="Observaciones"
-                       FontSize="11"
-                       TextColor="#94A3B8" />
+                                   FontSize="11"
+                                   TextColor="#94A3B8" />
                             <Label x:Name="LblObservacionesSalud"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="#334155"
-                       LineBreakMode="WordWrap" />
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"
+                                   LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
 
                     </Grid>
 
                     <Border BackgroundColor="#FEF3C7"
-                Stroke="Transparent"
-                Padding="12">
+                            Stroke="Transparent"
+                            Padding="12">
 
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="14" />
                         </Border.StrokeShape>
 
                         <Label Text="Si encuentras esta mascota, revisa estos cuidados antes de manipularla o alimentarla."
-                   FontSize="12"
-                   TextColor="#92400E"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center"
-                   LineBreakMode="WordWrap" />
+                               FontSize="12"
+                               TextColor="#92400E"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               LineBreakMode="WordWrap" />
                     </Border>
 
                 </VerticalStackLayout>
@@ -321,9 +338,9 @@
 
             <!-- Avistamientos registrados -->
             <Border x:Name="SeccionAvistamientos"
-        BackgroundColor="#FFFFFF"
-        Stroke="Transparent"
-        Padding="18">
+                    BackgroundColor="#FFFFFF"
+                    Stroke="Transparent"
+                    Padding="18">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
@@ -334,51 +351,51 @@
                     <Grid ColumnDefinitions="*,Auto">
                         <VerticalStackLayout>
                             <Label Text="Avistamientos registrados"
-                       FontSize="18"
-                       FontAttributes="Bold"
-                       TextColor="#1E293B" />
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="#1E293B" />
 
                             <Label x:Name="LblAvistamientosResumen"
-                       Text="Consulta los puntos reportados por la comunidad."
-                       FontSize="12"
-                       TextColor="#64748B" />
+                                   Text="Consulta los puntos reportados por la comunidad."
+                                   FontSize="12"
+                                   TextColor="#64748B" />
                         </VerticalStackLayout>
 
                         <Button Grid.Column="1"
-                    Text="🔄"
-                    Clicked="OnActualizarAvistamientosClicked"
-                    BackgroundColor="#EEF2FF"
-                    TextColor="#2B0B98"
-                    CornerRadius="14"
-                    HeightRequest="40"
-                    WidthRequest="44"
-                    VerticalOptions="Center" />
+                                Text="🔄"
+                                Clicked="OnActualizarAvistamientosClicked"
+                                BackgroundColor="#EEF2FF"
+                                TextColor="#2B0B98"
+                                CornerRadius="14"
+                                HeightRequest="40"
+                                WidthRequest="44"
+                                VerticalOptions="Center" />
                     </Grid>
 
                     <CollectionView x:Name="AvistamientosList"
-                        SelectionMode="None"
-                        HeightRequest="260">
+                                    SelectionMode="None"
+                                    HeightRequest="220">
 
                         <CollectionView.EmptyView>
                             <VerticalStackLayout Padding="20"
-                                     Spacing="8"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center">
+                                                 Spacing="8"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center">
 
                                 <Label Text="👀"
-                           FontSize="36"
-                           HorizontalOptions="Center" />
+                                       FontSize="36"
+                                       HorizontalOptions="Center" />
 
                                 <Label Text="Aún no hay avistamientos"
-                           FontSize="15"
-                           FontAttributes="Bold"
-                           TextColor="#334155"
-                           HorizontalOptions="Center" />
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       TextColor="#334155"
+                                       HorizontalOptions="Center" />
 
                                 <Label Text="Cuando alguien vea a la mascota, su aviso aparecerá aquí."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           HorizontalTextAlignment="Center" />
+                                       FontSize="12"
+                                       TextColor="#64748B"
+                                       HorizontalTextAlignment="Center" />
                             </VerticalStackLayout>
                         </CollectionView.EmptyView>
 
@@ -386,52 +403,52 @@
                             <DataTemplate>
 
                                 <Border Margin="0,0,0,10"
-                            Padding="10"
-                            BackgroundColor="#F8FAFC"
-                            Stroke="#E2E8F0">
+                                        Padding="10"
+                                        BackgroundColor="#F8FAFC"
+                                        Stroke="#E2E8F0">
 
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="16" />
                                     </Border.StrokeShape>
 
                                     <Grid ColumnDefinitions="76,*"
-                              ColumnSpacing="12">
+                                            ColumnSpacing="12">
 
                                         <Border Grid.Column="0"
-                                    BackgroundColor="#E2E8F0"
-                                    Stroke="Transparent"
-                                    HeightRequest="70"
-                                    WidthRequest="70">
+                                                BackgroundColor="#E2E8F0"
+                                                Stroke="Transparent"
+                                                HeightRequest="70"
+                                                WidthRequest="70">
 
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="14" />
                                             </Border.StrokeShape>
 
-                                            <Image Source="{Binding FotoUrl}"
-                                       Aspect="AspectFill"
-                                       HeightRequest="70"
-                                       WidthRequest="70" />
+                                            <Image Source="{Binding FotoMostrar}"
+                                                   Aspect="AspectFill"
+                                                   HeightRequest="70"
+                                                   WidthRequest="70" />
                                         </Border>
 
                                         <VerticalStackLayout Grid.Column="1"
-                                                 Spacing="4"
-                                                 VerticalOptions="Center">
+                                                             Spacing="4"
+                                                             VerticalOptions="Center">
 
                                             <Label Text="{Binding Descripcion}"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="#1E293B"
-                                       LineBreakMode="TailTruncation"
-                                       MaxLines="2" />
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#1E293B"
+                                                   LineBreakMode="TailTruncation"
+                                                   MaxLines="2" />
 
                                             <Label Text="{Binding DireccionReferencia}"
-                                       FontSize="12"
-                                       TextColor="#64748B"
-                                       LineBreakMode="TailTruncation" />
+                                                   FontSize="12"
+                                                   TextColor="#64748B"
+                                                   LineBreakMode="TailTruncation" />
 
                                             <Label Text="{Binding FechaAvistamiento, StringFormat='📅 {0:dd/MM/yyyy HH:mm}'}"
-                                       FontSize="12"
-                                       TextColor="#94A3B8" />
+                                                   FontSize="12"
+                                                   TextColor="#94A3B8" />
 
                                         </VerticalStackLayout>
                                     </Grid>
@@ -460,7 +477,7 @@
                            FontAttributes="Bold"
                            TextColor="#1E293B" />
 
-                    <Button Text="📍 Ver ubicación en mapa"
+                    <Button Text="📍 Ver ubicación del reporte"
                             Clicked="OnVerUbicacionClicked"
                             BackgroundColor="#EEF2FF"
                             TextColor="#2B0B98"
@@ -469,20 +486,20 @@
                             HeightRequest="48" />
 
                     <Button x:Name="BtnRegistrarAvistamiento"
-                        Text="👀 Registrar avistamiento"
-                        Clicked="OnRegistrarAvistamientoClicked"
-                        BackgroundColor="#0F766E"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="16"
-                        HeightRequest="48" />
+                            Text="👀 Registrar avistamiento"
+                            Clicked="OnRegistrarAvistamientoClicked"
+                            BackgroundColor="#0F766E"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            HeightRequest="48" />
 
                     <Label x:Name="LblAvistamientoNoDisponible"
-                       Text="Los avistamientos solo pueden registrarse en reportes activos de mascotas perdidas."
-                       FontSize="12"
-                       TextColor="#64748B"
-                       HorizontalTextAlignment="Center"
-                       IsVisible="False" />
+                           Text="Los avistamientos solo pueden registrarse en reportes activos de mascotas perdidas."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="False" />
 
                     <Button Text="💬 Contactar por WhatsApp"
                             Clicked="OnWhatsAppClicked"

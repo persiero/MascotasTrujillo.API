@@ -77,16 +77,33 @@
             <VerticalStackLayout Spacing="10">
 
                 <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="Mascotas registradas"
-                           FontSize="17"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Mascotas registradas"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="#1E293B" />
 
-                    <Label Grid.Column="1"
-                           Text="Selecciona una"
-                           FontSize="12"
-                           TextColor="#64748B"
-                           VerticalOptions="Center" />
+                        <Label Text="Selecciona una mascota para ver su última ubicación."
+                               FontSize="12"
+                               TextColor="#64748B" />
+                    </VerticalStackLayout>
+
+                    <Border Grid.Column="1"
+                            BackgroundColor="#EEF2FF"
+                            Stroke="Transparent"
+                            Padding="10,5"
+                            VerticalOptions="Center">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+
+                        <Label x:Name="LblConteoMascotas"
+                               Text="0 mascotas"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="#2B0B98" />
+                    </Border>
                 </Grid>
 
                 <CollectionView x:Name="MascotasCarousel"
@@ -120,58 +137,76 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-
-                            <Border Margin="0,0,10,0"
-                                    Padding="10"
-                                    WidthRequest="130"
-                                    BackgroundColor="#F8FAFC"
-                                    Stroke="#E2E8F0">
+                            <Border x:Name="CardBorder"
+                                    Margin="0,0,10,0"
+                                    Padding="12"
+                                    WidthRequest="120"
+                                    HeightRequest="140"
+                                    BackgroundColor="White"
+                                    Stroke="#E2E8F0"
+                                    StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="18" />
                                 </Border.StrokeShape>
 
-                                <VerticalStackLayout Spacing="6"
-                                                     HorizontalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup Name="CommonStates">
+                                        <VisualState Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter TargetName="CardBorder" Property="BackgroundColor" Value="White" />
+                                                <Setter TargetName="CardBorder" Property="Stroke" Value="#E2E8F0" />
+                                                <Setter TargetName="CardBorder" Property="StrokeThickness" Value="1" />
+                                            </VisualState.Setters>
+                                        </VisualState>
 
-                                    <Border Stroke="#2B0B98"
+                                        <VisualState Name="Selected">
+                                            <VisualState.Setters>
+                                                <Setter TargetName="CardBorder" Property="BackgroundColor" Value="#FFF7ED" />
+                                                <Setter TargetName="CardBorder" Property="Stroke" Value="#F97316" />
+                                                <Setter TargetName="CardBorder" Property="StrokeThickness" Value="2" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <VerticalStackLayout Spacing="6"
+                                                     HorizontalOptions="Center"
+                                                     VerticalOptions="Center">
+
+                                    <Border Stroke="#4338CA"
                                             StrokeThickness="2"
                                             BackgroundColor="#EEF2FF"
-                                            HeightRequest="76"
-                                            WidthRequest="76">
+                                            HeightRequest="72"
+                                            WidthRequest="72"
+                                            HorizontalOptions="Center">
 
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="38" />
+                                            <RoundRectangle CornerRadius="36" />
                                         </Border.StrokeShape>
 
                                         <Image Source="{Binding FotoPerfilUrl}"
-                                               HeightRequest="76"
-                                               WidthRequest="76"
-                                               Aspect="AspectFill" />
+                                               Aspect="AspectFill"
+                                               HeightRequest="72"
+                                               WidthRequest="72" />
                                     </Border>
 
                                     <Label Text="{Binding Nombre}"
                                            HorizontalOptions="Center"
+                                           HorizontalTextAlignment="Center"
                                            FontAttributes="Bold"
                                            FontSize="14"
                                            TextColor="#1E293B"
                                            LineBreakMode="TailTruncation"
                                            MaxLines="1" />
 
-                                    <Label Text="{Binding Especie}"
+                                                        <Label Text="{Binding Especie}"
                                            FontSize="11"
                                            TextColor="#64748B"
-                                           HorizontalOptions="Center" />
-
-                                    <Label Text="{Binding EstadoGpsTexto}"
-                                           FontSize="10"
-                                           TextColor="#0F766E"
                                            HorizontalOptions="Center"
-                                           LineBreakMode="TailTruncation" />
-
+                                           HorizontalTextAlignment="Center" />
                                 </VerticalStackLayout>
                             </Border>
-
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -182,7 +217,7 @@
 
                     <Button x:Name="BtnEditarMascota"
                             Grid.Column="0"
-                            Text="Editar"
+                            Text="✏️ Editar"
                             Clicked="OnEditarMascotaClicked"
                             BackgroundColor="#EEF2FF"
                             TextColor="#2B0B98"
@@ -193,7 +228,7 @@
 
                     <Button x:Name="BtnDesactivarMascota"
                             Grid.Column="1"
-                            Text="Desactivar"
+                            Text="🗑️ Desactivar"
                             Clicked="OnDesactivarMascotaClicked"
                             BackgroundColor="#FEE2E2"
                             TextColor="#B91C1C"
@@ -237,7 +272,8 @@
                         <RoundRectangle CornerRadius="14" />
                     </Border.StrokeShape>
 
-                    <Label Text="Última ubicación GPS"
+                    <Label x:Name="LblTituloMapa"
+                           Text="Última ubicación GPS"
                            FontSize="12"
                            FontAttributes="Bold"
                            TextColor="#2B0B98" />
@@ -255,11 +291,13 @@
                 <RoundRectangle CornerRadius="16" />
             </Border.StrokeShape>
 
-            <Label Text="El seguimiento GPS es privado y solo es visible para el dueño de la mascota."
+            <Label x:Name="LblNotaSeguimiento"
+                   Text="El seguimiento GPS es privado y solo es visible para el dueño de la mascota."
                    FontSize="12"
                    TextColor="#2B0B98"
                    HorizontalTextAlignment="Center"
-                   FontAttributes="Bold" />
+                   FontAttributes="Bold"
+                   LineBreakMode="WordWrap" />
         </Border>
 
     </Grid>

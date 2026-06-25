@@ -152,7 +152,9 @@ public partial class DetalleReportePage : ContentPage
                 _avistamientos.Add(avistamiento);
             }
 
-            LblAvistamientosResumen.Text = $"{lista.Count} avistamiento(s) registrado(s) para este reporte.";
+            LblAvistamientosResumen.Text = lista.Count == 1
+                ? "1 avistamiento registrado para este reporte."
+                : $"{lista.Count} avistamientos registrados para este reporte.";
         }
         else
         {

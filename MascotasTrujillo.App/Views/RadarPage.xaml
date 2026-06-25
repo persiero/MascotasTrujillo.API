@@ -13,26 +13,51 @@
         <Border Grid.Row="0"
                 BackgroundColor="#FFFFFF"
                 Stroke="Transparent"
-                Padding="18,16">
+                Padding="16,12">
 
             <Border.Shadow>
                 <Shadow Brush="Black"
-                        Opacity="0.08"
+                        Opacity="0.06"
                         Offset="0,2"
-                        Radius="8" />
+                        Radius="6" />
             </Border.Shadow>
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Radar Comunitario"
-                       FontSize="24"
-                       FontAttributes="Bold"
-                       TextColor="#1E1B4B" />
+            <Grid ColumnDefinitions="Auto,*"
+                    ColumnSpacing="12">
 
-                <Label Text="Visualiza reportes activos de mascotas perdidas o encontradas cerca de tu ubicación."
-                       FontSize="13"
-                       TextColor="#64748B"
-                       LineBreakMode="WordWrap" />
-            </VerticalStackLayout>
+                <Border Grid.Column="0"
+                        BackgroundColor="#EEF2FF"
+                        Stroke="Transparent"
+                        HeightRequest="46"
+                        WidthRequest="46"
+                        VerticalOptions="Center">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="23" />
+                    </Border.StrokeShape>
+
+                    <Label Text="📡"
+                           FontSize="24"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1"
+                                     Spacing="2"
+                                     VerticalOptions="Center">
+
+                    <Label Text="Reportes cerca de ti"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1E1B4B" />
+
+                    <Label Text="Mascotas perdidas o encontradas según tu ubicación."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="TailTruncation" />
+                </VerticalStackLayout>
+
+            </Grid>
         </Border>
 
         <!-- Mapa -->
@@ -70,51 +95,71 @@
             <Grid ColumnDefinitions="*,*"
                     ColumnSpacing="10">
 
-                <VerticalStackLayout Grid.Column="0"
-                                        Spacing="4">
+                <Border Grid.Column="0"
+                        BackgroundColor="#F8FAFC"
+                        Stroke="#E2E8F0"
+                        StrokeThickness="1"
+                        Padding="10,6">
 
-                    <Label Text="Tipo"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="#64748B" />
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
 
-                    <Picker x:Name="FiltroTipoPicker"
-                            Title="Tipo de reporte"
-                            SelectedIndexChanged="OnFiltroTipoChanged"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B"
-                            SelectedIndex="0">
+                    <VerticalStackLayout Spacing="2">
 
-                        <Picker.Items>
-                            <x:String>Todos</x:String>
-                            <x:String>Perdidas</x:String>
-                            <x:String>Encontradas</x:String>
-                        </Picker.Items>
-                    </Picker>
-                </VerticalStackLayout>
+                        <Label Text="Tipo"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#64748B" />
 
-                <VerticalStackLayout Grid.Column="1"
-                                        Spacing="4">
+                        <Picker x:Name="FiltroTipoPicker"
+                                Title="Todos"
+                                SelectedIndexChanged="OnFiltroTipoChanged"
+                                BackgroundColor="Transparent"
+                                TextColor="#1E293B"
+                                FontAttributes="Bold">
 
-                    <Label Text="Radio"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="#64748B" />
+                            <Picker.Items>
+                                <x:String>Todos</x:String>
+                                <x:String>Perdidas</x:String>
+                                <x:String>Encontradas</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </VerticalStackLayout>
+                </Border>
 
-                    <Picker x:Name="RadioPicker"
-                            Title="Radio"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B"
-                            SelectedIndex="2">
+                <Border Grid.Column="1"
+                        BackgroundColor="#F8FAFC"
+                        Stroke="#E2E8F0"
+                        StrokeThickness="1"
+                        Padding="10,6">
 
-                        <Picker.Items>
-                            <x:String>1 km</x:String>
-                            <x:String>3 km</x:String>
-                            <x:String>5 km</x:String>
-                            <x:String>10 km</x:String>
-                        </Picker.Items>
-                    </Picker>
-                </VerticalStackLayout>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="2">
+
+                        <Label Text="Radio"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#64748B" />
+
+                        <Picker x:Name="RadioPicker"
+                                Title="5 km"
+                                BackgroundColor="Transparent"
+                                TextColor="#1E293B"
+                                FontAttributes="Bold">
+
+                            <Picker.Items>
+                                <x:String>1 km</x:String>
+                                <x:String>3 km</x:String>
+                                <x:String>5 km</x:String>
+                                <x:String>10 km</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </VerticalStackLayout>
+                </Border>
 
             </Grid>
         </Border>
@@ -127,7 +172,7 @@
 
             <Button x:Name="BtnActualizar"
                     Grid.Column="0"
-                    Text="🔄 Actualizar"
+                    Text="🔄 Buscar cerca"
                     Clicked="OnActualizarClicked"
                     HeightRequest="48"
                     BackgroundColor="#2B0B98"
@@ -269,7 +314,7 @@
                                                    LineBreakMode="TailTruncation" />
 
                                             <Border Grid.Column="1"
-                                                    BackgroundColor="#FEE2E2"
+                                                    BackgroundColor="{Binding TipoReporteFondo}"
                                                     Stroke="Transparent"
                                                     Padding="8,3"
                                                     Margin="6,0,0,0">
@@ -281,7 +326,7 @@
                                                 <Label Text="{Binding TipoReporte}"
                                                        FontSize="11"
                                                        FontAttributes="Bold"
-                                                       TextColor="#991B1B" />
+                                                       TextColor="{Binding TipoReporteTexto}" />
                                             </Border>
                                         </Grid>
 

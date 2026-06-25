@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
+    x:Class="MascotasTrujillo.App.Views.SeleccionarUbicacionPage"
+    Title="Seleccionar ubicación"
+    BackgroundColor="#F8FAFC">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Encabezado -->
+        <Border Grid.Row="0"
+                BackgroundColor="#FFFFFF"
+                Stroke="Transparent"
+                Padding="18">
+
+            <VerticalStackLayout Spacing="4">
+                <Label x:Name="LblTitulo"
+                       Text="Seleccionar ubicación"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="#1E1B4B" />
+
+                <Label Text="Mueve el mapa y toca el punto exacto donde ocurrió el reporte o avistamiento."
+                       FontSize="13"
+                       TextColor="#64748B"
+                       LineBreakMode="WordWrap" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Mapa completo -->
+        <maps:Map x:Name="MapaUbicacion"
+                  Grid.Row="1"
+                  IsShowingUser="True"
+                  MapClicked="OnMapaClicked" />
+
+        <!-- Panel inferior -->
+        <Border Grid.Row="2"
+                BackgroundColor="#FFFFFF"
+                Stroke="Transparent"
+                Padding="16">
+
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Opacity="0.10"
+                        Offset="0,-2"
+                        Radius="8" />
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="12">
+
+                <Label x:Name="LblUbicacion"
+                       Text="Aún no has seleccionado una ubicación."
+                       FontSize="13"
+                       TextColor="#2B0B98"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"
+                       LineBreakMode="WordWrap" />
+
+                <Grid ColumnDefinitions="*,*"
+                      ColumnSpacing="10">
+
+                    <Button Grid.Column="0"
+                            Text="📍 Usar mi GPS"
+                            Clicked="OnUsarGpsClicked"
+                            BackgroundColor="#EEF2FF"
+                            TextColor="#2B0B98"
+                            FontAttributes="Bold"
+                            CornerRadius="14"
+                            HeightRequest="46" />
+
+                    <Button Grid.Column="1"
+                            Text="✅ Confirmar"
+                            Clicked="OnConfirmarClicked"
+                            BackgroundColor="#2B0B98"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="14"
+                            HeightRequest="46" />
+                </Grid>
+
+                <Button Text="Cancelar"
+                        Clicked="OnCancelarClicked"
+                        BackgroundColor="#F1F5F9"
+                        TextColor="#64748B"
+                        FontAttributes="Bold"
+                        CornerRadius="14"
+                        HeightRequest="44" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+</ContentPage>

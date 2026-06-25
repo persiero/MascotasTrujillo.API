@@ -19,6 +19,10 @@ public partial class RadarPage : ContentPage
     {
         InitializeComponent();
         _apiService = apiService;
+
+        FiltroTipoPicker.SelectedIndex = 0;
+        RadioPicker.SelectedIndex = 2;
+        LblResumenFiltro.Text = "0 reportes activos";
     }
 
     private async void OnActualizarClicked(object? sender, EventArgs e)
@@ -146,7 +150,7 @@ public partial class RadarPage : ContentPage
 
         LblResumenFiltro.Text = reportesFiltrados.Count == 1
             ? "1 reporte"
-            : $"{reportesFiltrados.Count} reportes";
+            : $"{reportesFiltrados.Count} reportes activos";
     }
 
     private List<Reporte> FiltrarPorTipo(List<Reporte> reportes)

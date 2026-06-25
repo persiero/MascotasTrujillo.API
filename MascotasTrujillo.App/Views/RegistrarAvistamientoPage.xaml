@@ -12,7 +12,7 @@
             <!-- Encabezado -->
             <Border BackgroundColor="#FFFFFF"
                     Stroke="Transparent"
-                    Padding="18">
+                    Padding="16">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
@@ -20,23 +20,48 @@
 
                 <Border.Shadow>
                     <Shadow Brush="Black"
-                            Opacity="0.08"
+                            Opacity="0.06"
                             Offset="0,3"
                             Radius="8" />
                 </Border.Shadow>
 
-                <VerticalStackLayout Spacing="6">
-                    <Label Text="Registrar Avistamiento"
-                           FontSize="26"
-                           FontAttributes="Bold"
-                           TextColor="#1E1B4B" />
+                <Grid ColumnDefinitions="Auto,*"
+                        ColumnSpacing="12">
 
-                    <Label x:Name="LblReporteTitulo"
-                           Text="Ayuda indicando dónde viste a la mascota reportada."
-                           FontSize="14"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-                </VerticalStackLayout>
+                    <Border Grid.Column="0"
+                            BackgroundColor="#DCFCE7"
+                            Stroke="Transparent"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            VerticalOptions="Center">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="25" />
+                        </Border.StrokeShape>
+
+                        <Label Text="👀"
+                               FontSize="25"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="1"
+                             Spacing="3"
+                             VerticalOptions="Center">
+
+                        <Label Text="Registrar avistamiento"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="#1E1B4B" />
+
+                        <Label x:Name="LblReporteTitulo"
+                               Text="Ayuda indicando dónde viste a la mascota reportada."
+                               FontSize="12"
+                               TextColor="#64748B"
+                               LineBreakMode="TailTruncation" />
+                    </VerticalStackLayout>
+
+                </Grid>
             </Border>
 
             <!-- Descripción -->
@@ -50,10 +75,15 @@
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Detalle del avistamiento"
+                    <Label Text="¿Cómo y dónde la viste?"
                            FontSize="16"
                            FontAttributes="Bold"
                            TextColor="#1E293B" />
+
+                    <Label Text="Describe la dirección, comportamiento de la mascota o alguna referencia útil."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
 
                     <Editor x:Name="DescripcionEditor"
                             Placeholder="Ej. La vi cerca del parque, caminando hacia la avenida..."
@@ -81,14 +111,35 @@
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Foto del avistamiento"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
+                    <Grid ColumnDefinitions="*,Auto">
 
-                    <Label Text="Agrega una foto si lograste capturar evidencia del avistamiento."
+                        <Label Text="Foto del avistamiento"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#1E293B" />
+
+                        <Border Grid.Column="1"
+                                BackgroundColor="#DCFCE7"
+                                Stroke="Transparent"
+                                Padding="8,3"
+                                VerticalOptions="Center">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
+                            <Label Text="Opcional"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#0F766E" />
+                        </Border>
+
+                    </Grid>
+
+                    <Label Text="Si tienes una foto, agrégala para que el dueño pueda reconocer mejor el avistamiento."
                            FontSize="12"
-                           TextColor="#64748B" />
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
 
                     <Border BackgroundColor="#F1F5F9"
                             HeightRequest="240"
@@ -117,15 +168,15 @@
 
                                     <Button Text="Cámara"
                                             Clicked="OnTomarFotoClicked"
-                                            BackgroundColor="#2B0B98"
+                                            BackgroundColor="#0F766E"
                                             TextColor="White"
                                             CornerRadius="14"
                                             Padding="18,0" />
 
                                     <Button Text="Galería"
                                             Clicked="OnElegirGaleriaClicked"
-                                            BackgroundColor="#EEF2FF"
-                                            TextColor="#2B0B98"
+                                            BackgroundColor="#DCFCE7"
+                                            TextColor="#0F766E"
                                             CornerRadius="14"
                                             Padding="18,0" />
 
@@ -137,25 +188,73 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Nota GPS -->
-            <Border BackgroundColor="#EEF2FF"
+            <!-- Ubicación del avistamiento -->
+            <Border BackgroundColor="#FFFFFF"
                     Stroke="Transparent"
-                    Padding="14">
+                    Padding="18">
 
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16" />
+                    <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
 
-                <Label Text="Se usará tu ubicación GPS actual para registrar el punto del avistamiento."
-                       FontSize="12"
-                       TextColor="#2B0B98"
-                       HorizontalTextAlignment="Center"
-                       FontAttributes="Bold" />
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Punto del avistamiento"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B" />
+
+                    <Label Text="Marca el lugar exacto donde viste a la mascota. Puedes usar tu GPS o elegir el punto en el mapa."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
+
+                    <Grid ColumnDefinitions="*,*"
+                            ColumnSpacing="10">
+
+                        <Button Grid.Column="0"
+                                Text="📍 Usar mi GPS"
+                                Clicked="OnUsarGpsActualClicked"
+                                BackgroundColor="#0F766E"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="14"
+                                HeightRequest="44" />
+
+                        <Button Grid.Column="1"
+                                Text="🗺️ Elegir en mapa"
+                                Clicked="OnSeleccionarMapaClicked"
+                                BackgroundColor="#DCFCE7"
+                                TextColor="#0F766E"
+                                FontAttributes="Bold"
+                                CornerRadius="14"
+                                HeightRequest="44" />
+
+                    </Grid>
+
+                    <Border BackgroundColor="#DCFCE7"
+                            Stroke="Transparent"
+                            Padding="12">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+
+                        <Label x:Name="LblUbicacionSeleccionada"
+                               Text="Aún no has seleccionado la ubicación del avistamiento."
+                               FontSize="12"
+                               TextColor="#0F766E"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               LineBreakMode="WordWrap" />
+                    </Border>
+
+                </VerticalStackLayout>
             </Border>
 
             <!-- Botón guardar -->
             <Button x:Name="BtnGuardarAvistamiento"
-                    Text="📍 Guardar avistamiento"
+                    Text="📌 Publicar avistamiento"
                     Clicked="OnGuardarAvistamientoClicked"
                     BackgroundColor="#0F766E"
                     TextColor="White"

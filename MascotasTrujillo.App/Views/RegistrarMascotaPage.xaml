@@ -14,7 +14,7 @@
             <!-- Encabezado -->
             <Border BackgroundColor="#FFFFFF"
                     Stroke="Transparent"
-                    Padding="18">
+                    Padding="16">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
@@ -22,22 +22,50 @@
 
                 <Border.Shadow>
                     <Shadow Brush="Black"
-                            Opacity="0.08"
+                            Opacity="0.06"
                             Offset="0,3"
                             Radius="8" />
                 </Border.Shadow>
 
-                <VerticalStackLayout Spacing="6">
-                    <Label Text="Registrar Mascota"
-                           FontSize="26"
-                           FontAttributes="Bold"
-                           TextColor="#1E1B4B" />
+                <Grid ColumnDefinitions="Auto,*"
+                        ColumnSpacing="12">
 
-                    <Label Text="Agrega los datos de tu mascota para administrarla y, si cuenta con collar GPS, consultar su ubicación privada."
-                           FontSize="14"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-                </VerticalStackLayout>
+                    <Border Grid.Column="0"
+                            BackgroundColor="#EEF2FF"
+                            Stroke="Transparent"
+                            HeightRequest="52"
+                            WidthRequest="52"
+                            VerticalOptions="Center">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="26" />
+                        </Border.StrokeShape>
+
+                        <Label x:Name="LblIconoFormulario"
+                               Text="🐾"
+                               FontSize="26"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="1"
+                                         Spacing="3"
+                                         VerticalOptions="Center">
+
+                        <Label x:Name="LblTituloFormulario"
+                               Text="Registrar mascota"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="#1E1B4B" />
+
+                                    <Label x:Name="LblSubtituloFormulario"
+                               Text="Agrega los datos de tu mascota para administrarla y consultar su ubicación privada si cuenta con collar GPS."
+                               FontSize="12"
+                               TextColor="#64748B"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+
+                </Grid>
             </Border>
 
             <!-- Foto -->
@@ -52,11 +80,37 @@
                 <VerticalStackLayout Spacing="12"
                                      HorizontalOptions="Center">
 
-                    <Label Text="Foto de la mascota"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B"
-                           HorizontalOptions="Center" />
+                    <Grid ColumnDefinitions="*,Auto"
+                            WidthRequest="260">
+
+                        <Label Text="Foto de la mascota"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#1E293B"
+                               VerticalOptions="Center" />
+
+                        <Border Grid.Column="1"
+                                BackgroundColor="#EEF2FF"
+                                Stroke="Transparent"
+                                Padding="8,3"
+                                VerticalOptions="Center">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
+                            <Label Text="Opcional"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#2B0B98" />
+                        </Border>
+                    </Grid>
+
+                    <Label Text="Puedes agregar una foto para identificarla mejor en tus reportes."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap" />
 
                     <Border Stroke="#2B0B98"
                             StrokeThickness="2"
@@ -111,10 +165,35 @@
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Datos principales"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <Label Text="Datos principales"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#1E293B"
+                               VerticalOptions="Center" />
+
+                        <Border Grid.Column="1"
+                                BackgroundColor="#FEE2E2"
+                                Stroke="Transparent"
+                                Padding="8,3"
+                                VerticalOptions="Center">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
+                            <Label Text="Obligatorio"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#B91C1C" />
+                        </Border>
+                    </Grid>
+
+                    <Label Text="El nombre y la especie son necesarios para registrar la mascota."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           LineBreakMode="WordWrap" />
 
                     <Entry x:Name="NombreEntry"
                            Placeholder="Nombre de la mascota *"
@@ -202,10 +281,30 @@
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Información de salud"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <Label Text="Información de salud"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#1E293B"
+                               VerticalOptions="Center" />
+
+                        <Border Grid.Column="1"
+                                BackgroundColor="#FEF3C7"
+                                Stroke="Transparent"
+                                Padding="8,3"
+                                VerticalOptions="Center">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
+                            <Label Text="Opcional"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#92400E" />
+                        </Border>
+                    </Grid>
 
                     <Label Text="Registra enfermedades, tratamientos o cuidados especiales. Esta información puede ayudar si tu mascota se pierde."
                            FontSize="12"
@@ -277,10 +376,30 @@
 
                 <VerticalStackLayout Spacing="12">
 
-                    <Label Text="Collar GPS privado"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <Label Text="Collar GPS privado"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#1E293B"
+                               VerticalOptions="Center" />
+
+                        <Border Grid.Column="1"
+                                BackgroundColor="#EEF2FF"
+                                Stroke="Transparent"
+                                Padding="8,3"
+                                VerticalOptions="Center">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
+                            <Label Text="Opcional"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#2B0B98" />
+                        </Border>
+                    </Grid>
 
                     <Label Text="Este dato es opcional. Si tu mascota tiene un collar GPS, ingresa el código del dispositivo para consultar su última ubicación."
                            FontSize="12"
@@ -312,7 +431,7 @@
 
             <!-- Guardar -->
             <Button x:Name="BtnGuardar"
-                    Text="Guardar mascota"
+                    Text="💾 Guardar mascota"
                     Clicked="OnGuardarMascotaClicked"
                     BackgroundColor="#2B0B98"
                     TextColor="White"
