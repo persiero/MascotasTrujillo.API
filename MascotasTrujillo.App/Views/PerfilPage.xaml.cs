@@ -69,7 +69,7 @@ public partial class PerfilPage : ContentPage
     private async void OnGuardarPerfilClicked(object sender, EventArgs e)
     {
         string nombre = NombreEntry.Text?.Trim() ?? string.Empty;
-        string telefono = TelefonoEntry.Text?.Trim() ?? string.Empty;
+        string telefono = LimpiarTelefono(TelefonoEntry.Text?.Trim() ?? string.Empty);
 
         if (string.IsNullOrWhiteSpace(nombre))
         {
@@ -82,10 +82,21 @@ public partial class PerfilPage : ContentPage
             return;
         }
 
+        if (!string.IsNullOrWhiteSpace(telefono) && telefono.Length < 9)
+        {
+            await DisplayAlertAsync(
+                "Teléfono inválido",
+                "Ingresa un número de teléfono válido para WhatsApp.",
+                "OK"
+            );
+
+            return;
+        }
+
         LoadingIndicator.IsRunning = true;
         LoadingIndicator.IsVisible = true;
         BtnGuardarPerfil.IsEnabled = false;
-        BtnGuardarPerfil.Text = "Guardando...";
+        BtnGuardarPerfil.Text = "Guardando cambios...";
 
         try
         {
@@ -133,7 +144,7 @@ public partial class PerfilPage : ContentPage
             LoadingIndicator.IsRunning = false;
             LoadingIndicator.IsVisible = false;
             BtnGuardarPerfil.IsEnabled = true;
-            BtnGuardarPerfil.Text = "Guardar cambios";
+            BtnGuardarPerfil.Text = "💾 Guardar cambios";
         }
     }
 
@@ -150,6 +161,7 @@ public partial class PerfilPage : ContentPage
             return;
 
         SecureStorage.Default.Remove("auth_token");
+        SecureStorage.Default.Remove("usuario_id");
         SecureStorage.Default.Remove("usuario_nombre");
         SecureStorage.Default.Remove("usuario_email");
         SecureStorage.Default.Remove("usuario_telefono");
@@ -161,4 +173,20 @@ public partial class PerfilPage : ContentPage
             Application.Current.Windows[0].Page = new LoginPage(_apiService);
         }
     }
+
+    private string LimpiarTelefono(string telefono)
+    {
+        if (string.IsNullOrWhiteSpace(telefono))
+            return string.Empty;
+
+        string numeroLimpio = new string(
+            telefono.Where(char.IsDigit).ToArray()
+        );
+
+        if (numeroLimpio.Length == 9)
+            numeroLimpio = "51" + numeroLimpio;
+
+        return numeroLimpio;
+    }
+
 }

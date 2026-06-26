@@ -501,13 +501,22 @@
                            HorizontalTextAlignment="Center"
                            IsVisible="False" />
 
-                    <Button Text="💬 Contactar por WhatsApp"
+                    <Button x:Name="BtnWhatsApp"
+                            Text="💬 Contactar por WhatsApp"
                             Clicked="OnWhatsAppClicked"
                             BackgroundColor="#22C55E"
                             TextColor="White"
                             FontAttributes="Bold"
                             CornerRadius="16"
                             HeightRequest="48" />
+
+                    <Label x:Name="LblReportePropio"
+                           Text="Este reporte fue creado por ti. Por eso no se muestran acciones de contacto ni registro de avistamiento."
+                           FontSize="12"
+                           TextColor="#64748B"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap"
+                           IsVisible="False" />
 
                 </VerticalStackLayout>
             </Border>

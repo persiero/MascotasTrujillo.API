@@ -62,7 +62,9 @@ public partial class LoginPage : ContentPage
         if (loginResponse != null && !string.IsNullOrWhiteSpace(loginResponse.Token))
         {
             _apiService.SetToken(loginResponse.Token);
+
             await SecureStorage.Default.SetAsync("auth_token", loginResponse.Token);
+            await SecureStorage.Default.SetAsync("usuario_id", loginResponse.UsuarioId.ToString());
 
             if (!string.IsNullOrWhiteSpace(loginResponse.NombreCompleto))
                 await SecureStorage.Default.SetAsync("usuario_nombre", loginResponse.NombreCompleto);

@@ -8,10 +8,10 @@ namespace MascotasTrujillo.App.Views;
 public partial class DetalleReportePage : ContentPage
 {
     private readonly Reporte _reporteActual;
-
     private readonly ApiService _apiService;
-
     private readonly ObservableCollection<Avistamiento> _avistamientos = new();
+
+    private bool _esReportePropio = false;
 
     public DetalleReportePage(ApiService apiService, Reporte reporte)
     {
@@ -72,10 +72,7 @@ public partial class DetalleReportePage : ContentPage
         LblNecesidadesEspeciales.Text = TextoONoRegistrado(_reporteActual.NecesidadesEspeciales);
         LblObservacionesSalud.Text = TextoONoRegistrado(_reporteActual.ObservacionesSalud);
 
-        bool puedeRegistrarAvistamiento = PuedeRegistrarAvistamiento();
-
-        BtnRegistrarAvistamiento.IsVisible = puedeRegistrarAvistamiento;
-        LblAvistamientoNoDisponible.IsVisible = !puedeRegistrarAvistamiento;
+        ConfigurarAccionesSegunUsuario();
 
         SeccionAvistamientos.IsVisible = EsReportePerdida();
 
@@ -84,6 +81,10 @@ public partial class DetalleReportePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        _esReportePropio = await EsReportePropioAsync();
+
+        ConfigurarAccionesSegunUsuario();
 
         await CargarAvistamientosAsync();
     }
@@ -117,6 +118,17 @@ public partial class DetalleReportePage : ContentPage
 
     private async void OnRegistrarAvistamientoClicked(object sender, EventArgs e)
     {
+        if (await EsReportePropioAsync())
+        {
+            await DisplayAlertAsync(
+                "Acción no disponible",
+                "No puedes registrar avistamientos sobre un reporte creado por ti.",
+                "OK"
+            );
+
+            return;
+        }
+
         if (!PuedeRegistrarAvistamiento())
         {
             await DisplayAlertAsync(
@@ -169,6 +181,17 @@ public partial class DetalleReportePage : ContentPage
 
     private async void OnWhatsAppClicked(object sender, EventArgs e)
     {
+        if (await EsReportePropioAsync())
+        {
+            await DisplayAlertAsync(
+                "Acción no disponible",
+                "No puedes contactarte por WhatsApp sobre un reporte creado por ti.",
+                "OK"
+            );
+
+            return;
+        }
+
         try
         {
             string numeroTelefono = LimpiarNumeroWhatsapp(_reporteActual.TelefonoContacto);
@@ -223,6 +246,64 @@ public partial class DetalleReportePage : ContentPage
             numeroLimpio = "51" + numeroLimpio;
 
         return numeroLimpio;
+    }
+
+    private async Task<long?> ObtenerUsuarioIdActualAsync()
+    {
+        try
+        {
+            string? usuarioIdTexto = await SecureStorage.Default.GetAsync("usuario_id");
+
+            if (long.TryParse(usuarioIdTexto, out long usuarioId))
+                return usuarioId;
+
+            var perfil = await _apiService.ObtenerPerfilAsync();
+
+            if (perfil != null)
+            {
+                await SecureStorage.Default.SetAsync("usuario_id", perfil.Id.ToString());
+                return perfil.Id;
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private async Task<bool> EsReportePropioAsync()
+    {
+        long? usuarioIdActual = await ObtenerUsuarioIdActualAsync();
+
+        if (!usuarioIdActual.HasValue)
+            return false;
+
+        return _reporteActual.UsuarioId == usuarioIdActual.Value;
+    }
+
+    private void ConfigurarAccionesSegunUsuario()
+    {
+        bool puedeRegistrarAvistamientoBase = PuedeRegistrarAvistamiento();
+        bool puedeRegistrarAvistamientoFinal = puedeRegistrarAvistamientoBase && !_esReportePropio;
+
+        BtnRegistrarAvistamiento.IsVisible = puedeRegistrarAvistamientoFinal;
+        BtnWhatsApp.IsVisible = !_esReportePropio;
+        LblReportePropio.IsVisible = _esReportePropio;
+
+        if (_esReportePropio)
+        {
+            LblAvistamientoNoDisponible.IsVisible = true;
+            LblAvistamientoNoDisponible.Text =
+                "Este reporte fue creado por ti. No puedes registrar avistamientos sobre tu propio reporte.";
+        }
+        else
+        {
+            LblAvistamientoNoDisponible.IsVisible = !puedeRegistrarAvistamientoBase;
+            LblAvistamientoNoDisponible.Text =
+                "Los avistamientos solo pueden registrarse en reportes activos de mascotas perdidas.";
+        }
     }
 
 }
