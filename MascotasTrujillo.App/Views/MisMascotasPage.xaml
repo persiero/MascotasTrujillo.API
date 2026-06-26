@@ -211,8 +211,8 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <Grid ColumnDefinitions="*,*"
-                      ColumnSpacing="10"
+                <Grid ColumnDefinitions="*,*,*"
+                      ColumnSpacing="8"
                       Margin="0,4,0,0">
 
                     <Button x:Name="BtnEditarMascota"
@@ -224,10 +224,23 @@
                             FontAttributes="Bold"
                             CornerRadius="14"
                             HeightRequest="44"
+                            FontSize="12"
+                            IsEnabled="False" />
+
+                    <Button x:Name="BtnHistorialGps"
+                            Grid.Column="1"
+                            Text="📍 GPS"
+                            Clicked="OnHistorialGpsClicked"
+                            BackgroundColor="#DCFCE7"
+                            TextColor="#0F766E"
+                            FontAttributes="Bold"
+                            CornerRadius="14"
+                            HeightRequest="44"
+                            FontSize="12"
                             IsEnabled="False" />
 
                     <Button x:Name="BtnDesactivarMascota"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Text="🗑️ Desactivar"
                             Clicked="OnDesactivarMascotaClicked"
                             BackgroundColor="#FEE2E2"
@@ -235,6 +248,7 @@
                             FontAttributes="Bold"
                             CornerRadius="14"
                             HeightRequest="44"
+                            FontSize="12"
                             IsEnabled="False" />
                 </Grid>
 

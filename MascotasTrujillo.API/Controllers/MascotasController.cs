@@ -79,6 +79,8 @@ namespace MascotasTrujillo.API.Controllers
                     FotoPerfilUrl = fotoPrincipal?.UrlFoto,
                     ObservacionesSalud = m.InformacionSalud?.Observaciones,
                     DispositivoId = dispositivoActivo?.CodigoDispositivo,
+                    EstadoConexionGps = dispositivoActivo?.EstadoConexion,
+                    BateriaGps = ultimaUbicacion?.Bateria,
                     UltimaActualizacion = ultimaUbicacion?.FechaRegistro,
                     Latitud = ultimaUbicacion?.Ubicacion != null ? (double?)ultimaUbicacion.Ubicacion.Y : null,
                     Longitud = ultimaUbicacion?.Ubicacion != null ? (double?)ultimaUbicacion.Ubicacion.X : null
@@ -132,9 +134,25 @@ namespace MascotasTrujillo.API.Controllers
 
             if (!string.IsNullOrWhiteSpace(mascotaDto.DispositivoId))
             {
+                string codigoGps = mascotaDto.DispositivoId.Trim();
+
+                bool dispositivoYaUsado = await _context.DispositivosGps
+                    .AnyAsync(d => d.CodigoDispositivo == codigoGps &&
+                                   d.Activo &&
+                                   d.Mascota != null &&
+                                   d.Mascota.EstaActiva);
+
+                if (dispositivoYaUsado)
+                {
+                    return BadRequest(new
+                    {
+                        Mensaje = "El código GPS ingresado ya está asociado a otra mascota activa."
+                    });
+                }
+
                 nuevaMascota.DispositivosGps.Add(new DispositivoGps
                 {
-                    CodigoDispositivo = mascotaDto.DispositivoId,
+                    CodigoDispositivo = codigoGps,
                     NombreDispositivo = "Collar GPS",
                     EstadoConexion = "Desconectado",
                     Activo = true,
@@ -219,31 +237,58 @@ namespace MascotasTrujillo.API.Controllers
                 });
             }
 
-            if (!string.IsNullOrWhiteSpace(mascotaDto.DispositivoId))
+            var dispositivoActivo = mascota.DispositivosGps
+    .Where(d => d.Activo)
+    .OrderByDescending(d => d.FechaAsociacion)
+    .FirstOrDefault();
+
+            string codigoGpsNuevo = mascotaDto.DispositivoId?.Trim() ?? string.Empty;
+
+            // Si el usuario borra el código GPS, desactivamos el dispositivo actual.
+            if (string.IsNullOrWhiteSpace(codigoGpsNuevo))
             {
-                var dispositivoActivo = mascota.DispositivosGps
-                    .Where(d => d.Activo)
-                    .OrderByDescending(d => d.FechaAsociacion)
-                    .FirstOrDefault();
+                if (dispositivoActivo != null)
+                {
+                    dispositivoActivo.Activo = false;
+                    dispositivoActivo.EstadoConexion = "Desconectado";
+                }
+            }
+            else
+            {
+                bool dispositivoYaUsado = await _context.DispositivosGps
+                    .AnyAsync(d => d.CodigoDispositivo == codigoGpsNuevo &&
+                                   d.Activo &&
+                                   d.MascotaId != mascota.Id &&
+                                   d.Mascota != null &&
+                                   d.Mascota.EstaActiva);
+
+                if (dispositivoYaUsado)
+                {
+                    return BadRequest(new
+                    {
+                        Mensaje = "El código GPS ingresado ya está asociado a otra mascota activa."
+                    });
+                }
 
                 if (dispositivoActivo == null)
                 {
                     mascota.DispositivosGps.Add(new DispositivoGps
                     {
-                        CodigoDispositivo = mascotaDto.DispositivoId,
+                        CodigoDispositivo = codigoGpsNuevo,
                         NombreDispositivo = "Collar GPS",
                         EstadoConexion = "Desconectado",
                         Activo = true,
                         FechaAsociacion = DateTime.UtcNow
                     });
                 }
-                else if (dispositivoActivo.CodigoDispositivo != mascotaDto.DispositivoId)
+                else if (!string.Equals(dispositivoActivo.CodigoDispositivo, codigoGpsNuevo, StringComparison.OrdinalIgnoreCase))
                 {
                     dispositivoActivo.Activo = false;
+                    dispositivoActivo.EstadoConexion = "Desconectado";
 
                     mascota.DispositivosGps.Add(new DispositivoGps
                     {
-                        CodigoDispositivo = mascotaDto.DispositivoId,
+                        CodigoDispositivo = codigoGpsNuevo,
                         NombreDispositivo = "Collar GPS",
                         EstadoConexion = "Desconectado",
                         Activo = true,
@@ -396,5 +441,66 @@ namespace MascotasTrujillo.API.Controllers
 
             return Ok(new { Mensaje = "Ubicación actualizada correctamente." });
         }
+
+        // GET: api/mascotas/5/historial-gps
+        [HttpGet("{id:long}/historial-gps")]
+        public async Task<IActionResult> ObtenerHistorialGps(long id)
+        {
+            var usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!long.TryParse(usuarioIdClaim, out var usuarioId))
+            {
+                return Unauthorized(new { Mensaje = "No se pudo identificar al usuario desde el token." });
+            }
+
+            var mascota = await _context.Mascotas
+                .Include(m => m.DispositivosGps)
+                .FirstOrDefaultAsync(m => m.Id == id &&
+                                          m.UsuarioId == usuarioId &&
+                                          m.EstaActiva);
+
+            if (mascota == null)
+            {
+                return NotFound(new { Mensaje = "La mascota no existe o no pertenece al usuario autenticado." });
+            }
+
+            var dispositivoActivo = mascota.DispositivosGps
+                .Where(d => d.Activo)
+                .OrderByDescending(d => d.FechaAsociacion)
+                .FirstOrDefault();
+
+            if (dispositivoActivo == null)
+            {
+                return Ok(new List<object>());
+            }
+
+            var ubicacionesDb = await _context.UbicacionesGps
+                .Where(u => u.DispositivoGpsId == dispositivoActivo.Id)
+                .OrderByDescending(u => u.FechaRegistro)
+                .Take(30)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.DispositivoGpsId,
+                    u.Bateria,
+                    u.FechaRegistro,
+                    Ubicacion = u.Ubicacion
+                })
+                .ToListAsync();
+
+            var historial = ubicacionesDb.Select(u => new
+            {
+                u.Id,
+                u.DispositivoGpsId,
+                CodigoDispositivo = dispositivoActivo.CodigoDispositivo,
+                u.Bateria,
+                u.FechaRegistro,
+                Latitud = u.Ubicacion.Y,
+                Longitud = u.Ubicacion.X
+            });
+
+            return Ok(historial);
+        }
+
     }
 }

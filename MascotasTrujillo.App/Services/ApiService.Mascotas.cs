@@ -170,7 +170,7 @@ namespace MascotasTrujillo.App.Services
                     content.Add(new StringContent(observacionesSalud), "ObservacionesSalud");
 
                 if (!string.IsNullOrWhiteSpace(dispositivoId))
-                    content.Add(new StringContent(dispositivoId), "DispositivoId");
+                    content.Add(new StringContent(dispositivoId?.Trim() ?? string.Empty), "DispositivoId");
 
                 if (!string.IsNullOrWhiteSpace(rutaFotoLocal) && File.Exists(rutaFotoLocal))
                 {
@@ -233,5 +233,27 @@ namespace MascotasTrujillo.App.Services
                 return (false, $"Error de conexión: {ex.Message}");
             }
         }
+
+        public async Task<List<UbicacionGpsHistorial>?> ObtenerHistorialGpsMascotaAsync(long mascotaId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"Mascotas/{mascotaId}/historial-gps");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<List<UbicacionGpsHistorial>>(json, _jsonOptions);
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener historial GPS: {ex.Message}");
+                return null;
+            }
+        }
+
     }
 }

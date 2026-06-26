@@ -49,12 +49,22 @@ namespace MascotasTrujillo.App.Models
         public bool TieneUbicacionGps =>
             Latitud.HasValue && Longitud.HasValue;
 
-        public string EstadoGpsVisual =>
-            string.IsNullOrWhiteSpace(DispositivoId)
-                ? "Sin GPS"
-                : TieneUbicacionGps
-                    ? "GPS activo"
-                    : "GPS sin ubicación";
+        public string EstadoGpsVisual
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(DispositivoId))
+                    return "Sin GPS";
+
+                if (TieneUbicacionGps && BateriaGps.HasValue)
+                    return $"GPS activo · {BateriaGps.Value:0}%";
+
+                if (TieneUbicacionGps)
+                    return "GPS activo";
+
+                return "GPS sin ubicación";
+            }
+        }
 
         public string EstadoGpsFondo =>
             string.IsNullOrWhiteSpace(DispositivoId)
@@ -69,6 +79,31 @@ namespace MascotasTrujillo.App.Models
                 : TieneUbicacionGps
                     ? "#0F766E"
                     : "#92400E";
+
+        public string? EstadoConexionGps { get; set; }
+
+        public decimal? BateriaGps { get; set; }
+
+        public string UltimaUbicacionTexto
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(DispositivoId))
+                    return "Esta mascota no tiene un collar GPS asociado.";
+
+                if (!TieneUbicacionGps)
+                    return "El collar GPS está asociado, pero aún no registra ubicación.";
+
+                string bateriaTexto = BateriaGps.HasValue
+                    ? $" · Batería: {BateriaGps.Value:0}%"
+                    : string.Empty;
+
+                if (UltimaActualizacion.HasValue)
+                    return $"Última actualización GPS: {UltimaActualizacion.Value:dd/MM/yyyy HH:mm}{bateriaTexto}";
+
+                return $"Última ubicación GPS registrada{bateriaTexto}";
+            }
+        }
 
     }
 }

@@ -407,6 +407,11 @@
                                         BackgroundColor="#F8FAFC"
                                         Stroke="#E2E8F0">
 
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAvistamientoTapped"
+                                                                CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="16" />
                                     </Border.StrokeShape>
@@ -431,7 +436,7 @@
                                         </Border>
 
                                         <VerticalStackLayout Grid.Column="1"
-                                                             Spacing="4"
+                                                             Spacing="5"
                                                              VerticalOptions="Center">
 
                                             <Label Text="{Binding Descripcion}"
@@ -441,14 +446,30 @@
                                                    LineBreakMode="TailTruncation"
                                                    MaxLines="2" />
 
-                                            <Label Text="{Binding DireccionReferencia}"
+                                            <Label Text="{Binding ResumenUbicacion}"
                                                    FontSize="12"
                                                    TextColor="#64748B"
-                                                   LineBreakMode="TailTruncation" />
+                                                   LineBreakMode="TailTruncation"
+                                                   MaxLines="1" />
 
-                                            <Label Text="{Binding FechaAvistamiento, StringFormat='📅 {0:dd/MM/yyyy HH:mm}'}"
+                                            <Label Text="{Binding FechaResumen}"
                                                    FontSize="12"
                                                    TextColor="#94A3B8" />
+
+                                            <Border BackgroundColor="{Binding DetalleChipFondo}"
+                                                    Stroke="Transparent"
+                                                    Padding="8,3"
+                                                    HorizontalOptions="Start">
+
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10" />
+                                                </Border.StrokeShape>
+
+                                                <Label Text="{Binding DetalleChipTexto}"
+                                                       FontSize="11"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{Binding DetalleChipColor}" />
+                                            </Border>
 
                                         </VerticalStackLayout>
                                     </Grid>

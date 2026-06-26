@@ -44,12 +44,16 @@ public partial class MisMascotasPage : ContentPage
     private void ActualizarEstadoBotonesMascota()
     {
         bool hayMascotaSeleccionada = _mascotaSeleccionada != null;
+        bool tieneGps = hayMascotaSeleccionada &&
+                        !string.IsNullOrWhiteSpace(_mascotaSeleccionada?.DispositivoId);
 
         BtnEditarMascota.IsEnabled = hayMascotaSeleccionada;
         BtnDesactivarMascota.IsEnabled = hayMascotaSeleccionada;
+        BtnHistorialGps.IsEnabled = tieneGps;
 
         BtnEditarMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
         BtnDesactivarMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
+        BtnHistorialGps.Opacity = tieneGps ? 1 : 0.45;
     }
 
     private async Task CargarMascotas()
@@ -199,6 +203,10 @@ public partial class MisMascotasPage : ContentPage
                         mascotaActual.Longitud = mascotaActualizada.Longitud;
                         mascotaActual.UltimaActualizacion = mascotaActualizada.UltimaActualizacion;
                         mascotaActual.DispositivoId = mascotaActualizada.DispositivoId;
+                        mascotaActual.EstadoConexionGps = mascotaActualizada.EstadoConexionGps;
+                        mascotaActual.BateriaGps = mascotaActualizada.BateriaGps;
+
+                        ActualizarEstadoBotonesMascota();
 
                         if (mascotaActual.Latitud.HasValue && mascotaActual.Longitud.HasValue)
                         {
@@ -233,18 +241,14 @@ public partial class MisMascotasPage : ContentPage
         MascotaMap.Pins.Add(new Pin
         {
             Label = mascotaActual.Nombre,
-            Address = mascotaActual.UltimaActualizacion.HasValue
-                ? $"Última actualización: {mascotaActual.UltimaActualizacion.Value:dd/MM/yyyy HH:mm}"
-                : "Última ubicación registrada",
+            Address = mascotaActual.UltimaUbicacionTexto,
             Location = ubicacion,
             Type = PinType.Place
         });
 
         LblTituloMapa.Text = $"Última ubicación de {mascotaActual.Nombre}";
 
-        LblNotaSeguimiento.Text = mascotaActual.UltimaActualizacion.HasValue
-            ? $"Última actualización GPS: {mascotaActual.UltimaActualizacion.Value:dd/MM/yyyy HH:mm}"
-            : "Última ubicación GPS registrada.";
+        LblNotaSeguimiento.Text = mascotaActual.UltimaUbicacionTexto;
 
         MascotaMap.MoveToRegion(
             MapSpan.FromCenterAndRadius(
@@ -267,16 +271,7 @@ public partial class MisMascotasPage : ContentPage
 
         LblTituloMapa.Text = "Sin ubicación GPS";
 
-        if (string.IsNullOrWhiteSpace(_mascotaSeleccionada.DispositivoId))
-        {
-            LblNotaSeguimiento.Text =
-                $"{_mascotaSeleccionada.Nombre} no tiene un collar GPS asociado.";
-        }
-        else
-        {
-            LblNotaSeguimiento.Text =
-                $"{_mascotaSeleccionada.Nombre} tiene GPS asociado, pero todavía no registra ubicación.";
-        }
+        LblNotaSeguimiento.Text = _mascotaSeleccionada.UltimaUbicacionTexto;
 
         var ubicacionReferencia = new Location(-8.1118, -79.0287);
 
@@ -292,4 +287,34 @@ public partial class MisMascotasPage : ContentPage
     {
         await Navigation.PushAsync(new RegistrarMascotaPage(_apiService));
     }
+
+    private async void OnHistorialGpsClicked(object sender, EventArgs e)
+    {
+        if (_mascotaSeleccionada == null)
+        {
+            await DisplayAlertAsync(
+                "Aviso",
+                "Selecciona una mascota primero.",
+                "OK"
+            );
+
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(_mascotaSeleccionada.DispositivoId))
+        {
+            await DisplayAlertAsync(
+                "Sin GPS",
+                "Esta mascota no tiene un collar GPS asociado.",
+                "OK"
+            );
+
+            return;
+        }
+
+        await Navigation.PushAsync(
+            new HistorialGpsPage(_apiService, _mascotaSeleccionada)
+        );
+    }
+
 }

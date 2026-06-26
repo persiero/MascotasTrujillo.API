@@ -92,7 +92,7 @@ namespace MascotasTrujillo.API.Controllers
         }
 
         // GET: api/avistamientos/reporte/5
-        // Consulta los avistamientos asociados a un reporte.
+        // Consulta la lista básica de avistamientos asociados a un reporte.
         [HttpGet("reporte/{reporteId:long}")]
         public async Task<IActionResult> ObtenerPorReporte(long reporteId)
         {
@@ -104,18 +104,14 @@ namespace MascotasTrujillo.API.Controllers
             }
 
             var reporte = await _context.Reportes
-                .FirstOrDefaultAsync(r => r.Id == reporteId);
+                .FirstOrDefaultAsync(r => r.Id == reporteId && r.Visible);
 
             if (reporte == null)
             {
                 return NotFound(new { Mensaje = "El reporte no existe." });
             }
 
-            // Versión controlada: solo el creador del reporte puede ver todos los avistamientos recibidos.
-            if (reporte.UsuarioId != usuarioId)
-            {
-                return Forbid();
-            }
+            bool esDuenoReporte = reporte.UsuarioId == usuarioId;
 
             var avistamientosDb = await _context.Avistamientos
                 .Where(a => a.ReporteId == reporteId && a.Visible)
@@ -136,17 +132,29 @@ namespace MascotasTrujillo.API.Controllers
                 })
                 .ToListAsync();
 
-            var avistamientos = avistamientosDb.Select(a => new
+            var avistamientos = avistamientosDb.Select(a =>
             {
-                a.Id,
-                a.ReporteId,
-                a.UsuarioId,
-                a.Descripcion,
-                a.DireccionReferencia,
-                a.FechaAvistamiento,
-                Latitud = a.Ubicacion.Y,
-                Longitud = a.Ubicacion.X,
-                a.FotoUrl
+                bool esAutorAvistamiento = a.UsuarioId == usuarioId;
+                bool puedeVerDetalle = esDuenoReporte || esAutorAvistamiento;
+                bool puedeContactar = esDuenoReporte && !esAutorAvistamiento;
+
+                return new
+                {
+                    a.Id,
+                    a.ReporteId,
+                    a.UsuarioId,
+                    a.Descripcion,
+                    a.DireccionReferencia,
+                    a.FechaAvistamiento,
+                    Latitud = a.Ubicacion.Y,
+                    Longitud = a.Ubicacion.X,
+                    a.FotoUrl,
+
+                    EsDuenoReporte = esDuenoReporte,
+                    EsAutorAvistamiento = esAutorAvistamiento,
+                    PuedeVerDetalle = puedeVerDetalle,
+                    PuedeContactar = puedeContactar
+                };
             });
 
             return Ok(avistamientos);
@@ -199,6 +207,7 @@ namespace MascotasTrujillo.API.Controllers
 
             var avistamiento = await _context.Avistamientos
                 .Include(a => a.Reporte)
+                .Include(a => a.Usuario)
                 .Include(a => a.Fotos)
                 .FirstOrDefaultAsync(a => a.Id == id && a.Visible);
 
@@ -207,13 +216,24 @@ namespace MascotasTrujillo.API.Controllers
                 return NotFound(new { Mensaje = "El avistamiento no existe." });
             }
 
-            // Puede verlo quien creó el avistamiento o quien creó el reporte.
-            if (avistamiento.UsuarioId != usuarioId &&
-                avistamiento.Reporte != null &&
-                avistamiento.Reporte.UsuarioId != usuarioId)
+            bool esDuenoReporte = avistamiento.Reporte != null &&
+                                   avistamiento.Reporte.UsuarioId == usuarioId;
+
+            bool esAutorAvistamiento = avistamiento.UsuarioId == usuarioId;
+
+            bool puedeVerDetalle = esDuenoReporte || esAutorAvistamiento;
+
+            if (!puedeVerDetalle)
             {
                 return Forbid();
             }
+
+            bool puedeContactar = esDuenoReporte && !esAutorAvistamiento;
+
+            string? fotoUrl = avistamiento.Fotos
+                .OrderByDescending(f => f.FechaRegistro)
+                .Select(f => f.UrlFoto)
+                .FirstOrDefault();
 
             return Ok(new
             {
@@ -221,20 +241,32 @@ namespace MascotasTrujillo.API.Controllers
                 avistamiento.ReporteId,
                 ReporteTitulo = avistamiento.Reporte?.Titulo,
                 avistamiento.UsuarioId,
+
+                NombreContacto = avistamiento.Usuario != null
+                    ? avistamiento.Usuario.NombreCompleto
+                    : null,
+
+                TelefonoContacto = avistamiento.Usuario != null
+                    ? avistamiento.Usuario.PhoneNumber
+                    : null,
+
                 avistamiento.Descripcion,
                 avistamiento.DireccionReferencia,
                 avistamiento.FechaAvistamiento,
+
                 Latitud = avistamiento.Ubicacion.Y,
                 Longitud = avistamiento.Ubicacion.X,
-                Fotos = avistamiento.Fotos
-                    .OrderByDescending(f => f.FechaRegistro)
-                    .Select(f => new
-                    {
-                        f.Id,
-                        f.UrlFoto,
-                        f.FechaRegistro
-                    })
+
+                FotoUrl = fotoUrl,
+
+                EsDuenoReporte = esDuenoReporte,
+                EsAutorAvistamiento = esAutorAvistamiento,
+                PuedeVerDetalle = puedeVerDetalle,
+                PuedeContactar = puedeContactar
             });
         }
+
+
+
     }
 }

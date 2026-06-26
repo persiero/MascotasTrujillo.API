@@ -74,5 +74,29 @@ namespace MascotasTrujillo.App.Services
                 return null;
             }
         }
+
+        public async Task<Avistamiento?> ObtenerDetalleAvistamientoAsync(long avistamientoId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"Avistamientos/{avistamientoId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<Avistamiento>(json, _jsonOptions);
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener detalle del avistamiento: {ex.Message}");
+                return null;
+            }
+        }
+
+
+
     }
 }

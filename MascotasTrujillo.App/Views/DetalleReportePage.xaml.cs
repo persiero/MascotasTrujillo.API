@@ -165,8 +165,8 @@ public partial class DetalleReportePage : ContentPage
             }
 
             LblAvistamientosResumen.Text = lista.Count == 1
-                ? "1 avistamiento registrado para este reporte."
-                : $"{lista.Count} avistamientos registrados para este reporte.";
+                ? "1 avistamiento registrado por la comunidad."
+                : $"{lista.Count} avistamientos registrados por la comunidad.";
         }
         else
         {
@@ -304,6 +304,27 @@ public partial class DetalleReportePage : ContentPage
             LblAvistamientoNoDisponible.Text =
                 "Los avistamientos solo pueden registrarse en reportes activos de mascotas perdidas.";
         }
+    }
+
+    private async void OnAvistamientoTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not Avistamiento avistamiento)
+            return;
+
+        if (!avistamiento.PuedeVerDetalle)
+        {
+            await DisplayAlertAsync(
+                "Detalle restringido",
+                "Solo el dueño del reporte o el usuario que registró este avistamiento pueden ver el detalle completo.",
+                "OK"
+            );
+
+            return;
+        }
+
+        await Navigation.PushAsync(
+            new DetalleAvistamientoPage(_apiService, avistamiento.Id)
+        );
     }
 
 }
