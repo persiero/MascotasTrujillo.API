@@ -6,6 +6,8 @@ public partial class LoginPage : ContentPage
 {
     private readonly ApiService _apiService;
 
+    private bool _procesandoLogin = false;
+
     // Inyectamos el servicio de la API
     public LoginPage(ApiService apiService)
     {
@@ -45,45 +47,88 @@ public partial class LoginPage : ContentPage
 
     private async void OnLoginClicked(object? sender, EventArgs e)
     {
-        // Mostramos el círculo de carga (UX profesional)
-        LoadingIndicator.IsRunning = true;
-        LoadingIndicator.IsVisible = true;
+        if (_procesandoLogin)
+            return;
 
-        string email = EmailEntry.Text;
-        string password = PasswordEntry.Text;
+        string email = EmailEntry.Text?.Trim() ?? string.Empty;
+        string password = PasswordEntry.Text ?? string.Empty;
 
-        // ¡Llamamos a nuestra API!
-        var loginResponse = await _apiService.LoginAsync(email, password);
-
-        // Ocultamos el círculo de carga
-        LoadingIndicator.IsRunning = false;
-        LoadingIndicator.IsVisible = false;
-
-        if (loginResponse != null && !string.IsNullOrWhiteSpace(loginResponse.Token))
+        if (string.IsNullOrWhiteSpace(email))
         {
-            _apiService.SetToken(loginResponse.Token);
-
-            await SecureStorage.Default.SetAsync("auth_token", loginResponse.Token);
-            await SecureStorage.Default.SetAsync("usuario_id", loginResponse.UsuarioId.ToString());
-
-            if (!string.IsNullOrWhiteSpace(loginResponse.NombreCompleto))
-                await SecureStorage.Default.SetAsync("usuario_nombre", loginResponse.NombreCompleto);
-
-            if (!string.IsNullOrWhiteSpace(loginResponse.Email))
-                await SecureStorage.Default.SetAsync("usuario_email", loginResponse.Email);
-
-            if (!string.IsNullOrWhiteSpace(loginResponse.Telefono))
-                await SecureStorage.Default.SetAsync("usuario_telefono", loginResponse.Telefono);
-
-            // Sintaxis moderna y segura para .NET 8/9 (Soporte Multi-ventana)
-            if (Application.Current?.Windows.Count > 0)
-            {
-                Application.Current.Windows[0].Page = new AppShell();
-            }
+            await DisplayAlertAsync("Aviso", "Ingresa tu correo electrónico.", "OK");
+            return;
         }
-        else
+
+        if (!email.Contains("@") || !email.Contains("."))
         {
-            await DisplayAlertAsync("Error de ingreso", "No se pudo conectar. Revisa tus credenciales o el estado de la API.", "OK");
+            await DisplayAlertAsync("Aviso", "Ingresa un correo electrónico válido.", "OK");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            await DisplayAlertAsync("Aviso", "Ingresa tu contraseña.", "OK");
+            return;
+        }
+
+        try
+        {
+            _procesandoLogin = true;
+
+            BtnLogin.IsEnabled = false;
+            BtnLogin.Text = "Ingresando...";
+            LoadingIndicator.IsRunning = true;
+            LoadingIndicator.IsVisible = true;
+
+            var loginResponse = await _apiService.LoginAsync(email, password);
+
+            if (loginResponse != null && !string.IsNullOrWhiteSpace(loginResponse.Token))
+            {
+                _apiService.SetToken(loginResponse.Token);
+
+                await SecureStorage.Default.SetAsync("auth_token", loginResponse.Token);
+                await SecureStorage.Default.SetAsync("usuario_id", loginResponse.UsuarioId.ToString());
+
+                if (!string.IsNullOrWhiteSpace(loginResponse.NombreCompleto))
+                    await SecureStorage.Default.SetAsync("usuario_nombre", loginResponse.NombreCompleto);
+
+                if (!string.IsNullOrWhiteSpace(loginResponse.Email))
+                    await SecureStorage.Default.SetAsync("usuario_email", loginResponse.Email);
+
+                if (!string.IsNullOrWhiteSpace(loginResponse.Telefono))
+                    await SecureStorage.Default.SetAsync("usuario_telefono", loginResponse.Telefono);
+
+                if (Application.Current?.Windows.Count > 0)
+                {
+                    Application.Current.Windows[0].Page = new AppShell();
+                }
+
+                return;
+            }
+
+            await DisplayAlertAsync(
+                "Error de ingreso",
+                "No se pudo iniciar sesión. Revisa tus credenciales o el estado de la API.",
+                "OK"
+            );
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                $"Ocurrió un problema al iniciar sesión: {ex.Message}",
+                "OK"
+            );
+        }
+        finally
+        {
+            _procesandoLogin = false;
+
+            LoadingIndicator.IsRunning = false;
+            LoadingIndicator.IsVisible = false;
+
+            BtnLogin.Text = "Iniciar sesión";
+            BtnLogin.IsEnabled = true;
         }
     }
 
@@ -96,5 +141,12 @@ public partial class LoginPage : ContentPage
     {
         // Abrimos la pantalla de registro de forma modal (animación de abajo hacia arriba)
         await Navigation.PushModalAsync(new RegistroPage(_apiService));
+    }
+
+    private void OnTogglePasswordClicked(object sender, EventArgs e)
+    {
+        PasswordEntry.IsPassword = !PasswordEntry.IsPassword;
+
+        BtnTogglePassword.Text = PasswordEntry.IsPassword ? "👁" : "🙈";
     }
 }
