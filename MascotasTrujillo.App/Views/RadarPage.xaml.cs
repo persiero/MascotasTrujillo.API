@@ -15,14 +15,34 @@ public partial class RadarPage : ContentPage
     private double _miLatitud = -8.1118;
     private double _miLongitud = -79.0287;
 
+    private string _tipoFiltro = "Todos";
+    private double _radioMetros = 5000;
+
+    private bool _cargandoRadar = false;
+    private bool _radarInicializado = false;
+
     public RadarPage(ApiService apiService)
     {
         InitializeComponent();
+
         _apiService = apiService;
 
-        FiltroTipoPicker.SelectedIndex = 0;
-        RadioPicker.SelectedIndex = 2;
-        LblResumenFiltro.Text = "0 reportes activos";
+        LblResumenFiltro.Text = "0 reportes";
+        LblResumenFiltroSuperior.Text = "5 km";
+
+        ActualizarEstiloFiltros();
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (_radarInicializado)
+            return;
+
+        _radarInicializado = true;
+
+        await CargarRadarAsync();
     }
 
     private async void OnActualizarClicked(object? sender, EventArgs e)
@@ -32,11 +52,16 @@ public partial class RadarPage : ContentPage
 
     private async Task CargarRadarAsync()
     {
-        BtnActualizar.Text = "Buscando...";
-        BtnActualizar.IsEnabled = false;
+        if (_cargandoRadar)
+            return;
 
         try
         {
+            _cargandoRadar = true;
+
+            BtnActualizar.Text = "Buscando...";
+            BtnActualizar.IsEnabled = false;
+
             var ubicacionActual = await ObtenerUbicacionActualAsync();
 
             if (ubicacionActual == null)
@@ -47,15 +72,13 @@ public partial class RadarPage : ContentPage
             _miLatitud = ubicacionActual.Latitude;
             _miLongitud = ubicacionActual.Longitude;
 
-            double radioMetros = ObtenerRadioSeleccionado();
-
             _reportesCargados = await _apiService.ObtenerReportesCercanosAsync(
                 _miLatitud,
                 _miLongitud,
-                radioMetros
+                _radioMetros
             );
 
-            AplicarFiltrosYActualizarVista(_miLatitud, _miLongitud, radioMetros);
+            AplicarFiltrosYActualizarVista(_miLatitud, _miLongitud, _radioMetros);
         }
         catch (Exception ex)
         {
@@ -67,6 +90,8 @@ public partial class RadarPage : ContentPage
         }
         finally
         {
+            _cargandoRadar = false;
+
             BtnActualizar.Text = "🔄 Actualizar";
             BtnActualizar.IsEnabled = true;
         }
@@ -151,20 +176,20 @@ public partial class RadarPage : ContentPage
         LblResumenFiltro.Text = reportesFiltrados.Count == 1
             ? "1 reporte"
             : $"{reportesFiltrados.Count} reportes activos";
+
+        LblResumenFiltroSuperior.Text = $"{radioMetros / 1000:0} km";
     }
 
     private List<Reporte> FiltrarPorTipo(List<Reporte> reportes)
     {
-        int filtro = FiltroTipoPicker.SelectedIndex;
-
-        if (filtro == 1)
+        if (_tipoFiltro == "Perdidas")
         {
             return reportes
                 .Where(r => EsReportePerdida(r.TipoReporte))
                 .ToList();
         }
 
-        if (filtro == 2)
+        if (_tipoFiltro == "Encontradas")
         {
             return reportes
                 .Where(r => EsReporteEncontrada(r.TipoReporte))
@@ -192,26 +217,90 @@ public partial class RadarPage : ContentPage
                valor.Contains("encontrad", StringComparison.OrdinalIgnoreCase);
     }
 
-    private double ObtenerRadioSeleccionado()
+    private void ActualizarEstiloFiltros()
     {
-        return RadioPicker.SelectedIndex switch
+        Color primary = Color.FromArgb("#5B21E6");
+        Color soft = Color.FromArgb("#F8F5FF");
+        Color primaryDark = Color.FromArgb("#2B0B98");
+        Color border = Color.FromArgb("#D8CCFF");
+
+        void AplicarEstado(Button boton, bool seleccionado)
         {
-            0 => 1000,
-            1 => 3000,
-            2 => 5000,
-            3 => 10000,
-            _ => 5000
-        };
+            boton.BackgroundColor = seleccionado ? primary : soft;
+            boton.TextColor = seleccionado ? Colors.White : primaryDark;
+            boton.BorderColor = seleccionado ? primary : border;
+            boton.BorderWidth = seleccionado ? 0 : 1;
+        }
+
+        AplicarEstado(BtnTipoTodos, _tipoFiltro == "Todos");
+        AplicarEstado(BtnTipoPerdidas, _tipoFiltro == "Perdidas");
+        AplicarEstado(BtnTipoEncontradas, _tipoFiltro == "Encontradas");
+
+        AplicarEstado(BtnRadio1, _radioMetros == 1000);
+        AplicarEstado(BtnRadio3, _radioMetros == 3000);
+        AplicarEstado(BtnRadio5, _radioMetros == 5000);
+        AplicarEstado(BtnRadio10, _radioMetros == 10000);
+
+        LblResumenFiltroSuperior.Text = $"{_radioMetros / 1000:0} km";
     }
 
-    private void OnFiltroTipoChanged(object sender, EventArgs e)
+    private void AplicarFiltroTipoSinRecargar()
     {
+        ActualizarEstiloFiltros();
+
         if (_reportesCargados.Count == 0)
+        {
+            LblResumenFiltro.Text = "0 reportes";
             return;
+        }
 
-        double radioMetros = ObtenerRadioSeleccionado();
+        AplicarFiltrosYActualizarVista(_miLatitud, _miLongitud, _radioMetros);
+    }
 
-        AplicarFiltrosYActualizarVista(_miLatitud, _miLongitud, radioMetros);
+    private void OnTipoTodosClicked(object sender, EventArgs e)
+    {
+        _tipoFiltro = "Todos";
+        AplicarFiltroTipoSinRecargar();
+    }
+
+    private void OnTipoPerdidasClicked(object sender, EventArgs e)
+    {
+        _tipoFiltro = "Perdidas";
+        AplicarFiltroTipoSinRecargar();
+    }
+
+    private void OnTipoEncontradasClicked(object sender, EventArgs e)
+    {
+        _tipoFiltro = "Encontradas";
+        AplicarFiltroTipoSinRecargar();
+    }
+
+    private async void OnRadio1Clicked(object sender, EventArgs e)
+    {
+        _radioMetros = 1000;
+        ActualizarEstiloFiltros();
+        await CargarRadarAsync();
+    }
+
+    private async void OnRadio3Clicked(object sender, EventArgs e)
+    {
+        _radioMetros = 3000;
+        ActualizarEstiloFiltros();
+        await CargarRadarAsync();
+    }
+
+    private async void OnRadio5Clicked(object sender, EventArgs e)
+    {
+        _radioMetros = 5000;
+        ActualizarEstiloFiltros();
+        await CargarRadarAsync();
+    }
+
+    private async void OnRadio10Clicked(object sender, EventArgs e)
+    {
+        _radioMetros = 10000;
+        ActualizarEstiloFiltros();
+        await CargarRadarAsync();
     }
 
     private async void OnIrAReportarClicked(object? sender, EventArgs e)

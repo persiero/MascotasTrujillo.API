@@ -4,198 +4,126 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
     x:Class="MascotasTrujillo.App.Views.RadarPage"
-    Title="Radar Comunitario"
-    BackgroundColor="#F8FAFC">
+    Title="Radar"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="#F5F1FF">
 
-    <Grid RowDefinitions="Auto,*,Auto,Auto,260">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="PrimaryColor">#5B21E6</Color>
+            <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="AccentPink">#FF4FB3</Color>
+            <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextMuted">#64748B</Color>
+            <Color x:Key="CardBorder">#E1D6FF</Color>
+            <Color x:Key="InputBorder">#D8CCFF</Color>
+            <Color x:Key="InputBackground">#F8F5FF</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-        <!-- Encabezado -->
+    <Grid RowDefinitions="Auto,170,Auto,Auto,*"
+          Padding="12,12,12,8"
+          RowSpacing="8">
+
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F8F5FF" Offset="0.0" />
+                <GradientStop Color="#F3EDFF" Offset="0.55" />
+                <GradientStop Color="#FDFBFF" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Encabezado compacto -->
         <Border Grid.Row="0"
                 BackgroundColor="#FFFFFF"
-                Stroke="Transparent"
-                Padding="16,12">
+                Stroke="{StaticResource CardBorder}"
+                StrokeThickness="1"
+                Padding="14,10">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
 
             <Border.Shadow>
-                <Shadow Brush="Black"
-                        Opacity="0.06"
-                        Offset="0,2"
-                        Radius="6" />
+                <Shadow Brush="#2B0B98"
+                        Opacity="0.10"
+                        Offset="0,4"
+                        Radius="12" />
             </Border.Shadow>
 
-            <Grid ColumnDefinitions="Auto,*"
-                    ColumnSpacing="12">
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="10">
 
                 <Border Grid.Column="0"
-                        BackgroundColor="#EEF2FF"
+                        BackgroundColor="{StaticResource PrimarySoft}"
                         Stroke="Transparent"
-                        HeightRequest="46"
-                        WidthRequest="46"
+                        HeightRequest="42"
+                        WidthRequest="42"
                         VerticalOptions="Center">
 
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="23" />
+                        <RoundRectangle CornerRadius="21" />
                     </Border.StrokeShape>
 
                     <Label Text="📡"
-                           FontSize="24"
+                           FontSize="22"
                            HorizontalOptions="Center"
                            VerticalOptions="Center" />
                 </Border>
 
-                <VerticalStackLayout Grid.Column="1"
-                                     Spacing="2"
-                                     VerticalOptions="Center">
+                <Label Grid.Column="1"
+                       Text="Reportes cerca de ti"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextMain}"
+                       VerticalOptions="Center" />
 
-                    <Label Text="Reportes cerca de ti"
-                           FontSize="20"
+                <Border Grid.Column="2"
+                        BackgroundColor="#FCE7F3"
+                        Stroke="Transparent"
+                        Padding="9,5"
+                        VerticalOptions="Center">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12" />
+                    </Border.StrokeShape>
+
+                    <Label x:Name="LblResumenFiltroSuperior"
+                           Text="Radar"
+                           FontSize="11"
                            FontAttributes="Bold"
-                           TextColor="#1E1B4B" />
-
-                    <Label Text="Mascotas perdidas o encontradas según tu ubicación."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="TailTruncation" />
-                </VerticalStackLayout>
-
+                           TextColor="#BE185D" />
+                </Border>
             </Grid>
         </Border>
 
         <!-- Mapa -->
         <Border Grid.Row="1"
-                Margin="14,14,14,8"
-                Stroke="Transparent"
+                Stroke="{StaticResource CardBorder}"
+                StrokeThickness="1"
                 BackgroundColor="#E2E8F0">
 
             <Border.StrokeShape>
-                <RoundRectangle CornerRadius="18" />
+                <RoundRectangle CornerRadius="20" />
             </Border.StrokeShape>
 
             <Border.Shadow>
-                <Shadow Brush="Black"
-                        Opacity="0.12"
-                        Offset="0,4"
-                        Radius="10" />
+                <Shadow Brush="#2B0B98"
+                        Opacity="0.13"
+                        Offset="0,5"
+                        Radius="14" />
             </Border.Shadow>
 
             <maps:Map x:Name="MapaMascotas"
                       IsShowingUser="True" />
         </Border>
 
-        <!-- Filtros -->
+        <!-- Filtros rápidos -->
         <Border Grid.Row="2"
-                Margin="14,0,14,6"
                 Padding="12"
-                Stroke="Transparent"
-                BackgroundColor="#FFFFFF">
-
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="18" />
-            </Border.StrokeShape>
-
-            <Grid ColumnDefinitions="*,*"
-                    ColumnSpacing="10">
-
-                <Border Grid.Column="0"
-                        BackgroundColor="#F8FAFC"
-                        Stroke="#E2E8F0"
-                        StrokeThickness="1"
-                        Padding="10,6">
-
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="14" />
-                    </Border.StrokeShape>
-
-                    <VerticalStackLayout Spacing="2">
-
-                        <Label Text="Tipo"
-                               FontSize="11"
-                               FontAttributes="Bold"
-                               TextColor="#64748B" />
-
-                        <Picker x:Name="FiltroTipoPicker"
-                                Title="Todos"
-                                SelectedIndexChanged="OnFiltroTipoChanged"
-                                BackgroundColor="Transparent"
-                                TextColor="#1E293B"
-                                FontAttributes="Bold">
-
-                            <Picker.Items>
-                                <x:String>Todos</x:String>
-                                <x:String>Perdidas</x:String>
-                                <x:String>Encontradas</x:String>
-                            </Picker.Items>
-                        </Picker>
-                    </VerticalStackLayout>
-                </Border>
-
-                <Border Grid.Column="1"
-                        BackgroundColor="#F8FAFC"
-                        Stroke="#E2E8F0"
-                        StrokeThickness="1"
-                        Padding="10,6">
-
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="14" />
-                    </Border.StrokeShape>
-
-                    <VerticalStackLayout Spacing="2">
-
-                        <Label Text="Radio"
-                               FontSize="11"
-                               FontAttributes="Bold"
-                               TextColor="#64748B" />
-
-                        <Picker x:Name="RadioPicker"
-                                Title="5 km"
-                                BackgroundColor="Transparent"
-                                TextColor="#1E293B"
-                                FontAttributes="Bold">
-
-                            <Picker.Items>
-                                <x:String>1 km</x:String>
-                                <x:String>3 km</x:String>
-                                <x:String>5 km</x:String>
-                                <x:String>10 km</x:String>
-                            </Picker.Items>
-                        </Picker>
-                    </VerticalStackLayout>
-                </Border>
-
-            </Grid>
-        </Border>
-
-        <!-- Botones de acción -->
-        <Grid Grid.Row="3"
-              Padding="14,6,14,8"
-              ColumnDefinitions="*,*"
-              ColumnSpacing="10">
-
-            <Button x:Name="BtnActualizar"
-                    Grid.Column="0"
-                    Text="🔄 Buscar cerca"
-                    Clicked="OnActualizarClicked"
-                    HeightRequest="48"
-                    BackgroundColor="#2B0B98"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="16" />
-
-            <Button Grid.Column="1"
-                    Text="➕ Reportar"
-                    Clicked="OnIrAReportarClicked"
-                    HeightRequest="48"
-                    BackgroundColor="#EEF2FF"
-                    TextColor="#2B0B98"
-                    FontAttributes="Bold"
-                    CornerRadius="16" />
-
-        </Grid>
-
-        <!-- Lista de reportes -->
-        <Border Grid.Row="4"
-                Margin="14,0,14,14"
-                Padding="12"
-                Stroke="Transparent"
+                Stroke="{StaticResource CardBorder}"
+                StrokeThickness="1"
                 BackgroundColor="#FFFFFF">
 
             <Border.StrokeShape>
@@ -203,10 +131,176 @@
             </Border.StrokeShape>
 
             <Border.Shadow>
-                <Shadow Brush="Black"
+                <Shadow Brush="#2B0B98"
                         Opacity="0.08"
                         Offset="0,3"
-                        Radius="8" />
+                        Radius="10" />
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="10">
+
+                <!-- Tipo -->
+                <Grid ColumnDefinitions="Auto,*,*,*"
+                      ColumnSpacing="6">
+
+                    <Label Text="Tipo"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextMuted}"
+                           VerticalOptions="Center" />
+
+                    <Button x:Name="BtnTipoTodos"
+                            Grid.Column="1"
+                            Text="Todos"
+                            Clicked="OnTipoTodosClicked"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HeightRequest="34"
+                            CornerRadius="14"
+                            Padding="6,0" />
+
+                    <Button x:Name="BtnTipoPerdidas"
+                            Grid.Column="2"
+                            Text="Perdidas"
+                            Clicked="OnTipoPerdidasClicked"
+                            BackgroundColor="{StaticResource InputBackground}"
+                            TextColor="{StaticResource PrimaryDark}"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HeightRequest="34"
+                            CornerRadius="14"
+                            Padding="6,0" />
+
+                    <Button x:Name="BtnTipoEncontradas"
+                            Grid.Column="3"
+                            Text="Encontradas"
+                            Clicked="OnTipoEncontradasClicked"
+                            BackgroundColor="{StaticResource InputBackground}"
+                            TextColor="{StaticResource PrimaryDark}"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HeightRequest="34"
+                            CornerRadius="14"
+                            Padding="6,0" />
+                </Grid>
+
+                <!-- Radio -->
+                <Grid ColumnDefinitions="Auto,*,*,*,*"
+                      ColumnSpacing="6">
+
+                    <Label Text="Radio"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextMuted}"
+                           VerticalOptions="Center" />
+
+                    <Button x:Name="BtnRadio1"
+                            Grid.Column="1"
+                            Text="1 km"
+                            Clicked="OnRadio1Clicked"
+                            BackgroundColor="{StaticResource InputBackground}"
+                            TextColor="{StaticResource PrimaryDark}"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HeightRequest="34"
+                            CornerRadius="14"
+                            Padding="6,0" />
+
+                    <Button x:Name="BtnRadio3"
+                            Grid.Column="2"
+                            Text="3 km"
+                            Clicked="OnRadio3Clicked"
+                            BackgroundColor="{StaticResource InputBackground}"
+                            TextColor="{StaticResource PrimaryDark}"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HeightRequest="34"
+                            CornerRadius="14"
+                            Padding="6,0" />
+
+                    <Button x:Name="BtnRadio5"
+                            Grid.Column="3"
+                            Text="5 km"
+                            Clicked="OnRadio5Clicked"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HeightRequest="34"
+                            CornerRadius="14"
+                            Padding="6,0" />
+
+                    <Button x:Name="BtnRadio10"
+                            Grid.Column="4"
+                            Text="10 km"
+                            Clicked="OnRadio10Clicked"
+                            BackgroundColor="{StaticResource InputBackground}"
+                            TextColor="{StaticResource PrimaryDark}"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HeightRequest="34"
+                            CornerRadius="14"
+                            Padding="6,0" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Botones de acción -->
+        <Grid Grid.Row="3"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="10">
+
+            <Button x:Name="BtnActualizar"
+                    Grid.Column="0"
+                    Text="🔄 Actualizar"
+                    Clicked="OnActualizarClicked"
+                    HeightRequest="46"
+                    BackgroundColor="{StaticResource PrimaryColor}"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="14"
+                    CornerRadius="16">
+
+                <Button.Shadow>
+                    <Shadow Brush="#5B21E6"
+                            Opacity="0.25"
+                            Offset="0,4"
+                            Radius="10" />
+                </Button.Shadow>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Text="➕ Reportar"
+                    Clicked="OnIrAReportarClicked"
+                    HeightRequest="46"
+                    BackgroundColor="#FFFFFF"
+                    TextColor="{StaticResource PrimaryColor}"
+                    BorderColor="{StaticResource CardBorder}"
+                    BorderWidth="1"
+                    FontAttributes="Bold"
+                    FontSize="14"
+                    CornerRadius="16" />
+        </Grid>
+
+        <!-- Lista de reportes -->
+        <Border Grid.Row="4"
+                Padding="12"
+                Stroke="{StaticResource CardBorder}"
+                StrokeThickness="1"
+                BackgroundColor="#FFFFFF">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="22" />
+            </Border.StrokeShape>
+
+            <Border.Shadow>
+                <Shadow Brush="#2B0B98"
+                        Opacity="0.10"
+                        Offset="0,4"
+                        Radius="12" />
             </Border.Shadow>
 
             <Grid RowDefinitions="Auto,*">
@@ -215,19 +309,14 @@
                       ColumnDefinitions="*,Auto"
                       Margin="0,0,0,8">
 
-                    <VerticalStackLayout>
-                        <Label Text="Reportes cercanos"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="#1E293B" />
-
-                        <Label Text="Selecciona un reporte para ver más detalles."
-                               FontSize="12"
-                               TextColor="#64748B" />
-                    </VerticalStackLayout>
+                    <Label Text="Reportes cercanos"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextMain}"
+                           VerticalOptions="Center" />
 
                     <Border Grid.Column="1"
-                            BackgroundColor="#EEF2FF"
+                            BackgroundColor="{StaticResource PrimarySoft}"
                             Stroke="Transparent"
                             Padding="10,5"
                             VerticalOptions="Center">
@@ -238,7 +327,7 @@
 
                         <Label x:Name="LblResumenFiltro"
                                Text="0 reportes"
-                               TextColor="#2B0B98"
+                               TextColor="{StaticResource PrimaryColor}"
                                FontSize="12"
                                FontAttributes="Bold" />
                     </Border>
@@ -254,6 +343,7 @@
                                              Spacing="8"
                                              HorizontalOptions="Center"
                                              VerticalOptions="Center">
+
                             <Label Text="🐾"
                                    FontSize="38"
                                    HorizontalOptions="Center" />
@@ -266,7 +356,7 @@
 
                             <Label Text="Actualiza el radar o registra un nuevo reporte."
                                    FontSize="13"
-                                   TextColor="#64748B"
+                                   TextColor="{StaticResource TextMuted}"
                                    HorizontalTextAlignment="Center" />
                         </VerticalStackLayout>
                     </CollectionView.EmptyView>
@@ -275,48 +365,51 @@
                         <DataTemplate>
 
                             <Border Margin="0,0,0,10"
-                                    Padding="10"
-                                    Stroke="#E2E8F0"
+                                    Padding="9"
+                                    Stroke="#E6E0F8"
+                                    StrokeThickness="1"
                                     BackgroundColor="#FFFFFF">
 
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="16" />
+                                    <RoundRectangle CornerRadius="18" />
                                 </Border.StrokeShape>
 
-                                <Grid ColumnDefinitions="86,*"
-                                      ColumnSpacing="12">
+                                <Grid ColumnDefinitions="74,*"
+                                      ColumnSpacing="10">
 
                                     <Border Grid.Column="0"
                                             Stroke="Transparent"
                                             BackgroundColor="#F1F5F9"
-                                            HeightRequest="78"
-                                            WidthRequest="78">
+                                            HeightRequest="68"
+                                            WidthRequest="68"
+                                            VerticalOptions="Center">
 
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="14" />
                                         </Border.StrokeShape>
 
-                                        <Image Source="{Binding FotoUrl}"
-                                               HeightRequest="78"
-                                               WidthRequest="78"
+                                        <Image Source="{Binding FotoMostrar}"
+                                               HeightRequest="68"
+                                               WidthRequest="68"
                                                Aspect="AspectFill" />
                                     </Border>
 
                                     <VerticalStackLayout Grid.Column="1"
-                                                         Spacing="4"
+                                                         Spacing="3"
                                                          VerticalOptions="Center">
 
                                         <Grid ColumnDefinitions="*,Auto">
+
                                             <Label Text="{Binding Titulo}"
                                                    FontAttributes="Bold"
-                                                   FontSize="15"
-                                                   TextColor="#1E293B"
+                                                   FontSize="14"
+                                                   TextColor="{StaticResource TextMain}"
                                                    LineBreakMode="TailTruncation" />
 
                                             <Border Grid.Column="1"
                                                     BackgroundColor="{Binding TipoReporteFondo}"
                                                     Stroke="Transparent"
-                                                    Padding="8,3"
+                                                    Padding="7,3"
                                                     Margin="6,0,0,0">
 
                                                 <Border.StrokeShape>
@@ -324,30 +417,30 @@
                                                 </Border.StrokeShape>
 
                                                 <Label Text="{Binding TipoReporte}"
-                                                       FontSize="11"
+                                                       FontSize="10"
                                                        FontAttributes="Bold"
                                                        TextColor="{Binding TipoReporteTexto}" />
                                             </Border>
                                         </Grid>
 
                                         <Label Text="{Binding Descripcion}"
-                                               FontSize="13"
-                                               TextColor="#64748B"
+                                               FontSize="12"
+                                               TextColor="{StaticResource TextMuted}"
                                                LineBreakMode="TailTruncation"
-                                               MaxLines="2" />
+                                               MaxLines="1" />
 
                                         <Grid ColumnDefinitions="*,Auto"
-                                              Margin="0,4,0,0">
+                                              Margin="0,3,0,0">
 
                                             <Label Text="{Binding DistanciaMetros, StringFormat='📍 A {0:N0} metros de ti'}"
-                                                   TextColor="#2B0B98"
-                                                   FontSize="13"
+                                                   TextColor="{StaticResource PrimaryColor}"
+                                                   FontSize="12"
                                                    FontAttributes="Bold" />
 
                                             <Label Grid.Column="1"
                                                    Text="Ver detalle"
                                                    TextColor="#0F766E"
-                                                   FontSize="12"
+                                                   FontSize="11"
                                                    FontAttributes="Bold" />
                                         </Grid>
 

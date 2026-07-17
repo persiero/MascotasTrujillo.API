@@ -238,9 +238,9 @@ namespace MascotasTrujillo.API.Controllers
             }
 
             var dispositivoActivo = mascota.DispositivosGps
-    .Where(d => d.Activo)
-    .OrderByDescending(d => d.FechaAsociacion)
-    .FirstOrDefault();
+                .Where(d => d.Activo)
+                .OrderByDescending(d => d.FechaAsociacion)
+                .FirstOrDefault();
 
             string codigoGpsNuevo = mascotaDto.DispositivoId?.Trim() ?? string.Empty;
 

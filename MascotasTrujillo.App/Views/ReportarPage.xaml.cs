@@ -13,6 +13,8 @@ public partial class ReportarPage : ContentPage
     private FileResult? _fotoCapturada;
     private List<Mascota> _misMascotas = new();
     private Mascota? _mascotaSeleccionada;
+    private int _tipoReporteSeleccionado = -1; // 0 = perdida, 1 = encontrada
+    private bool _datosMascotaExpandido = false;
 
     private double? _latitudReporte;
     private double? _longitudReporte;
@@ -20,14 +22,18 @@ public partial class ReportarPage : ContentPage
     private readonly double _latitudTrujillo = -8.1118;
     private readonly double _longitudTrujillo = -79.0287;
 
-  
+
     public ReportarPage(ApiService apiService)
     {
         InitializeComponent();
+
         _apiService = apiService;
 
         BtnEnviar.IsEnabled = true;
+
+        ActualizarEstiloTipoReporte();
         ActualizarTextosSegunTipo();
+        ActualizarEstadoSeccionMascota();
     }
 
 
@@ -38,6 +44,28 @@ public partial class ReportarPage : ContentPage
         await CargarMisMascotasAsync();
     }
 
+    private void OnToggleDatosMascotaClicked(object sender, EventArgs e)
+    {
+        _datosMascotaExpandido = !_datosMascotaExpandido;
+        ActualizarEstadoSeccionMascota();
+    }
+
+    private void ActualizarEstadoSeccionMascota()
+    {
+        MascotaCamposContainer.IsVisible = _datosMascotaExpandido;
+
+        BtnToggleDatosMascota.Text = _datosMascotaExpandido
+            ? "Ocultar"
+            : "Mostrar";
+
+        BtnToggleDatosMascota.BackgroundColor = _datosMascotaExpandido
+            ? Color.FromArgb("#5B21E6")
+            : Color.FromArgb("#EEE7FF");
+
+        BtnToggleDatosMascota.TextColor = _datosMascotaExpandido
+            ? Colors.White
+            : Color.FromArgb("#2B0B98");
+    }
 
     private async Task CargarMisMascotasAsync()
     {
@@ -118,10 +146,28 @@ public partial class ReportarPage : ContentPage
             $"{mensaje}\nLat. {latitud:F6}, Long. {longitud:F6}";
     }
 
-    private void OnTipoReporteChanged(object sender, EventArgs e)
+    private void OnTipoPerdidaClicked(object sender, EventArgs e)
     {
-        bool esMascotaPerdida = TipoReportePicker.SelectedIndex == 0;
-        bool esMascotaEncontrada = TipoReportePicker.SelectedIndex == 1;
+        SeleccionarTipoReporte(0);
+    }
+
+    private void OnTipoEncontradaClicked(object sender, EventArgs e)
+    {
+        SeleccionarTipoReporte(1);
+    }
+
+    private void SeleccionarTipoReporte(int tipo)
+    {
+        _tipoReporteSeleccionado = tipo;
+
+        ActualizarEstiloTipoReporte();
+        ProcesarCambioTipoReporte();
+    }
+
+    private void ProcesarCambioTipoReporte()
+    {
+        bool esMascotaPerdida = _tipoReporteSeleccionado == 0;
+        bool esMascotaEncontrada = _tipoReporteSeleccionado == 1;
 
         ActualizarTextosSegunTipo();
 
@@ -137,7 +183,9 @@ public partial class ReportarPage : ContentPage
             FotoPreview.Source = null;
 
             LblResumenMascotaSeleccionada.Text =
-                "Selecciona una mascota registrada para cargar sus datos automáticamente.";
+                "Selecciona una mascota registrada.";
+
+            _datosMascotaExpandido = false;
         }
 
         if (esMascotaEncontrada)
@@ -151,7 +199,30 @@ public partial class ReportarPage : ContentPage
             FotoPreview.Source = null;
             BotonesCaptura.IsVisible = true;
             _fotoCapturada = null;
+
+            _datosMascotaExpandido = true;
         }
+
+        ActualizarEstadoSeccionMascota();
+    }
+
+    private void ActualizarEstiloTipoReporte()
+    {
+        Color primary = Color.FromArgb("#5B21E6");
+        Color soft = Color.FromArgb("#F8F5FF");
+        Color primaryDark = Color.FromArgb("#2B0B98");
+        Color border = Color.FromArgb("#D8CCFF");
+
+        void AplicarEstado(Button boton, bool seleccionado)
+        {
+            boton.BackgroundColor = seleccionado ? primary : soft;
+            boton.TextColor = seleccionado ? Colors.White : primaryDark;
+            boton.BorderColor = seleccionado ? primary : border;
+            boton.BorderWidth = seleccionado ? 0 : 1;
+        }
+
+        AplicarEstado(BtnTipoPerdida, _tipoReporteSeleccionado == 0);
+        AplicarEstado(BtnTipoEncontrada, _tipoReporteSeleccionado == 1);
     }
 
     private void OnMascotaRegistradaSeleccionada(object sender, EventArgs e)
@@ -194,6 +265,9 @@ public partial class ReportarPage : ContentPage
 
         LblResumenMascotaSeleccionada.Text =
             $"Mascota seleccionada: {_mascotaSeleccionada.Nombre}. Sus datos se usarán automáticamente en el reporte.";
+
+        _datosMascotaExpandido = false;
+        ActualizarEstadoSeccionMascota();
     }
 
     private void HabilitarCamposMascota(bool habilitar)
@@ -205,14 +279,25 @@ public partial class ReportarPage : ContentPage
 
         SexoPicker.IsEnabled = habilitar;
 
-        var colorFondo = habilitar
-            ? Color.FromArgb("#F1F5F9")
-            : Color.FromArgb("#EEF2FF");
+        Color fondoEditable = Color.FromArgb("#F8F5FF");
+        Color fondoBloqueado = Color.FromArgb("#EEE7FF");
+        Color textoEditable = Color.FromArgb("#1F2340");
+        Color textoBloqueado = Color.FromArgb("#64748B");
 
-        NombreMascotaEntry.BackgroundColor = colorFondo;
-        EspecieEntry.BackgroundColor = colorFondo;
-        RazaEntry.BackgroundColor = colorFondo;
-        ColorEntry.BackgroundColor = colorFondo;
+        void AplicarCampo(Border campo, Entry entry)
+        {
+            campo.BackgroundColor = habilitar ? fondoEditable : fondoBloqueado;
+            entry.TextColor = habilitar ? textoEditable : textoBloqueado;
+            entry.BackgroundColor = Colors.Transparent;
+        }
+
+        AplicarCampo(NombreMascotaField, NombreMascotaEntry);
+        AplicarCampo(EspecieField, EspecieEntry);
+        AplicarCampo(RazaField, RazaEntry);
+        AplicarCampo(ColorField, ColorEntry);
+
+        SexoField.BackgroundColor = habilitar ? fondoEditable : fondoBloqueado;
+        SexoPicker.TextColor = habilitar ? textoEditable : textoBloqueado;
     }
 
     private void LimpiarDatosMascota()
@@ -267,44 +352,37 @@ public partial class ReportarPage : ContentPage
 
     private void ActualizarTextosSegunTipo()
     {
-        if (TipoReportePicker.SelectedIndex == 0)
+        if (_tipoReporteSeleccionado == 0)
         {
-            LblAyudaTipoReporte.Text =
-                "Selecciona una mascota registrada. Sus datos principales se cargarán automáticamente.";
+            LblAyudaTipoReporte.Text = "Mascota perdida";
 
             LblTituloDatosMascota.Text = "Datos de mi mascota";
-            LblAyudaDatosMascota.Text =
-                "Estos datos se cargan desde la mascota seleccionada y se usarán para publicar el reporte.";
+            LblAyudaDatosMascota.Text = "Se completan desde la mascota seleccionada.";
 
-            LblTituloFotoReporte.Text = "Fotografía del reporte";
+            LblTituloFotoReporte.Text = "Foto";
             LblAyudaFotoReporte.Text =
-                "Se usará la foto principal de tu mascota. Si no tiene foto registrada, puedes agregar una imagen.";
+                "Usaremos su foto principal o puedes agregar una.";
         }
-        else if (TipoReportePicker.SelectedIndex == 1)
+        else if (_tipoReporteSeleccionado == 1)
         {
-            LblAyudaTipoReporte.Text =
-                "Completa manualmente la información disponible de la mascota encontrada.";
+            LblAyudaTipoReporte.Text = "Mascota encontrada";
 
-            LblTituloDatosMascota.Text = "Datos referenciales de la mascota encontrada";
-            LblAyudaDatosMascota.Text =
-                "Ingresa los datos que hayas podido observar. No es necesario conocer toda la información.";
+            LblTituloDatosMascota.Text = "Mascota encontrada";
+            LblAyudaDatosMascota.Text = "Completa solo lo que puedas identificar.";
 
-            LblTituloFotoReporte.Text = "Fotografía de la mascota encontrada";
+            LblTituloFotoReporte.Text = "Foto";
             LblAyudaFotoReporte.Text =
-                "Agrega una foto para que el dueño pueda reconocerla con mayor facilidad.";
+                "Agrega una imagen clara para reconocerla.";
         }
         else
         {
-            LblAyudaTipoReporte.Text =
-                "Selecciona si deseas reportar una mascota perdida o encontrada.";
+            LblAyudaTipoReporte.Text = string.Empty;
 
-            LblTituloDatosMascota.Text = "Datos de la mascota";
-            LblAyudaDatosMascota.Text =
-                "Completa estos datos si no estás asociando el reporte a una mascota registrada.";
+            LblTituloDatosMascota.Text = "Mascota";
+            LblAyudaDatosMascota.Text = "Completa solo lo necesario.";
 
-            LblTituloFotoReporte.Text = "Fotografía del reporte";
-            LblAyudaFotoReporte.Text =
-                "Agrega una foto para que sea más fácil identificar a la mascota.";
+            LblTituloFotoReporte.Text = "Foto";
+            LblAyudaFotoReporte.Text = "Agrega una imagen clara.";
         }
     }
 
@@ -317,13 +395,13 @@ public partial class ReportarPage : ContentPage
 
         try
         {
-            if (TipoReportePicker.SelectedIndex == -1)
+            if (_tipoReporteSeleccionado == -1)
             {
                 await DisplayAlertAsync("Dato requerido", "Selecciona el tipo de reporte.", "OK");
                 return;
             }
 
-            short tipoReporteId = TipoReportePicker.SelectedIndex == 0
+            short tipoReporteId = _tipoReporteSeleccionado == 0
                 ? (short)1
                 : (short)2;
 
@@ -380,10 +458,6 @@ public partial class ReportarPage : ContentPage
                     return;
                 }
             }
-
-            var location = await Geolocation.Default.GetLocationAsync(
-                new GeolocationRequest(GeolocationAccuracy.Medium)
-            );
 
             if (!_latitudReporte.HasValue || !_longitudReporte.HasValue)
             {

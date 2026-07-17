@@ -4,369 +4,624 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MascotasTrujillo.App.Views.ReportarPage"
     Title="Nuevo Reporte"
-    BackgroundColor="#F8FAFC">
-
-    <ScrollView>
-        <VerticalStackLayout Padding="18" Spacing="16">
-
-            <!-- Encabezado -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="18">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
-
-                <Border.Shadow>
-                    <Shadow Brush="Black"
-                            Opacity="0.08"
-                            Offset="0,3"
-                            Radius="8" />
-                </Border.Shadow>
-
-                <VerticalStackLayout Spacing="6">
-                    <Label Text="Nuevo Reporte"
-                           FontSize="26"
-                           FontAttributes="Bold"
-                           TextColor="#1E1B4B" />
-
-                    <Label Text="Registra una mascota perdida o encontrada para ayudar a la comunidad."
-                           FontSize="14"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Tipo de reporte -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="10">
-
-                    <Label Text="Tipo de reporte"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Picker x:Name="TipoReportePicker"
-                            Title="Selecciona una opción"
-                            SelectedIndexChanged="OnTipoReporteChanged"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B">
-                        <Picker.Items>
-                            <x:String>Mascota perdida</x:String>
-                            <x:String>Mascota encontrada</x:String>
-                        </Picker.Items>
-                    </Picker>
-                    
-                    <Label x:Name="LblAyudaTipoReporte"
-                           Text="Selecciona si deseas reportar una mascota perdida o encontrada."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Seleccionar mascota registrada -->
-            <Border x:Name="SeleccionMascotaBorder"
-                    BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16"
-                    IsVisible="False">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Label Text="Seleccionar mi mascota"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Label Text="Para reportar una mascota perdida, selecciona una mascota que ya tengas registrada."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-
-                    <Picker x:Name="MisMascotasPicker"
-                            Title="Selecciona una mascota"
-                            ItemDisplayBinding="{Binding Nombre}"
-                            SelectedIndexChanged="OnMascotaRegistradaSeleccionada"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B" />
-
-                    <Border BackgroundColor="#EEF2FF"
-                            Stroke="Transparent"
-                            Padding="12">
-
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="14" />
-                        </Border.StrokeShape>
-
-                        <Label x:Name="LblResumenMascotaSeleccionada"
-                               Text="Los datos y la foto se cargarán automáticamente desde tu mascota registrada."
-                               FontSize="12"
-                               TextColor="#2B0B98"
-                               FontAttributes="Bold"
-                               LineBreakMode="WordWrap" />
-                    </Border>
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Datos principales -->
-            <Border x:Name="DatosMascotaBorder"
-                    BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Label Text="Información del reporte"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="TituloEntry"
-                           Placeholder="Ej. Se perdió mi perro / Mascota encontrada"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Editor x:Name="DescripcionEntry"
-                            Placeholder="Describe la situación, características visibles o detalles importantes..."
-                            AutoSize="TextChanges"
-                            HeightRequest="100"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B" />
-
-                    <Entry x:Name="DireccionReferenciaEntry"
-                           Placeholder="Referencia del lugar. Ej. Cerca del parque, avenida, mercado..."
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Ubicación del reporte -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Label Text="Ubicación del reporte"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Label Text="Puedes usar tu GPS actual o abrir el mapa para marcar el punto exacto donde se perdió o encontró la mascota."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-
-                    <Grid ColumnDefinitions="*,*"
-                            ColumnSpacing="10">
-
-                        <Button Grid.Column="0"
-                                Text="📍 Usar mi GPS"
-                                Clicked="OnUsarGpsActualClicked"
-                                BackgroundColor="#2B0B98"
-                                TextColor="White"
-                                FontAttributes="Bold"
-                                CornerRadius="14"
-                                HeightRequest="44" />
-
-                        <Button Grid.Column="1"
-                                Text="🗺️ Elegir en mapa"
-                                Clicked="OnSeleccionarMapaClicked"
-                                BackgroundColor="#EEF2FF"
-                                TextColor="#2B0B98"
-                                FontAttributes="Bold"
-                                CornerRadius="14"
-                                HeightRequest="44" />
-
-                    </Grid>
-
-                    <Border BackgroundColor="#EEF2FF"
-                            Stroke="Transparent"
-                            Padding="12">
-
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="14" />
-                        </Border.StrokeShape>
-
-                        <Label x:Name="LblUbicacionSeleccionada"
-                               Text="Aún no has seleccionado una ubicación para el reporte."
-                               FontSize="12"
-                               TextColor="#2B0B98"
-                               FontAttributes="Bold"
-                               HorizontalTextAlignment="Center"
-                               LineBreakMode="WordWrap" />
-                    </Border>
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Datos referenciales de la mascota -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Label x:Name="LblTituloDatosMascota"
-                           Text="Datos de la mascota"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Label x:Name="LblAyudaDatosMascota"
-                           Text="Completa estos datos si no estás asociando el reporte a una mascota registrada."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-
-                    <Entry x:Name="NombreMascotaEntry"
-                           Placeholder="Nombre de la mascota, si se conoce"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="EspecieEntry"
-                           Placeholder="Especie. Ej. Perro, gato"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="RazaEntry"
-                           Placeholder="Raza, si se conoce"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="ColorEntry"
-                           Placeholder="Color principal"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Picker x:Name="SexoPicker"
-                            Title="Sexo, si se conoce"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B">
-                        <Picker.Items>
-                            <x:String>Macho</x:String>
-                            <x:String>Hembra</x:String>
-                            <x:String>No identificado</x:String>
-                        </Picker.Items>
-                    </Picker>
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Foto -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Label x:Name="LblTituloFotoReporte"
-                           Text="Fotografía del reporte"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Label x:Name="LblAyudaFotoReporte"
-                           Text="Agrega una foto para que sea más fácil identificar a la mascota."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-
-                    <Border BackgroundColor="#F1F5F9"
-                            HeightRequest="240"
-                            Stroke="#CBD5E1"
-                            StrokeThickness="1">
-
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="16" />
-                        </Border.StrokeShape>
-
-                        <Grid>
-                            <Image x:Name="FotoPreview"
-                                   Aspect="AspectFill" />
-
-                            <VerticalStackLayout x:Name="BotonesCaptura"
-                                                 HorizontalOptions="Center"
-                                                 VerticalOptions="Center"
-                                                 Spacing="10">
-
-                                <Label Text="📷"
-                                       FontSize="40"
-                                       HorizontalOptions="Center" />
-
-                                <HorizontalStackLayout Spacing="10"
-                                                       HorizontalOptions="Center">
-
-                                    <Button Text="Cámara"
-                                            Clicked="OnTomarFotoClicked"
-                                            BackgroundColor="#2B0B98"
-                                            TextColor="White"
-                                            CornerRadius="14"
-                                            Padding="18,0" />
-
-                                    <Button Text="Galería"
-                                            Clicked="OnElegirGaleriaClicked"
-                                            BackgroundColor="#EEF2FF"
-                                            TextColor="#2B0B98"
-                                            CornerRadius="14"
-                                            Padding="18,0" />
-
-                                </HorizontalStackLayout>
-                            </VerticalStackLayout>
+    BackgroundColor="#F5F1FF">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="PrimaryColor">#5B21E6</Color>
+            <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="AccentPink">#FF4FB3</Color>
+            <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextMuted">#64748B</Color>
+            <Color x:Key="CardBorder">#E1D6FF</Color>
+            <Color x:Key="InputBorder">#D8CCFF</Color>
+            <Color x:Key="InputBackground">#F8F5FF</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F8F5FF" Offset="0.0" />
+                <GradientStop Color="#F3EDFF" Offset="0.55" />
+                <GradientStop Color="#FDFBFF" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ScrollView>
+            <VerticalStackLayout Padding="14,12,14,20"
+                                 Spacing="10">
+
+                <!-- Tipo de reporte -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.10"
+                                Offset="0,4"
+                                Radius="12" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Grid ColumnDefinitions="Auto,*"
+                              ColumnSpacing="10">
+
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource PrimarySoft}"
+                                    Stroke="Transparent"
+                                    WidthRequest="38"
+                                    HeightRequest="38"
+                                    VerticalOptions="Center">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="19" />
+                                </Border.StrokeShape>
+
+                                <Label Text="🐾"
+                                       FontSize="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Border>
+
+                            <Label Grid.Column="1"
+                                   Text="Tipo de reporte"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextMain}"
+                                   VerticalOptions="Center" />
                         </Grid>
-                    </Border>
 
-                </VerticalStackLayout>
-            </Border>
+                        <Grid ColumnDefinitions="*,*"
+                              ColumnSpacing="10">
 
-            <!-- Botón enviar -->
-            <Button x:Name="BtnEnviar"
-                    Text="📌 Publicar reporte"
-                    Clicked="OnEnviarClicked"
-                    BackgroundColor="#2B0B98"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="18"
-                    HeightRequest="54"
-                    IsEnabled="False" />
+                            <Button x:Name="BtnTipoPerdida"
+                                    Grid.Column="0"
+                                    Text="🐾 Perdida"
+                                    Clicked="OnTipoPerdidaClicked"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    TextColor="{StaticResource PrimaryDark}"
+                                    BorderColor="{StaticResource InputBorder}"
+                                    BorderWidth="1"
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    CornerRadius="16"
+                                    HeightRequest="44" />
 
-            <ActivityIndicator x:Name="LoadingIndicator"
-                               IsRunning="False"
-                               IsVisible="False"
-                               Color="#2B0B98" />
+                            <Button x:Name="BtnTipoEncontrada"
+                                    Grid.Column="1"
+                                    Text="🏠 Encontrada"
+                                    Clicked="OnTipoEncontradaClicked"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    TextColor="{StaticResource PrimaryDark}"
+                                    BorderColor="{StaticResource InputBorder}"
+                                    BorderWidth="1"
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    CornerRadius="16"
+                                    HeightRequest="44" />
+                        </Grid>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                        <Label x:Name="LblAyudaTipoReporte"
+                               Text=""
+                               IsVisible="False" />
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Seleccionar mascota registrada -->
+                <Border x:Name="SeleccionMascotaBorder"
+                        BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14"
+                        IsVisible="False">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Label Text="Mi mascota"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextMain}" />
+
+                        <Border Stroke="{StaticResource InputBorder}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource InputBackground}"
+                                Padding="12,0"
+                                HeightRequest="52">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+
+                            <Picker x:Name="MisMascotasPicker"
+                                    Title="Selecciona una mascota"
+                                    ItemDisplayBinding="{Binding Nombre}"
+                                    SelectedIndexChanged="OnMascotaRegistradaSeleccionada"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource TextMain}" />
+                        </Border>
+
+                        <Border BackgroundColor="{StaticResource PrimarySoft}"
+                                Stroke="Transparent"
+                                Padding="10">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Label x:Name="LblResumenMascotaSeleccionada"
+                                   Text="Sus datos se cargarán automáticamente."
+                                   FontSize="12"
+                                   TextColor="{StaticResource PrimaryDark}"
+                                   FontAttributes="Bold"
+                                   LineBreakMode="WordWrap" />
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Información del reporte -->
+                <Border x:Name="DatosMascotaBorder"
+                        BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Label Text="Información"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextMain}" />
+
+                        <Border Stroke="{StaticResource InputBorder}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource InputBackground}"
+                                Padding="12,0"
+                                HeightRequest="50">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+
+                            <Entry x:Name="TituloEntry"
+                                   Placeholder="Título del reporte"
+                                   PlaceholderColor="#8C84A6"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource TextMain}" />
+                        </Border>
+
+                        <Border Stroke="{StaticResource InputBorder}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource InputBackground}"
+                                Padding="12,4"
+                                HeightRequest="88">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+
+                            <Editor x:Name="DescripcionEntry"
+                                    Placeholder="Descripción breve"
+                                    PlaceholderColor="#8C84A6"
+                                    AutoSize="TextChanges"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource TextMain}" />
+                        </Border>
+
+                        <Border Stroke="{StaticResource InputBorder}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource InputBackground}"
+                                Padding="12,0"
+                                HeightRequest="50">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+
+                            <Entry x:Name="DireccionReferenciaEntry"
+                                   Placeholder="Referencia del lugar"
+                                   PlaceholderColor="#8C84A6"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource TextMain}" />
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Ubicación del reporte -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Label Text="Ubicación"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextMain}" />
+
+                        <Grid ColumnDefinitions="*,*"
+                              ColumnSpacing="10">
+
+                            <Button Grid.Column="0"
+                                    Text="📍 Usar GPS"
+                                    Clicked="OnUsarGpsActualClicked"
+                                    BackgroundColor="{StaticResource PrimaryColor}"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="16"
+                                    HeightRequest="44" />
+
+                            <Button Grid.Column="1"
+                                    Text="🗺️ Mapa"
+                                    Clicked="OnSeleccionarMapaClicked"
+                                    BackgroundColor="#FFFFFF"
+                                    TextColor="{StaticResource PrimaryColor}"
+                                    BorderColor="{StaticResource CardBorder}"
+                                    BorderWidth="1"
+                                    FontAttributes="Bold"
+                                    CornerRadius="16"
+                                    HeightRequest="44" />
+
+                        </Grid>
+
+                        <Border BackgroundColor="{StaticResource PrimarySoft}"
+                                Stroke="Transparent"
+                                Padding="10">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Label x:Name="LblUbicacionSeleccionada"
+                                   Text="Ubicación pendiente"
+                                   FontSize="12"
+                                   TextColor="{StaticResource PrimaryDark}"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap" />
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Datos referenciales de la mascota -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <!-- Encabezado plegable -->
+                        <Grid ColumnDefinitions="*,Auto"
+                                ColumnSpacing="10">
+
+                            <VerticalStackLayout Grid.Column="0"
+                                 Spacing="2">
+
+                                <Label x:Name="LblTituloDatosMascota"
+                                       Text="Mascota"
+                                       FontSize="17"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextMain}" />
+
+                                <Label x:Name="LblAyudaDatosMascota"
+                                       Text="Completa solo lo necesario."
+                                       FontSize="12"
+                                       TextColor="{StaticResource TextMuted}"
+                                       LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+
+                            <Button x:Name="BtnToggleDatosMascota"
+                                    Grid.Column="1"
+                                    Text="Mostrar"
+                                    Clicked="OnToggleDatosMascotaClicked"
+                                    BackgroundColor="{StaticResource PrimarySoft}"
+                                    TextColor="{StaticResource PrimaryDark}"
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    CornerRadius="14"
+                                    HeightRequest="36"
+                                    Padding="12,0"
+                                    VerticalOptions="Center" />
+                        </Grid>
+
+                        <!-- Contenido plegable -->
+                        <VerticalStackLayout x:Name="MascotaCamposContainer"
+                                             Spacing="10"
+                                             IsVisible="False">
+
+                            <Border x:Name="NombreMascotaField"
+                                    Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,0"
+                                    HeightRequest="50">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Entry x:Name="NombreMascotaEntry"
+                                       Placeholder="Nombre"
+                                       PlaceholderColor="#8C84A6"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                            <Border x:Name="EspecieField"
+                                    Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,0"
+                                    HeightRequest="50">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Entry x:Name="EspecieEntry"
+                                       Placeholder="Especie"
+                                       PlaceholderColor="#8C84A6"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                            <Grid ColumnDefinitions="*,*"
+                                    ColumnSpacing="10">
+
+                                <Border x:Name="RazaField"
+                                        Grid.Column="0"
+                                        Stroke="{StaticResource InputBorder}"
+                                        StrokeThickness="1"
+                                        BackgroundColor="{StaticResource InputBackground}"
+                                        Padding="12,0"
+                                        HeightRequest="50">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Entry x:Name="RazaEntry"
+                                           Placeholder="Raza"
+                                           PlaceholderColor="#8C84A6"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{StaticResource TextMain}" />
+                                </Border>
+
+                                <Border x:Name="ColorField"
+                                        Grid.Column="1"
+                                        Stroke="{StaticResource InputBorder}"
+                                        StrokeThickness="1"
+                                        BackgroundColor="{StaticResource InputBackground}"
+                                        Padding="12,0"
+                                        HeightRequest="50">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Entry x:Name="ColorEntry"
+                                           Placeholder="Color"
+                                           PlaceholderColor="#8C84A6"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{StaticResource TextMain}" />
+                                </Border>
+                            </Grid>
+
+                            <Border x:Name="SexoField"
+                                    Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,0"
+                                    HeightRequest="52">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Picker x:Name="SexoPicker"
+                                        Title="Sexo"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource TextMain}">
+                                    <Picker.Items>
+                                        <x:String>Macho</x:String>
+                                        <x:String>Hembra</x:String>
+                                        <x:String>No identificado</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </Border>
+
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Foto -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label x:Name="LblTituloFotoReporte"
+                                   Text="Foto"
+                                   FontSize="17"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextMain}"
+                                   VerticalOptions="Center" />
+
+                            <Border Grid.Column="1"
+                                    BackgroundColor="#FCE7F3"
+                                    Stroke="Transparent"
+                                    Padding="9,4"
+                                    VerticalOptions="Center">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+
+                                <Label Text="Opcional"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="#BE185D" />
+                            </Border>
+                        </Grid>
+
+                        <Label x:Name="LblAyudaFotoReporte"
+                               Text="Agrega una imagen clara."
+                               FontSize="12"
+                               TextColor="{StaticResource TextMuted}"
+                               LineBreakMode="WordWrap" />
+
+                        <Border BackgroundColor="{StaticResource InputBackground}"
+                                HeightRequest="210"
+                                Stroke="{StaticResource InputBorder}"
+                                StrokeThickness="1">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+
+                            <Grid>
+                                <Image x:Name="FotoPreview"
+                                       Aspect="AspectFill" />
+
+                                <VerticalStackLayout x:Name="BotonesCaptura"
+                                                     HorizontalOptions="Center"
+                                                     VerticalOptions="Center"
+                                                     Spacing="10">
+
+                                    <Label Text="📷"
+                                           FontSize="36"
+                                           HorizontalOptions="Center" />
+
+                                    <HorizontalStackLayout Spacing="10"
+                                                           HorizontalOptions="Center">
+
+                                        <Button Text="Cámara"
+                                                Clicked="OnTomarFotoClicked"
+                                                BackgroundColor="{StaticResource PrimaryColor}"
+                                                TextColor="White"
+                                                FontAttributes="Bold"
+                                                CornerRadius="14"
+                                                HeightRequest="40"
+                                                Padding="18,0" />
+
+                                        <Button Text="Galería"
+                                                Clicked="OnElegirGaleriaClicked"
+                                                BackgroundColor="#FFFFFF"
+                                                TextColor="{StaticResource PrimaryColor}"
+                                                BorderColor="{StaticResource CardBorder}"
+                                                BorderWidth="1"
+                                                FontAttributes="Bold"
+                                                CornerRadius="14"
+                                                HeightRequest="40"
+                                                Padding="18,0" />
+
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Botón enviar -->
+                <Button x:Name="BtnEnviar"
+                        Text="📌 Publicar reporte"
+                        Clicked="OnEnviarClicked"
+                        BackgroundColor="{StaticResource PrimaryColor}"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="18"
+                        HeightRequest="54"
+                        IsEnabled="True">
+
+                    <Button.Shadow>
+                        <Shadow Brush="#5B21E6"
+                                Opacity="0.25"
+                                Offset="0,5"
+                                Radius="12" />
+                    </Button.Shadow>
+                </Button>
+
+                <ActivityIndicator x:Name="LoadingIndicator"
+                                   IsRunning="False"
+                                   IsVisible="False"
+                                   Color="{StaticResource PrimaryColor}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>
