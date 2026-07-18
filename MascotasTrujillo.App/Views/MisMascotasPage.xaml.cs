@@ -44,16 +44,9 @@ public partial class MisMascotasPage : ContentPage
     private void ActualizarEstadoBotonesMascota()
     {
         bool hayMascotaSeleccionada = _mascotaSeleccionada != null;
-        bool tieneGps = hayMascotaSeleccionada &&
-                        !string.IsNullOrWhiteSpace(_mascotaSeleccionada?.DispositivoId);
 
-        BtnEditarMascota.IsEnabled = hayMascotaSeleccionada;
-        BtnDesactivarMascota.IsEnabled = hayMascotaSeleccionada;
-        BtnHistorialGps.IsEnabled = tieneGps;
-
-        BtnEditarMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
-        BtnDesactivarMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
-        BtnHistorialGps.Opacity = tieneGps ? 1 : 0.45;
+        BtnAccionesMascota.IsEnabled = hayMascotaSeleccionada;
+        BtnAccionesMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
     }
 
     private async Task CargarMascotas()
@@ -315,6 +308,55 @@ public partial class MisMascotasPage : ContentPage
         await Navigation.PushAsync(
             new HistorialGpsPage(_apiService, _mascotaSeleccionada)
         );
+    }
+
+    private async void OnAccionesMascotaClicked(object sender, EventArgs e)
+    {
+        if (_mascotaSeleccionada == null)
+        {
+            await DisplayAlertAsync("Aviso", "Selecciona una mascota primero.", "OK");
+            return;
+        }
+
+        LblAccionesMascotaTitulo.Text = _mascotaSeleccionada.Nombre;
+
+        bool tieneGps = !string.IsNullOrWhiteSpace(_mascotaSeleccionada.DispositivoId);
+        BtnAccionHistorialGps.IsVisible = tieneGps;
+
+        AccionesMascotaOverlay.IsVisible = true;
+        AccionesMascotaOverlay.Opacity = 0;
+
+        await AccionesMascotaOverlay.FadeToAsync(1, 150);
+    }
+
+    private async void OnCerrarAccionesMascotaClicked(object sender, EventArgs e)
+    {
+        await CerrarAccionesMascotaOverlayAsync();
+    }
+
+    private async Task CerrarAccionesMascotaOverlayAsync()
+    {
+        await AccionesMascotaOverlay.FadeToAsync(0, 120);
+        AccionesMascotaOverlay.IsVisible = false;
+        AccionesMascotaOverlay.Opacity = 0;
+    }
+
+    private async void OnAccionEditarMascotaClicked(object sender, EventArgs e)
+    {
+        await CerrarAccionesMascotaOverlayAsync();
+        OnEditarMascotaClicked(sender, e);
+    }
+
+    private async void OnAccionHistorialGpsClicked(object sender, EventArgs e)
+    {
+        await CerrarAccionesMascotaOverlayAsync();
+        OnHistorialGpsClicked(sender, e);
+    }
+
+    private async void OnAccionDesactivarMascotaClicked(object sender, EventArgs e)
+    {
+        await CerrarAccionesMascotaOverlayAsync();
+        OnDesactivarMascotaClicked(sender, e);
     }
 
 }

@@ -9,6 +9,7 @@ public partial class MisReportesPage : ContentPage
     private readonly ApiService _apiService;
     private ObservableCollection<Reporte> _misPublicaciones;
     private bool _cargandoReportes = false;
+    private Reporte? _reporteAccionesActual;
 
     public MisReportesPage(ApiService apiService)
     {
@@ -240,48 +241,18 @@ public partial class MisReportesPage : ContentPage
         if (boton.CommandParameter is not Reporte reporte)
             return;
 
-        var opciones = new List<string>
-    {
-        "Ver detalle"
-    };
+        _reporteAccionesActual = reporte;
 
-        if (reporte.PuedeResolver)
-            opciones.Add("Marcar como resuelto");
+        LblAccionesReporteTitulo.Text = reporte.Titulo;
 
-        if (reporte.PuedeSuspender)
-            opciones.Add("Pausar reporte");
+        BtnAccionResolver.IsVisible = reporte.PuedeResolver;
+        BtnAccionPausar.IsVisible = reporte.PuedeSuspender;
+        BtnAccionReactivar.IsVisible = reporte.PuedeReactivar;
 
-        if (reporte.PuedeReactivar)
-            opciones.Add("Reactivar reporte");
+        AccionesOverlay.IsVisible = true;
+        AccionesOverlay.Opacity = 0;
 
-        string accion = await DisplayActionSheetAsync(
-            "Acciones del reporte",
-            "Cancelar",
-            null,
-            opciones.ToArray()
-        );
-
-        if (string.IsNullOrWhiteSpace(accion) || accion == "Cancelar")
-            return;
-
-        switch (accion)
-        {
-            case "Ver detalle":
-                await Navigation.PushAsync(new DetalleReportePage(_apiService, reporte));
-                break;
-
-            case "Marcar como resuelto":
-                await ResolverReporteAsync(reporte);
-                break;
-
-            case "Pausar reporte":
-                await SuspenderReporteAsync(reporte);
-                break;
-
-            case "Reactivar reporte":
-                await ReactivarReporteAsync(reporte);
-                break;
-        }
+        await AccionesOverlay.FadeToAsync(1, 150);
     }
 
     private async Task ResolverReporteAsync(Reporte reporte)
@@ -411,6 +382,66 @@ public partial class MisReportesPage : ContentPage
         {
             await DisplayAlertAsync("Error", $"No se pudo reactivar el reporte: {ex.Message}", "OK");
         }
+    }
+
+    private async void OnCerrarAccionesClicked(object sender, EventArgs e)
+    {
+        await CerrarAccionesOverlayAsync();
+    }
+
+    private async Task CerrarAccionesOverlayAsync()
+    {
+        await AccionesOverlay.FadeToAsync(0, 120);
+        AccionesOverlay.IsVisible = false;
+        AccionesOverlay.Opacity = 0;
+    }
+
+    private async void OnAccionDetalleClicked(object sender, EventArgs e)
+    {
+        if (_reporteAccionesActual == null)
+            return;
+
+        var reporte = _reporteAccionesActual;
+
+        await CerrarAccionesOverlayAsync();
+
+        await Navigation.PushAsync(new DetalleReportePage(_apiService, reporte));
+    }
+
+    private async void OnAccionResolverClicked(object sender, EventArgs e)
+    {
+        if (_reporteAccionesActual == null)
+            return;
+
+        var reporte = _reporteAccionesActual;
+
+        await CerrarAccionesOverlayAsync();
+
+        await ResolverReporteAsync(reporte);
+    }
+
+    private async void OnAccionPausarClicked(object sender, EventArgs e)
+    {
+        if (_reporteAccionesActual == null)
+            return;
+
+        var reporte = _reporteAccionesActual;
+
+        await CerrarAccionesOverlayAsync();
+
+        await SuspenderReporteAsync(reporte);
+    }
+
+    private async void OnAccionReactivarClicked(object sender, EventArgs e)
+    {
+        if (_reporteAccionesActual == null)
+            return;
+
+        var reporte = _reporteAccionesActual;
+
+        await CerrarAccionesOverlayAsync();
+
+        await ReactivarReporteAsync(reporte);
     }
 
 }

@@ -555,7 +555,9 @@
 
                             <Grid>
                                 <Image x:Name="FotoPreview"
-                                       Aspect="AspectFill" />
+                                       Aspect="AspectFit"
+                                       HorizontalOptions="Fill"
+                                       VerticalOptions="Fill" />
 
                                 <VerticalStackLayout x:Name="BotonesCaptura"
                                                      HorizontalOptions="Center"

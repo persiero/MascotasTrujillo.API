@@ -45,6 +45,26 @@ public partial class RadarPage : ContentPage
         await CargarRadarAsync();
     }
 
+    private async void OnAbrirFiltrosClicked(object sender, EventArgs e)
+    {
+        FiltrosOverlay.IsVisible = true;
+        FiltrosOverlay.Opacity = 0;
+
+        await FiltrosOverlay.FadeToAsync(1, 150);
+    }
+
+    private async void OnCerrarFiltrosClicked(object sender, EventArgs e)
+    {
+        await CerrarFiltrosOverlayAsync();
+    }
+
+    private async Task CerrarFiltrosOverlayAsync()
+    {
+        await FiltrosOverlay.FadeToAsync(0, 120);
+        FiltrosOverlay.IsVisible = false;
+        FiltrosOverlay.Opacity = 0;
+    }
+
     private async void OnActualizarClicked(object? sender, EventArgs e)
     {
         await CargarRadarAsync();
@@ -241,6 +261,7 @@ public partial class RadarPage : ContentPage
         AplicarEstado(BtnRadio5, _radioMetros == 5000);
         AplicarEstado(BtnRadio10, _radioMetros == 10000);
 
+        LblFiltroActual.Text = $"{_tipoFiltro} · {_radioMetros / 1000:0} km";
         LblResumenFiltroSuperior.Text = $"{_radioMetros / 1000:0} km";
     }
 

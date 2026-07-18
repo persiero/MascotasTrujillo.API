@@ -22,9 +22,9 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,170,Auto,Auto,*"
-          Padding="12,12,12,8"
-          RowSpacing="8">
+    <Grid RowDefinitions="Auto,170,Auto,*"
+      Padding="12,12,12,8"
+      RowSpacing="8">
 
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -119,174 +119,50 @@
                       IsShowingUser="True" />
         </Border>
 
-        <!-- Filtros rápidos -->
-        <Border Grid.Row="2"
-                Padding="12"
-                Stroke="{StaticResource CardBorder}"
-                StrokeThickness="1"
-                BackgroundColor="#FFFFFF">
-
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="20" />
-            </Border.StrokeShape>
-
-            <Border.Shadow>
-                <Shadow Brush="#2B0B98"
-                        Opacity="0.08"
-                        Offset="0,3"
-                        Radius="10" />
-            </Border.Shadow>
-
-            <VerticalStackLayout Spacing="10">
-
-                <!-- Tipo -->
-                <Grid ColumnDefinitions="Auto,*,*,*"
-                      ColumnSpacing="6">
-
-                    <Label Text="Tipo"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextMuted}"
-                           VerticalOptions="Center" />
-
-                    <Button x:Name="BtnTipoTodos"
-                            Grid.Column="1"
-                            Text="Todos"
-                            Clicked="OnTipoTodosClicked"
-                            BackgroundColor="{StaticResource PrimaryColor}"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            FontSize="11"
-                            HeightRequest="34"
-                            CornerRadius="14"
-                            Padding="6,0" />
-
-                    <Button x:Name="BtnTipoPerdidas"
-                            Grid.Column="2"
-                            Text="Perdidas"
-                            Clicked="OnTipoPerdidasClicked"
-                            BackgroundColor="{StaticResource InputBackground}"
-                            TextColor="{StaticResource PrimaryDark}"
-                            FontAttributes="Bold"
-                            FontSize="11"
-                            HeightRequest="34"
-                            CornerRadius="14"
-                            Padding="6,0" />
-
-                    <Button x:Name="BtnTipoEncontradas"
-                            Grid.Column="3"
-                            Text="Encontradas"
-                            Clicked="OnTipoEncontradasClicked"
-                            BackgroundColor="{StaticResource InputBackground}"
-                            TextColor="{StaticResource PrimaryDark}"
-                            FontAttributes="Bold"
-                            FontSize="11"
-                            HeightRequest="34"
-                            CornerRadius="14"
-                            Padding="6,0" />
-                </Grid>
-
-                <!-- Radio -->
-                <Grid ColumnDefinitions="Auto,*,*,*,*"
-                      ColumnSpacing="6">
-
-                    <Label Text="Radio"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextMuted}"
-                           VerticalOptions="Center" />
-
-                    <Button x:Name="BtnRadio1"
-                            Grid.Column="1"
-                            Text="1 km"
-                            Clicked="OnRadio1Clicked"
-                            BackgroundColor="{StaticResource InputBackground}"
-                            TextColor="{StaticResource PrimaryDark}"
-                            FontAttributes="Bold"
-                            FontSize="11"
-                            HeightRequest="34"
-                            CornerRadius="14"
-                            Padding="6,0" />
-
-                    <Button x:Name="BtnRadio3"
-                            Grid.Column="2"
-                            Text="3 km"
-                            Clicked="OnRadio3Clicked"
-                            BackgroundColor="{StaticResource InputBackground}"
-                            TextColor="{StaticResource PrimaryDark}"
-                            FontAttributes="Bold"
-                            FontSize="11"
-                            HeightRequest="34"
-                            CornerRadius="14"
-                            Padding="6,0" />
-
-                    <Button x:Name="BtnRadio5"
-                            Grid.Column="3"
-                            Text="5 km"
-                            Clicked="OnRadio5Clicked"
-                            BackgroundColor="{StaticResource PrimaryColor}"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            FontSize="11"
-                            HeightRequest="34"
-                            CornerRadius="14"
-                            Padding="6,0" />
-
-                    <Button x:Name="BtnRadio10"
-                            Grid.Column="4"
-                            Text="10 km"
-                            Clicked="OnRadio10Clicked"
-                            BackgroundColor="{StaticResource InputBackground}"
-                            TextColor="{StaticResource PrimaryDark}"
-                            FontAttributes="Bold"
-                            FontSize="11"
-                            HeightRequest="34"
-                            CornerRadius="14"
-                            Padding="6,0" />
-                </Grid>
-
-            </VerticalStackLayout>
-        </Border>
-
-        <!-- Botones de acción -->
-        <Grid Grid.Row="3"
-              ColumnDefinitions="*,*"
-              ColumnSpacing="10">
+        <!-- Acciones rápidas -->
+        <Grid Grid.Row="2"
+      ColumnDefinitions="*,Auto,*"
+      ColumnSpacing="8">
 
             <Button x:Name="BtnActualizar"
-                    Grid.Column="0"
-                    Text="🔄 Actualizar"
-                    Clicked="OnActualizarClicked"
-                    HeightRequest="46"
-                    BackgroundColor="{StaticResource PrimaryColor}"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    FontSize="14"
-                    CornerRadius="16">
-
-                <Button.Shadow>
-                    <Shadow Brush="#5B21E6"
-                            Opacity="0.25"
-                            Offset="0,4"
-                            Radius="10" />
-                </Button.Shadow>
-            </Button>
+            Grid.Column="0"
+            Text="🔄 Actualizar"
+            Clicked="OnActualizarClicked"
+            HeightRequest="46"
+            BackgroundColor="{StaticResource PrimaryColor}"
+            TextColor="White"
+            FontAttributes="Bold"
+            FontSize="13"
+            CornerRadius="16" />
 
             <Button Grid.Column="1"
-                    Text="➕ Reportar"
-                    Clicked="OnIrAReportarClicked"
-                    HeightRequest="46"
-                    BackgroundColor="#FFFFFF"
-                    TextColor="{StaticResource PrimaryColor}"
-                    BorderColor="{StaticResource CardBorder}"
-                    BorderWidth="1"
-                    FontAttributes="Bold"
-                    FontSize="14"
-                    CornerRadius="16" />
+            Text="⚙️ Filtros"
+            Clicked="OnAbrirFiltrosClicked"
+            HeightRequest="46"
+            BackgroundColor="#FFFFFF"
+            TextColor="{StaticResource PrimaryColor}"
+            BorderColor="{StaticResource CardBorder}"
+            BorderWidth="1"
+            FontAttributes="Bold"
+            FontSize="13"
+            CornerRadius="16"
+            Padding="14,0" />
+
+            <Button Grid.Column="2"
+            Text="➕ Reportar"
+            Clicked="OnIrAReportarClicked"
+            HeightRequest="46"
+            BackgroundColor="#FFFFFF"
+            TextColor="{StaticResource PrimaryColor}"
+            BorderColor="{StaticResource CardBorder}"
+            BorderWidth="1"
+            FontAttributes="Bold"
+            FontSize="13"
+            CornerRadius="16" />
         </Grid>
 
         <!-- Lista de reportes -->
-        <Border Grid.Row="4"
+        <Border Grid.Row="3"
                 Padding="12"
                 Stroke="{StaticResource CardBorder}"
                 StrokeThickness="1"
@@ -454,6 +330,162 @@
 
             </Grid>
         </Border>
+
+        <!-- Modal de filtros -->
+        <Grid x:Name="FiltrosOverlay"
+      Grid.RowSpan="4"
+      IsVisible="False"
+      Opacity="0"
+      BackgroundColor="#99000000"
+      Padding="18">
+
+            <BoxView BackgroundColor="Transparent">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCerrarFiltrosClicked" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border VerticalOptions="End"
+            BackgroundColor="#FFFFFF"
+            Stroke="{StaticResource CardBorder}"
+            StrokeThickness="1"
+            Padding="16"
+            Margin="0,0,0,12">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="26" />
+                </Border.StrokeShape>
+
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                    Opacity="0.18"
+                    Offset="0,6"
+                    Radius="18" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="14">
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Filtros del radar"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextMain}" />
+
+                            <Label x:Name="LblFiltroActual"
+                           Text="Todos · 5 km"
+                           FontSize="12"
+                           TextColor="{StaticResource TextMuted}" />
+                        </VerticalStackLayout>
+
+                        <Button Grid.Column="1"
+                        Text="✕"
+                        Clicked="OnCerrarFiltrosClicked"
+                        WidthRequest="36"
+                        HeightRequest="36"
+                        CornerRadius="18"
+                        Padding="0"
+                        BackgroundColor="{StaticResource PrimarySoft}"
+                        TextColor="{StaticResource PrimaryDark}"
+                        FontAttributes="Bold" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1"
+                     Color="#EEE7FF" />
+
+                    <Label Text="Tipo de reporte"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextMuted}" />
+
+                    <Grid ColumnDefinitions="*,*,*"
+                  ColumnSpacing="8">
+
+                        <Button x:Name="BtnTipoTodos"
+                        Grid.Column="0"
+                        Text="Todos"
+                        Clicked="OnTipoTodosClicked"
+                        HeightRequest="42"
+                        CornerRadius="16"
+                        FontSize="12"
+                        FontAttributes="Bold" />
+
+                        <Button x:Name="BtnTipoPerdidas"
+                        Grid.Column="1"
+                        Text="Perdidas"
+                        Clicked="OnTipoPerdidasClicked"
+                        HeightRequest="42"
+                        CornerRadius="16"
+                        FontSize="12"
+                        FontAttributes="Bold" />
+
+                        <Button x:Name="BtnTipoEncontradas"
+                        Grid.Column="2"
+                        Text="Encontradas"
+                        Clicked="OnTipoEncontradasClicked"
+                        HeightRequest="42"
+                        CornerRadius="16"
+                        FontSize="12"
+                        FontAttributes="Bold" />
+                    </Grid>
+
+                    <Label Text="Radio de búsqueda"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextMuted}" />
+
+                    <Grid ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="8">
+
+                        <Button x:Name="BtnRadio1"
+                        Grid.Column="0"
+                        Text="1 km"
+                        Clicked="OnRadio1Clicked"
+                        HeightRequest="42"
+                        CornerRadius="16"
+                        FontSize="12"
+                        FontAttributes="Bold" />
+
+                        <Button x:Name="BtnRadio3"
+                        Grid.Column="1"
+                        Text="3 km"
+                        Clicked="OnRadio3Clicked"
+                        HeightRequest="42"
+                        CornerRadius="16"
+                        FontSize="12"
+                        FontAttributes="Bold" />
+
+                        <Button x:Name="BtnRadio5"
+                        Grid.Column="2"
+                        Text="5 km"
+                        Clicked="OnRadio5Clicked"
+                        HeightRequest="42"
+                        CornerRadius="16"
+                        FontSize="12"
+                        FontAttributes="Bold" />
+
+                        <Button x:Name="BtnRadio10"
+                        Grid.Column="3"
+                        Text="10 km"
+                        Clicked="OnRadio10Clicked"
+                        HeightRequest="42"
+                        CornerRadius="16"
+                        FontSize="12"
+                        FontAttributes="Bold" />
+                    </Grid>
+
+                    <Button Text="Listo"
+                    Clicked="OnCerrarFiltrosClicked"
+                    BackgroundColor="{StaticResource PrimaryColor}"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="14"
+                    CornerRadius="18"
+                    HeightRequest="48" />
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
 
     </Grid>
 </ContentPage>
