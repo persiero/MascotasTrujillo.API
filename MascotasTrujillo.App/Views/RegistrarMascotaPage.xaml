@@ -4,448 +4,681 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MascotasTrujillo.App.Views.RegistrarMascotaPage"
     Title="Registrar Mascota"
-    BackgroundColor="#F8FAFC">
+    BackgroundColor="#F5F1FF">
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="16"
-                             Padding="18"
-                             VerticalOptions="Start">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="PrimaryColor">#5B21E6</Color>
+            <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="AccentPink">#FF4FB3</Color>
+            <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextMuted">#64748B</Color>
+            <Color x:Key="CardBorder">#E1D6FF</Color>
+            <Color x:Key="InputBorder">#D8CCFF</Color>
+            <Color x:Key="InputBackground">#F8F5FF</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-            <!-- Encabezado -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
+    <Grid>
 
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F8F5FF" Offset="0.0" />
+                <GradientStop Color="#F3EDFF" Offset="0.55" />
+                <GradientStop Color="#FDFBFF" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
 
-                <Border.Shadow>
-                    <Shadow Brush="Black"
-                            Opacity="0.06"
-                            Offset="0,3"
-                            Radius="8" />
-                </Border.Shadow>
+        <ScrollView>
+            <VerticalStackLayout Spacing="10"
+                                 Padding="14,12,14,22">
 
-                <Grid ColumnDefinitions="Auto,*"
-                        ColumnSpacing="12">
+                <!-- Encabezado compacto -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14"
+                        IsVisible="False">
 
-                    <Border Grid.Column="0"
-                            BackgroundColor="#EEF2FF"
-                            Stroke="Transparent"
-                            HeightRequest="52"
-                            WidthRequest="52"
-                            VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
 
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="26" />
-                        </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.10"
+                                Offset="0,4"
+                                Radius="12" />
+                    </Border.Shadow>
 
-                        <Label x:Name="LblIconoFormulario"
-                               Text="🐾"
-                               FontSize="26"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center" />
-                    </Border>
-
-                    <VerticalStackLayout Grid.Column="1"
-                                         Spacing="3"
-                                         VerticalOptions="Center">
-
-                        <Label x:Name="LblTituloFormulario"
-                               Text="Registrar mascota"
-                               FontSize="22"
-                               FontAttributes="Bold"
-                               TextColor="#1E1B4B" />
-
-                                    <Label x:Name="LblSubtituloFormulario"
-                               Text="Agrega los datos de tu mascota para administrarla y consultar su ubicación privada si cuenta con collar GPS."
-                               FontSize="12"
-                               TextColor="#64748B"
-                               LineBreakMode="WordWrap" />
-                    </VerticalStackLayout>
-
-                </Grid>
-            </Border>
-
-            <!-- Foto -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="18">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12"
-                                     HorizontalOptions="Center">
-
-                    <Grid ColumnDefinitions="*,Auto"
-                            WidthRequest="260">
-
-                        <Label Text="Foto de la mascota"
-                               FontSize="16"
-                               FontAttributes="Bold"
-                               TextColor="#1E293B"
-                               VerticalOptions="Center" />
-
-                        <Border Grid.Column="1"
-                                BackgroundColor="#EEF2FF"
-                                Stroke="Transparent"
-                                Padding="8,3"
-                                VerticalOptions="Center">
-
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
-
-                            <Label Text="Opcional"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="#2B0B98" />
-                        </Border>
-                    </Grid>
-
-                    <Label Text="Puedes agregar una foto para identificarla mejor en tus reportes."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           HorizontalTextAlignment="Center"
-                           LineBreakMode="WordWrap" />
-
-                    <Border Stroke="#2B0B98"
-                            StrokeThickness="2"
-                            BackgroundColor="#EEF2FF"
-                            HeightRequest="140"
-                            WidthRequest="140">
-
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="70" />
-                        </Border.StrokeShape>
-
-                        <Image x:Name="FotoMascotaImage"
-                               Source="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-                               Aspect="AspectFill"
-                               HeightRequest="140"
-                               WidthRequest="140" />
-                    </Border>
-
-                    <HorizontalStackLayout Spacing="10"
-                                           HorizontalOptions="Center">
-
-                        <Button Text="📷 Cámara"
-                                Clicked="OnTomarFotoClicked"
-                                BackgroundColor="#2B0B98"
-                                TextColor="White"
-                                CornerRadius="14"
-                                HeightRequest="40"
-                                Padding="16,0"
-                                FontSize="13" />
-
-                        <Button Text="🖼️ Galería"
-                                Clicked="OnSeleccionarFotoClicked"
-                                BackgroundColor="#EEF2FF"
-                                TextColor="#2B0B98"
-                                CornerRadius="14"
-                                HeightRequest="40"
-                                Padding="16,0"
-                                FontSize="13" />
-                    </HorizontalStackLayout>
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Datos principales -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="18">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Grid ColumnDefinitions="*,Auto">
-
-                        <Label Text="Datos principales"
-                               FontSize="16"
-                               FontAttributes="Bold"
-                               TextColor="#1E293B"
-                               VerticalOptions="Center" />
-
-                        <Border Grid.Column="1"
-                                BackgroundColor="#FEE2E2"
-                                Stroke="Transparent"
-                                Padding="8,3"
-                                VerticalOptions="Center">
-
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
-
-                            <Label Text="Obligatorio"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="#B91C1C" />
-                        </Border>
-                    </Grid>
-
-                    <Label Text="El nombre y la especie son necesarios para registrar la mascota."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
-
-                    <Entry x:Name="NombreEntry"
-                           Placeholder="Nombre de la mascota *"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="EspecieEntry"
-                           Placeholder="Especie. Ej. Perro, gato *"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="RazaEntry"
-                           Placeholder="Raza. Ej. Labrador, siamés"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Entry x:Name="ColorEntry"
-                           Placeholder="Color principal. Ej. Marrón con blanco"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
-
-                    <Grid ColumnDefinitions="*,*"
+                    <Grid ColumnDefinitions="Auto,*"
                           ColumnSpacing="10">
 
-                        <Picker x:Name="SexoPicker"
-                                Grid.Column="0"
-                                Title="Sexo"
-                                BackgroundColor="#F1F5F9"
-                                TextColor="#1E293B">
-                            <Picker.Items>
-                                <x:String>Macho</x:String>
-                                <x:String>Hembra</x:String>
-                                <x:String>No especificado</x:String>
-                            </Picker.Items>
-                        </Picker>
-
-                        <Entry x:Name="EdadEntry"
-                               Grid.Column="1"
-                               Placeholder="Edad aprox."
-                               BackgroundColor="#F1F5F9"
-                               TextColor="#1E293B" />
-                    </Grid>
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Rasgos -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="18">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Label Text="Rasgos particulares"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="#1E293B" />
-
-                    <Label Text="Describe señales que ayuden a identificarla."
-                           FontSize="12"
-                           TextColor="#64748B" />
-
-                    <Editor x:Name="RasgosEditor"
-                            Placeholder="Ej. Tiene una mancha en el ojo derecho, collar rojo, cola corta..."
-                            AutoSize="TextChanges"
-                            HeightRequest="95"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B" />
-
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Información de salud -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="18">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Grid ColumnDefinitions="*,Auto">
-
-                        <Label Text="Información de salud"
-                               FontSize="16"
-                               FontAttributes="Bold"
-                               TextColor="#1E293B"
-                               VerticalOptions="Center" />
-
-                        <Border Grid.Column="1"
-                                BackgroundColor="#FEF3C7"
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource PrimarySoft}"
                                 Stroke="Transparent"
-                                Padding="8,3"
+                                HeightRequest="42"
+                                WidthRequest="42"
                                 VerticalOptions="Center">
 
                             <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10" />
+                                <RoundRectangle CornerRadius="21" />
                             </Border.StrokeShape>
 
-                            <Label Text="Opcional"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="#92400E" />
+                            <Label x:Name="LblIconoFormulario"
+                                   Text="🐾"
+                                   FontSize="22"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
                         </Border>
+
+                        <VerticalStackLayout Grid.Column="1"
+                                             Spacing="1"
+                                             VerticalOptions="Center">
+
+                            <Label x:Name="LblTituloFormulario"
+                                   Text="Registrar mascota"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextMain}" />
+
+                            <Label x:Name="LblSubtituloFormulario"
+                                   Text="Datos básicos y seguimiento GPS."
+                                   FontSize="12"
+                                   TextColor="{StaticResource TextMuted}"
+                                   LineBreakMode="TailTruncation" />
+                        </VerticalStackLayout>
+
                     </Grid>
+                </Border>
 
-                    <Label Text="Registra enfermedades, tratamientos o cuidados especiales. Esta información puede ayudar si tu mascota se pierde."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
+                <!-- Foto -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
 
-                    <Editor x:Name="EnfermedadesEditor"
-                            Placeholder="Enfermedades. Ej. Epilepsia, alergias, problemas renales..."
-                            AutoSize="TextChanges"
-                            HeightRequest="75"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B" />
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
 
-                    <Editor x:Name="DiscapacidadesEditor"
-                            Placeholder="Discapacidades. Ej. No ve de un ojo, dificultad para caminar..."
-                            AutoSize="TextChanges"
-                            HeightRequest="75"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B" />
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
 
-                    <Editor x:Name="TratamientosEditor"
-                            Placeholder="Tratamientos. Ej. Medicación diaria, gotas, dieta especial..."
-                            AutoSize="TextChanges"
-                            HeightRequest="75"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B" />
+                    <VerticalStackLayout Spacing="10"
+                                         HorizontalOptions="Center">
 
-                    <Editor x:Name="NecesidadesEspecialesEditor"
-                            Placeholder="Necesidades especiales. Ej. No cargar bruscamente, evitar ciertos alimentos..."
-                            AutoSize="TextChanges"
-                            HeightRequest="75"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B" />
+                        <Grid ColumnDefinitions="*,Auto"
+                              WidthRequest="260">
 
-                    <Editor x:Name="ObservacionesSaludEditor"
-                            Placeholder="Observaciones adicionales de salud"
-                            AutoSize="TextChanges"
-                            HeightRequest="75"
-                            BackgroundColor="#F1F5F9"
-                            TextColor="#1E293B" />
+                            <Label Text="Foto"
+                                   FontSize="17"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextMain}"
+                                   VerticalOptions="Center" />
 
-                    <Border BackgroundColor="#FEF3C7"
-                            Stroke="Transparent"
-                            Padding="12">
+                            <Border Grid.Column="1"
+                                    BackgroundColor="{StaticResource PrimarySoft}"
+                                    Stroke="Transparent"
+                                    Padding="8,3"
+                                    VerticalOptions="Center">
 
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="14" />
-                        </Border.StrokeShape>
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
 
-                        <Label Text="Esta información es importante para que una persona que encuentre a tu mascota sepa cómo cuidarla."
-                               FontSize="12"
-                               TextColor="#92400E"
-                               FontAttributes="Bold"
-                               HorizontalTextAlignment="Center"
-                               LineBreakMode="WordWrap" />
-                    </Border>
+                                <Label Text="Opcional"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource PrimaryColor}" />
+                            </Border>
+                        </Grid>
 
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- GPS -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="18">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="12">
-
-                    <Grid ColumnDefinitions="*,Auto">
-
-                        <Label Text="Collar GPS privado"
-                               FontSize="16"
-                               FontAttributes="Bold"
-                               TextColor="#1E293B"
-                               VerticalOptions="Center" />
-
-                        <Border Grid.Column="1"
-                                BackgroundColor="#EEF2FF"
-                                Stroke="Transparent"
-                                Padding="8,3"
-                                VerticalOptions="Center">
+                        <Border Stroke="{StaticResource PrimaryColor}"
+                                StrokeThickness="2"
+                                BackgroundColor="{StaticResource PrimarySoft}"
+                                HeightRequest="128"
+                                WidthRequest="128">
 
                             <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10" />
+                                <RoundRectangle CornerRadius="64" />
                             </Border.StrokeShape>
 
-                            <Label Text="Opcional"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="#2B0B98" />
+                            <Image x:Name="FotoMascotaImage"
+                                   Source="https://cdn-icons-png.flaticon.com/512/616/616408.png"
+                                   Aspect="AspectFill"
+                                   HeightRequest="128"
+                                   WidthRequest="128" />
                         </Border>
-                    </Grid>
 
-                    <Label Text="Este dato es opcional. Si tu mascota tiene un collar GPS, ingresa el código del dispositivo para consultar su última ubicación."
-                           FontSize="12"
-                           TextColor="#64748B"
-                           LineBreakMode="WordWrap" />
+                        <HorizontalStackLayout Spacing="10"
+                                               HorizontalOptions="Center">
 
-                    <Entry x:Name="DispositivoIdEntry"
-                           Placeholder="Código del dispositivo. Ej. GPS-TRU-001"
-                           BackgroundColor="#F1F5F9"
-                           TextColor="#1E293B" />
+                            <Button Text="📷 Cámara"
+                                    Clicked="OnTomarFotoClicked"
+                                    BackgroundColor="{StaticResource PrimaryColor}"
+                                    TextColor="White"
+                                    CornerRadius="14"
+                                    HeightRequest="40"
+                                    Padding="16,0"
+                                    FontAttributes="Bold"
+                                    FontSize="13" />
 
-                    <Border BackgroundColor="#EEF2FF"
-                            Stroke="Transparent"
-                            Padding="12">
+                            <Button Text="🖼️ Galería"
+                                    Clicked="OnSeleccionarFotoClicked"
+                                    BackgroundColor="#FFFFFF"
+                                    BorderColor="{StaticResource CardBorder}"
+                                    BorderWidth="1"
+                                    TextColor="{StaticResource PrimaryColor}"
+                                    CornerRadius="14"
+                                    HeightRequest="40"
+                                    Padding="16,0"
+                                    FontAttributes="Bold"
+                                    FontSize="13" />
+                        </HorizontalStackLayout>
 
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="14" />
-                        </Border.StrokeShape>
+                    </VerticalStackLayout>
+                </Border>
 
-                        <Label Text="La ubicación GPS solo será visible para el dueño de la mascota."
-                               FontSize="12"
-                               TextColor="#2B0B98"
-                               FontAttributes="Bold"
-                               HorizontalTextAlignment="Center" />
-                    </Border>
+                <!-- Datos principales -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
 
-                </VerticalStackLayout>
-            </Border>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
 
-            <!-- Guardar -->
-            <Button x:Name="BtnGuardar"
-                    Text="💾 Guardar mascota"
-                    Clicked="OnGuardarMascotaClicked"
-                    BackgroundColor="#2B0B98"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    FontSize="16"
-                    CornerRadius="18"
-                    HeightRequest="54"
-                    Margin="0,8,0,0" />
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
 
-            <ActivityIndicator x:Name="LoadingIndicator"
-                               IsRunning="False"
-                               IsVisible="False"
-                               Color="#2B0B98" />
+                    <VerticalStackLayout Spacing="10">
 
-        </VerticalStackLayout>
-    </ScrollView>
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <Label Text="Datos principales"
+                                   FontSize="17"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextMain}"
+                                   VerticalOptions="Center" />
+
+                            <Border Grid.Column="1"
+                                    BackgroundColor="#FCE7F3"
+                                    Stroke="Transparent"
+                                    Padding="8,3"
+                                    VerticalOptions="Center">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+
+                                <Label Text="Obligatorio"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="#BE185D" />
+                            </Border>
+                        </Grid>
+
+                        <Border Stroke="{StaticResource InputBorder}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource InputBackground}"
+                                Padding="12,0"
+                                HeightRequest="50">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+
+                            <Entry x:Name="NombreEntry"
+                                   Placeholder="Nombre de la mascota *"
+                                   PlaceholderColor="#8C84A6"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource TextMain}" />
+                        </Border>
+
+                        <Border Stroke="{StaticResource InputBorder}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource InputBackground}"
+                                Padding="12,0"
+                                HeightRequest="50">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+
+                            <Entry x:Name="EspecieEntry"
+                                   Placeholder="Especie. Ej. Perro, gato *"
+                                   PlaceholderColor="#8C84A6"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource TextMain}" />
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Detalles adicionales plegables -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <VerticalStackLayout Spacing="1">
+                                <Label Text="Detalles"
+                                       FontSize="17"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextMain}" />
+
+                                <Label Text="Raza, color, edad y rasgos."
+                                       FontSize="12"
+                                       TextColor="{StaticResource TextMuted}" />
+                            </VerticalStackLayout>
+
+                            <Button x:Name="BtnToggleDetalles"
+                                    Grid.Column="1"
+                                    Text="Mostrar"
+                                    Clicked="OnToggleDetallesClicked"
+                                    BackgroundColor="{StaticResource PrimarySoft}"
+                                    TextColor="{StaticResource PrimaryDark}"
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    CornerRadius="14"
+                                    HeightRequest="36"
+                                    Padding="12,0"
+                                    VerticalOptions="Center" />
+                        </Grid>
+
+                        <VerticalStackLayout x:Name="DetallesContainer"
+                                             Spacing="10"
+                                             IsVisible="False">
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="10">
+
+                                <Border Grid.Column="0"
+                                        Stroke="{StaticResource InputBorder}"
+                                        StrokeThickness="1"
+                                        BackgroundColor="{StaticResource InputBackground}"
+                                        Padding="12,0"
+                                        HeightRequest="50">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Entry x:Name="RazaEntry"
+                                           Placeholder="Raza"
+                                           PlaceholderColor="#8C84A6"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{StaticResource TextMain}" />
+                                </Border>
+
+                                <Border Grid.Column="1"
+                                        Stroke="{StaticResource InputBorder}"
+                                        StrokeThickness="1"
+                                        BackgroundColor="{StaticResource InputBackground}"
+                                        Padding="12,0"
+                                        HeightRequest="50">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Entry x:Name="ColorEntry"
+                                           Placeholder="Color"
+                                           PlaceholderColor="#8C84A6"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{StaticResource TextMain}" />
+                                </Border>
+                            </Grid>
+
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="10">
+
+                                <Border Grid.Column="0"
+                                        Stroke="{StaticResource InputBorder}"
+                                        StrokeThickness="1"
+                                        BackgroundColor="{StaticResource InputBackground}"
+                                        Padding="12,0"
+                                        HeightRequest="52">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Picker x:Name="SexoPicker"
+                                            Title="Sexo"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource TextMain}">
+                                        <Picker.Items>
+                                            <x:String>Macho</x:String>
+                                            <x:String>Hembra</x:String>
+                                            <x:String>No especificado</x:String>
+                                        </Picker.Items>
+                                    </Picker>
+                                </Border>
+
+                                <Border Grid.Column="1"
+                                        Stroke="{StaticResource InputBorder}"
+                                        StrokeThickness="1"
+                                        BackgroundColor="{StaticResource InputBackground}"
+                                        Padding="12,0"
+                                        HeightRequest="50">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Entry x:Name="EdadEntry"
+                                           Placeholder="Edad aprox."
+                                           PlaceholderColor="#8C84A6"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{StaticResource TextMain}" />
+                                </Border>
+                            </Grid>
+
+                            <Border Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,4"
+                                    HeightRequest="86">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Editor x:Name="RasgosEditor"
+                                        Placeholder="Rasgos particulares"
+                                        PlaceholderColor="#8C84A6"
+                                        AutoSize="TextChanges"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Información de salud plegable -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <VerticalStackLayout Spacing="1">
+                                <Label Text="Salud"
+                                       FontSize="17"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextMain}" />
+
+                                <Label Text="Cuidados especiales."
+                                       FontSize="12"
+                                       TextColor="{StaticResource TextMuted}" />
+                            </VerticalStackLayout>
+
+                            <Button x:Name="BtnToggleSalud"
+                                    Grid.Column="1"
+                                    Text="Mostrar"
+                                    Clicked="OnToggleSaludClicked"
+                                    BackgroundColor="{StaticResource PrimarySoft}"
+                                    TextColor="{StaticResource PrimaryDark}"
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    CornerRadius="14"
+                                    HeightRequest="36"
+                                    Padding="12,0"
+                                    VerticalOptions="Center" />
+                        </Grid>
+
+                        <VerticalStackLayout x:Name="SaludContainer"
+                                             Spacing="10"
+                                             IsVisible="False">
+
+                            <Border Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,4"
+                                    HeightRequest="72">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Editor x:Name="EnfermedadesEditor"
+                                        Placeholder="Enfermedades"
+                                        PlaceholderColor="#8C84A6"
+                                        AutoSize="TextChanges"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                            <Border Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,4"
+                                    HeightRequest="72">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Editor x:Name="DiscapacidadesEditor"
+                                        Placeholder="Discapacidades"
+                                        PlaceholderColor="#8C84A6"
+                                        AutoSize="TextChanges"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                            <Border Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,4"
+                                    HeightRequest="72">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Editor x:Name="TratamientosEditor"
+                                        Placeholder="Tratamientos"
+                                        PlaceholderColor="#8C84A6"
+                                        AutoSize="TextChanges"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                            <Border Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,4"
+                                    HeightRequest="72">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Editor x:Name="NecesidadesEspecialesEditor"
+                                        Placeholder="Necesidades especiales"
+                                        PlaceholderColor="#8C84A6"
+                                        AutoSize="TextChanges"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                            <Border Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,4"
+                                    HeightRequest="72">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Editor x:Name="ObservacionesSaludEditor"
+                                        Placeholder="Observaciones de salud"
+                                        PlaceholderColor="#8C84A6"
+                                        AutoSize="TextChanges"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- GPS plegable -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="14">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.08"
+                                Offset="0,3"
+                                Radius="10" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <VerticalStackLayout Spacing="1">
+                                <Label Text="Collar GPS"
+                                       FontSize="17"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextMain}" />
+
+                                <Label Text="Código del dispositivo."
+                                       FontSize="12"
+                                       TextColor="{StaticResource TextMuted}" />
+                            </VerticalStackLayout>
+
+                            <Button x:Name="BtnToggleGps"
+                                    Grid.Column="1"
+                                    Text="Mostrar"
+                                    Clicked="OnToggleGpsClicked"
+                                    BackgroundColor="{StaticResource PrimarySoft}"
+                                    TextColor="{StaticResource PrimaryDark}"
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    CornerRadius="14"
+                                    HeightRequest="36"
+                                    Padding="12,0"
+                                    VerticalOptions="Center" />
+                        </Grid>
+
+                        <VerticalStackLayout x:Name="GpsContainer"
+                                             Spacing="10"
+                                             IsVisible="False">
+
+                            <Border Stroke="{StaticResource InputBorder}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource InputBackground}"
+                                    Padding="12,0"
+                                    HeightRequest="50">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <Entry x:Name="DispositivoIdEntry"
+                                       Placeholder="Código o IMEI del GPS"
+                                       PlaceholderColor="#8C84A6"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{StaticResource TextMain}" />
+                            </Border>
+
+                            <Border BackgroundColor="{StaticResource PrimarySoft}"
+                                    Stroke="Transparent"
+                                    Padding="10">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+
+                                <Label Text="Solo el dueño puede ver la ubicación GPS."
+                                       FontSize="12"
+                                       TextColor="{StaticResource PrimaryDark}"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center" />
+                            </Border>
+
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Guardar -->
+                <Button x:Name="BtnGuardar"
+                        Text="💾 Guardar mascota"
+                        Clicked="OnGuardarMascotaClicked"
+                        BackgroundColor="{StaticResource PrimaryColor}"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        CornerRadius="18"
+                        HeightRequest="54"
+                        Margin="0,4,0,0">
+
+                    <Button.Shadow>
+                        <Shadow Brush="#5B21E6"
+                                Opacity="0.25"
+                                Offset="0,5"
+                                Radius="12" />
+                    </Button.Shadow>
+                </Button>
+
+                <ActivityIndicator x:Name="LoadingIndicator"
+                                   IsRunning="False"
+                                   IsVisible="False"
+                                   Color="{StaticResource PrimaryColor}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

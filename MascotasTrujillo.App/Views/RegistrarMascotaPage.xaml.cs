@@ -10,6 +10,10 @@ public partial class RegistrarMascotaPage : ContentPage
 
     private string _rutaFotoLocal = string.Empty;
 
+    private bool _detallesExpandido = false;
+    private bool _saludExpandida = false;
+    private bool _gpsExpandido = false;
+
     private bool EsModoEdicion => _mascotaEditar != null;
 
     public RegistrarMascotaPage(ApiService apiService)
@@ -18,6 +22,7 @@ public partial class RegistrarMascotaPage : ContentPage
         _apiService = apiService;
 
         ConfigurarModoVisual();
+        ActualizarSeccionesPlegables();
     }
 
     public RegistrarMascotaPage(ApiService apiService, Mascota mascotaEditar)
@@ -29,6 +34,24 @@ public partial class RegistrarMascotaPage : ContentPage
 
         CargarDatosParaEdicion();
         ConfigurarModoVisual();
+
+        _detallesExpandido = true;
+        _saludExpandida = TieneDatosSalud();
+        _gpsExpandido = !string.IsNullOrWhiteSpace(_mascotaEditar.DispositivoId);
+
+        ActualizarSeccionesPlegables();
+    }
+
+    private bool TieneDatosSalud()
+    {
+        if (_mascotaEditar == null)
+            return false;
+
+        return !string.IsNullOrWhiteSpace(_mascotaEditar.Enfermedades) ||
+               !string.IsNullOrWhiteSpace(_mascotaEditar.Discapacidades) ||
+               !string.IsNullOrWhiteSpace(_mascotaEditar.Tratamientos) ||
+               !string.IsNullOrWhiteSpace(_mascotaEditar.NecesidadesEspeciales) ||
+               !string.IsNullOrWhiteSpace(_mascotaEditar.ObservacionesSalud);
     }
 
     private void CargarDatosParaEdicion()
@@ -235,8 +258,7 @@ public partial class RegistrarMascotaPage : ContentPage
 
             LblIconoFormulario.Text = "✏️";
             LblTituloFormulario.Text = "Editar mascota";
-            LblSubtituloFormulario.Text =
-                "Actualiza los datos, foto, salud o collar GPS de tu mascota.";
+            LblSubtituloFormulario.Text = "Actualiza sus datos principales.";
 
             BtnGuardar.Text = "💾 Actualizar mascota";
         }
@@ -246,11 +268,63 @@ public partial class RegistrarMascotaPage : ContentPage
 
             LblIconoFormulario.Text = "🐾";
             LblTituloFormulario.Text = "Registrar mascota";
-            LblSubtituloFormulario.Text =
-                "Agrega los datos de tu mascota para administrarla y consultar su ubicación privada si cuenta con collar GPS.";
+            LblSubtituloFormulario.Text = "Agrega sus datos básicos.";
 
             BtnGuardar.Text = "💾 Guardar mascota";
         }
+    }
+
+    private void OnToggleDetallesClicked(object sender, EventArgs e)
+    {
+        _detallesExpandido = !_detallesExpandido;
+        ActualizarSeccionesPlegables();
+    }
+
+    private void OnToggleSaludClicked(object sender, EventArgs e)
+    {
+        _saludExpandida = !_saludExpandida;
+        ActualizarSeccionesPlegables();
+    }
+
+    private void OnToggleGpsClicked(object sender, EventArgs e)
+    {
+        _gpsExpandido = !_gpsExpandido;
+        ActualizarSeccionesPlegables();
+    }
+
+    private void ActualizarSeccionesPlegables()
+    {
+        ActualizarSeccion(
+            DetallesContainer,
+            BtnToggleDetalles,
+            _detallesExpandido
+        );
+
+        ActualizarSeccion(
+            SaludContainer,
+            BtnToggleSalud,
+            _saludExpandida
+        );
+
+        ActualizarSeccion(
+            GpsContainer,
+            BtnToggleGps,
+            _gpsExpandido
+        );
+    }
+
+    private void ActualizarSeccion(VisualElement contenedor, Button boton, bool expandido)
+    {
+        contenedor.IsVisible = expandido;
+
+        boton.Text = expandido ? "Ocultar" : "Mostrar";
+        boton.BackgroundColor = expandido
+            ? Color.FromArgb("#5B21E6")
+            : Color.FromArgb("#EEE7FF");
+
+        boton.TextColor = expandido
+            ? Colors.White
+            : Color.FromArgb("#2B0B98");
     }
 
 }
