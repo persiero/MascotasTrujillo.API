@@ -21,5 +21,8 @@ namespace MascotasTrujillo.App.Models
 
         [JsonPropertyName("telefono")]
         public string? Telefono { get; set; }
+
+        [JsonPropertyName("fotoPerfilUrl")]
+        public string? FotoPerfilUrl { get; set; }
     }
 }

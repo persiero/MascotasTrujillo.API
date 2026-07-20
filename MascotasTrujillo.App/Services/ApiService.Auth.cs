@@ -41,8 +41,13 @@ namespace MascotasTrujillo.App.Services
             }
         }
 
-        
-        public async Task<(bool Exito, string Mensaje)> RegistrarAsync(string nombreCompleto, string email, string password, string? telefono)
+
+        public async Task<(bool Exito, string Mensaje)> RegistrarAsync(
+            string nombreCompleto,
+            string email,
+            string password,
+            string confirmarPassword,
+            string? telefono)
         {
             try
             {
@@ -51,25 +56,116 @@ namespace MascotasTrujillo.App.Services
                     NombreCompleto = nombreCompleto,
                     Email = email,
                     Password = password,
+                    ConfirmarPassword = confirmarPassword,
                     Telefono = telefono
                 };
 
                 var response = await _httpClient.PostAsJsonAsync("Auth/registrar", registroData);
 
+                var json = await response.Content.ReadAsStringAsync();
+
                 if (response.IsSuccessStatusCode)
                 {
-                    return (true, "Cuenta creada exitosamente");
+                    return (true, "Cuenta creada exitosamente.");
                 }
-                else
-                {
-                    // ¡Atrapamos el mensaje real del backend!
-                    string errorInfo = await response.Content.ReadAsStringAsync();
-                    return (false, errorInfo);
-                }
+
+                string mensaje = ExtraerMensajeApi(json, json);
+
+                return (false, mensaje);
             }
             catch (Exception ex)
             {
                 return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Exito, string Mensaje)> ForgotPasswordAsync(string email)
+        {
+            try
+            {
+                var data = new
+                {
+                    Email = email
+                };
+
+                var response = await _httpClient.PostAsJsonAsync(
+                    "Auth/forgot-password",
+                    data
+                );
+
+                var json = await response.Content.ReadAsStringAsync();
+                string mensaje = ExtraerMensajeApi(json, "Solicitud procesada.");
+
+                if (response.IsSuccessStatusCode)
+                    return (true, mensaje);
+
+                return (false, mensaje);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Exito, string Mensaje)> ResetPasswordAsync(
+            string email,
+            string codigo,
+            string passwordNuevo,
+            string confirmarPasswordNuevo)
+        {
+            try
+            {
+                var data = new
+                {
+                    Email = email,
+                    Codigo = codigo,
+                    PasswordNuevo = passwordNuevo,
+                    ConfirmarPasswordNuevo = confirmarPasswordNuevo
+                };
+
+                var response = await _httpClient.PostAsJsonAsync(
+                    "Auth/reset-password",
+                    data
+                );
+
+                var json = await response.Content.ReadAsStringAsync();
+                string mensaje = ExtraerMensajeApi(json, "Solicitud procesada.");
+
+                if (response.IsSuccessStatusCode)
+                    return (true, mensaje);
+
+                return (false, mensaje);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        private static string ExtraerMensajeApi(string json, string mensajeDefecto)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return mensajeDefecto;
+
+            try
+            {
+                using var document = JsonDocument.Parse(json);
+                var root = document.RootElement;
+
+                if (root.ValueKind == JsonValueKind.Object)
+                {
+                    if (root.TryGetProperty("mensaje", out var mensaje))
+                        return mensaje.GetString() ?? mensajeDefecto;
+
+                    if (root.TryGetProperty("Mensaje", out var mensajeMayus))
+                        return mensajeMayus.GetString() ?? mensajeDefecto;
+                }
+
+                return json;
+            }
+            catch
+            {
+                return json;
             }
         }
     }

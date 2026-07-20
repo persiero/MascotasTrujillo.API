@@ -327,4 +327,5 @@ public partial class DetalleReportePage : ContentPage
         );
     }
 
+
 }

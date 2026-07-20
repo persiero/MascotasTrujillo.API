@@ -516,4 +516,56 @@ public partial class ReportarPage : ContentPage
             BtnEnviar.Text = "📌 Publicar reporte";
         }
     }
+
+    private async void OnVolverClicked(object sender, EventArgs e)
+    {
+        if (HayDatosSinGuardar())
+        {
+            bool salir = await DisplayAlertAsync(
+                "Salir sin guardar",
+                "¿Deseas volver? Los datos ingresados no se guardarán.",
+                "Sí, volver",
+                "Cancelar"
+            );
+
+            if (!salir)
+                return;
+        }
+
+        await VolverAsync();
+    }
+
+    private bool HayDatosSinGuardar()
+    {
+        return _tipoReporteSeleccionado != -1 ||
+               _mascotaSeleccionada != null ||
+               !string.IsNullOrWhiteSpace(TituloEntry.Text) ||
+               !string.IsNullOrWhiteSpace(DescripcionEntry.Text) ||
+               !string.IsNullOrWhiteSpace(DireccionReferenciaEntry.Text) ||
+               !string.IsNullOrWhiteSpace(NombreMascotaEntry.Text) ||
+               !string.IsNullOrWhiteSpace(EspecieEntry.Text) ||
+               !string.IsNullOrWhiteSpace(RazaEntry.Text) ||
+               !string.IsNullOrWhiteSpace(ColorEntry.Text) ||
+               SexoPicker.SelectedIndex >= 0 ||
+               _latitudReporte.HasValue ||
+               _longitudReporte.HasValue ||
+               _fotoCapturada != null;
+    }
+
+    private async Task VolverAsync()
+    {
+        if (Navigation.ModalStack.Count > 0)
+        {
+            await Navigation.PopModalAsync();
+            return;
+        }
+
+        if (Navigation.NavigationStack.Count > 1)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        await Shell.Current.GoToAsync("..");
+    }
 }

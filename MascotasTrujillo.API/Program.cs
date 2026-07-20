@@ -20,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     ));
 
 builder.Services.AddScoped<R2StorageService>();
+builder.Services.AddScoped<EmailService>();
 
 // 1. Activar Identity (El gestor de usuarios)
 builder.Services.AddIdentity<Usuario, IdentityRole<long>>()

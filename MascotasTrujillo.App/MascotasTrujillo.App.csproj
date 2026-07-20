@@ -106,6 +106,9 @@
 	  <MauiXaml Update="Views\RadarPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\RecuperarPasswordPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\RegistrarAvistamientoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

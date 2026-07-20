@@ -5,29 +5,40 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:MascotasTrujillo.App.Views"
     Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
+
     Shell.TabBarBackgroundColor="#FFFFFF"
-    Shell.TabBarTitleColor="#2B0B98"
+    Shell.TabBarTitleColor="#5B21E6"
     Shell.TabBarUnselectedColor="#94A3B8"
-    Shell.TabBarForegroundColor="#2B0B98"
+    Shell.TabBarForegroundColor="#5B21E6"
+
     Shell.BackgroundColor="#FFFFFF"
     Shell.TitleColor="#1E1B4B">
 
     <TabBar>
 
-        <Tab Title="Radar" Icon="icon_radar.png">
-            <ShellContent ContentTemplate="{DataTemplate views:RadarPage}" />
+        <Tab Title=" " Icon="icon_radar.png">
+            <ShellContent 
+            Title="Radar"
+            ContentTemplate="{DataTemplate views:RadarPage}" />
         </Tab>
 
-        <Tab Title="Mis Reportes" Icon="icon_clipboard.png">
-            <ShellContent ContentTemplate="{DataTemplate views:MisReportesPage}" />
+        <Tab Title=" " Icon="icon_clipboard.png">
+            <ShellContent 
+            Title="Mis Reportes"
+            ContentTemplate="{DataTemplate views:MisReportesPage}" />
         </Tab>
 
-        <Tab Title="Mis Mascotas" Icon="icon_paw.png">
-            <ShellContent ContentTemplate="{DataTemplate views:MisMascotasPage}" />
+        <Tab Title=" " Icon="icon_paw.png">
+            <ShellContent 
+            Title="Mis Mascotas"
+            ContentTemplate="{DataTemplate views:MisMascotasPage}" />
         </Tab>
 
-        <Tab Title="Perfil" Icon="icon_user.png">
-            <ShellContent ContentTemplate="{DataTemplate views:PerfilPage}" />
+        <Tab Title=" " Icon="icon_user.png">
+            <ShellContent 
+            Title="Perfil"
+            ContentTemplate="{DataTemplate views:PerfilPage}" />
         </Tab>
 
     </TabBar>

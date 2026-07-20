@@ -9,6 +9,11 @@ namespace MascotasTrujillo.API.Models
         public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
         public bool EstaActivo { get; set; } = true;
 
+        public string? FotoPerfilUrl { get; set; }
+
+        public string? CodigoRecuperacionPassword { get; set; }
+        public DateTime? CodigoRecuperacionExpira { get; set; }
+
         // Relaciones
         public List<Mascota> Mascotas { get; set; } = new();
         public List<Reporte> Reportes { get; set; } = new();

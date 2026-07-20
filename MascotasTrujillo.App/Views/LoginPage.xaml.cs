@@ -98,6 +98,9 @@ public partial class LoginPage : ContentPage
                 if (!string.IsNullOrWhiteSpace(loginResponse.Telefono))
                     await SecureStorage.Default.SetAsync("usuario_telefono", loginResponse.Telefono);
 
+                if (!string.IsNullOrWhiteSpace(loginResponse.FotoPerfilUrl))
+                    await SecureStorage.Default.SetAsync("usuario_foto", loginResponse.FotoPerfilUrl);
+
                 if (Application.Current?.Windows.Count > 0)
                 {
                     Application.Current.Windows[0].Page = new AppShell();
@@ -134,7 +137,7 @@ public partial class LoginPage : ContentPage
 
     private async void OnOlvidastePasswordTapped(object? sender, EventArgs e)
     {
-        await DisplayAlertAsync("Recuperación", "Próximamente: Pantalla de recuperación de contraseña.", "OK");
+        await Navigation.PushModalAsync(new RecuperarPasswordPage(_apiService));
     }
 
     private async void OnRegistrarseTapped(object? sender, EventArgs e)

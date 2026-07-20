@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace MascotasTrujillo.API.DTOs
 {
@@ -8,6 +9,7 @@ namespace MascotasTrujillo.API.DTOs
         public string NombreCompleto { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string? Telefono { get; set; }
+        public string? FotoPerfilUrl { get; set; }
         public DateTime FechaRegistro { get; set; }
     }
 
@@ -29,5 +31,14 @@ namespace MascotasTrujillo.API.DTOs
         [Required]
         [MinLength(6)]
         public string PasswordNuevo { get; set; } = string.Empty;
+
+        [Required]
+        public string ConfirmarPasswordNuevo { get; set; } = string.Empty;
+    }
+
+    public class ActualizarFotoPerfilDTO
+    {
+        [Required]
+        public IFormFile Foto { get; set; } = null!;
     }
 }
