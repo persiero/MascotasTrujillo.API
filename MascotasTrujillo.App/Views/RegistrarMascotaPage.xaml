@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MascotasTrujillo.App.Views.RegistrarMascotaPage"
     Title="Registrar Mascota"
+    Shell.NavBarIsVisible="False"
     BackgroundColor="#F5F1FF">
 
     <ContentPage.Resources>
@@ -33,6 +34,57 @@
         <ScrollView>
             <VerticalStackLayout Spacing="10"
                                  Padding="14,12,14,22">
+
+                <!-- Encabezado con volver -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        Padding="12,10">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+
+                    <Border.Shadow>
+                        <Shadow Brush="#2B0B98"
+                                Opacity="0.10"
+                                Offset="0,4"
+                                Radius="12" />
+                    </Border.Shadow>
+
+                    <Grid ColumnDefinitions="Auto,*"
+                        ColumnSpacing="10">
+
+                        <Button Grid.Column="0"
+                                Text="←"
+                                Clicked="OnVolverClicked"
+                                BackgroundColor="{StaticResource PrimarySoft}"
+                                TextColor="{StaticResource PrimaryColor}"
+                                FontAttributes="Bold"
+                                FontSize="22"
+                                WidthRequest="42"
+                                HeightRequest="42"
+                                CornerRadius="21"
+                                Padding="0"
+                                VerticalOptions="Center" />
+
+                        <VerticalStackLayout Grid.Column="1"
+                                             Spacing="1"
+                                             VerticalOptions="Center">
+
+                            <Label x:Name="LblTituloHeader"
+                                   Text="Registrar mascota"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextMain}" />
+
+                            <Label x:Name="LblSubtituloHeader"
+                                   Text="Completa los datos de tu mascota"
+                                   FontSize="12"
+                                   TextColor="{StaticResource TextMuted}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
 
                 <!-- Encabezado compacto -->
                 <Border BackgroundColor="#FFFFFF"

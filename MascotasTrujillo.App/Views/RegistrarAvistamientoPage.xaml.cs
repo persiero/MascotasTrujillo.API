@@ -128,8 +128,18 @@ public partial class RegistrarAvistamientoPage : ContentPage
 
         _fotoCapturada = foto;
 
-        var stream = await foto.OpenReadAsync();
-        FotoPreview.Source = ImageSource.FromStream(() => stream);
+        byte[] imageBytes;
+
+        using (Stream sourceStream = await foto.OpenReadAsync())
+        using (MemoryStream memoryStream = new MemoryStream())
+        {
+            await sourceStream.CopyToAsync(memoryStream);
+            imageBytes = memoryStream.ToArray();
+        }
+
+        FotoPreview.Source = ImageSource.FromStream(
+            () => new MemoryStream(imageBytes)
+        );
 
         BotonesCaptura.IsVisible = false;
     }
@@ -203,5 +213,49 @@ public partial class RegistrarAvistamientoPage : ContentPage
             BtnGuardarAvistamiento.IsEnabled = true;
             BtnGuardarAvistamiento.Text = "📌 Publicar avistamiento";
         }
+    }
+
+    private async void OnVolverClicked(object sender, EventArgs e)
+    {
+        if (HayDatosSinGuardar())
+        {
+            bool salir = await DisplayAlertAsync(
+                "Salir sin guardar",
+                "¿Deseas volver? Los datos ingresados no se guardarán.",
+                "Sí, volver",
+                "Cancelar"
+            );
+
+            if (!salir)
+                return;
+        }
+
+        await VolverAsync();
+    }
+
+    private bool HayDatosSinGuardar()
+    {
+        return !string.IsNullOrWhiteSpace(DescripcionEditor.Text) ||
+               !string.IsNullOrWhiteSpace(DireccionReferenciaEntry.Text) ||
+               _latitudAvistamiento.HasValue ||
+               _longitudAvistamiento.HasValue ||
+               _fotoCapturada != null;
+    }
+
+    private async Task VolverAsync()
+    {
+        if (Navigation.ModalStack.Count > 0)
+        {
+            await Navigation.PopModalAsync();
+            return;
+        }
+
+        if (Navigation.NavigationStack.Count > 1)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        await Shell.Current.GoToAsync("..");
     }
 }

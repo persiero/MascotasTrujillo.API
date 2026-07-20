@@ -256,6 +256,9 @@ public partial class RegistrarMascotaPage : ContentPage
         {
             Title = "Editar Mascota";
 
+            LblTituloHeader.Text = "Editar mascota";
+            LblSubtituloHeader.Text = "Actualiza los datos de tu mascota";
+
             LblIconoFormulario.Text = "✏️";
             LblTituloFormulario.Text = "Editar mascota";
             LblSubtituloFormulario.Text = "Actualiza sus datos principales.";
@@ -265,6 +268,9 @@ public partial class RegistrarMascotaPage : ContentPage
         else
         {
             Title = "Registrar Mascota";
+
+            LblTituloHeader.Text = "Registrar mascota";
+            LblSubtituloHeader.Text = "Completa los datos de tu mascota";
 
             LblIconoFormulario.Text = "🐾";
             LblTituloFormulario.Text = "Registrar mascota";
@@ -326,5 +332,116 @@ public partial class RegistrarMascotaPage : ContentPage
             ? Colors.White
             : Color.FromArgb("#2B0B98");
     }
+    
+    private bool HayDatosSinGuardar()
+    {
+        string nombre = Normalizar(NombreEntry.Text);
+        string especie = Normalizar(EspecieEntry.Text);
+        string raza = Normalizar(RazaEntry.Text);
+        string color = Normalizar(ColorEntry.Text);
+        string edad = Normalizar(EdadEntry.Text);
+        string rasgos = Normalizar(RasgosEditor.Text);
 
+        string enfermedades = Normalizar(EnfermedadesEditor.Text);
+        string discapacidades = Normalizar(DiscapacidadesEditor.Text);
+        string tratamientos = Normalizar(TratamientosEditor.Text);
+        string necesidades = Normalizar(NecesidadesEspecialesEditor.Text);
+        string observaciones = Normalizar(ObservacionesSaludEditor.Text);
+
+        string dispositivoId = Normalizar(DispositivoIdEntry.Text);
+
+        string sexoSeleccionado = SexoPicker.SelectedIndex >= 0
+            ? Normalizar(SexoPicker.Items[SexoPicker.SelectedIndex])
+            : string.Empty;
+
+        // Si tomó o seleccionó una nueva foto, hay cambios.
+        if (!string.IsNullOrWhiteSpace(_rutaFotoLocal))
+            return true;
+
+        // Modo registro: basta con detectar si empezó a llenar algo.
+        if (!EsModoEdicion || _mascotaEditar == null)
+        {
+            return !string.IsNullOrWhiteSpace(nombre) ||
+                   !string.IsNullOrWhiteSpace(especie) ||
+                   !string.IsNullOrWhiteSpace(raza) ||
+                   !string.IsNullOrWhiteSpace(color) ||
+                   !string.IsNullOrWhiteSpace(edad) ||
+                   !string.IsNullOrWhiteSpace(rasgos) ||
+                   !string.IsNullOrWhiteSpace(enfermedades) ||
+                   !string.IsNullOrWhiteSpace(discapacidades) ||
+                   !string.IsNullOrWhiteSpace(tratamientos) ||
+                   !string.IsNullOrWhiteSpace(necesidades) ||
+                   !string.IsNullOrWhiteSpace(observaciones) ||
+                   !string.IsNullOrWhiteSpace(dispositivoId) ||
+                   !string.IsNullOrWhiteSpace(sexoSeleccionado);
+        }
+
+        // Modo edición: compara lo actual contra los datos originales.
+        return !SonIguales(nombre, _mascotaEditar.Nombre) ||
+               !SonIguales(especie, _mascotaEditar.Especie) ||
+               !SonIguales(raza, _mascotaEditar.Raza) ||
+               !SonIguales(color, _mascotaEditar.ColorPrincipal) ||
+               !SonIguales(edad, _mascotaEditar.EdadAproximada) ||
+               !SonIguales(rasgos, _mascotaEditar.RasgosParticulares) ||
+               !SonIguales(enfermedades, _mascotaEditar.Enfermedades) ||
+               !SonIguales(discapacidades, _mascotaEditar.Discapacidades) ||
+               !SonIguales(tratamientos, _mascotaEditar.Tratamientos) ||
+               !SonIguales(necesidades, _mascotaEditar.NecesidadesEspeciales) ||
+               !SonIguales(observaciones, _mascotaEditar.ObservacionesSalud) ||
+               !SonIguales(dispositivoId, _mascotaEditar.DispositivoId) ||
+               !SonIguales(sexoSeleccionado, _mascotaEditar.Sexo);
+    }
+
+    private static string Normalizar(string? valor)
+    {
+        return valor?.Trim() ?? string.Empty;
+    }
+
+    private static bool SonIguales(string? valorActual, string? valorOriginal)
+    {
+        return string.Equals(
+            Normalizar(valorActual),
+            Normalizar(valorOriginal),
+            StringComparison.OrdinalIgnoreCase
+        );
+    }
+
+    private async void OnVolverClicked(object sender, EventArgs e)
+    {
+        if (HayDatosSinGuardar())
+        {
+            string mensaje = EsModoEdicion
+                ? "¿Deseas volver? Los cambios realizados no se guardarán."
+                : "¿Deseas volver? Los datos ingresados no se guardarán.";
+
+            bool salir = await DisplayAlertAsync(
+                "Salir sin guardar",
+                mensaje,
+                "Sí, volver",
+                "Cancelar"
+            );
+
+            if (!salir)
+                return;
+        }
+
+        await VolverAsync();
+    }
+
+    private async Task VolverAsync()
+    {
+        if (Navigation.ModalStack.Count > 0)
+        {
+            await Navigation.PopModalAsync();
+            return;
+        }
+
+        if (Navigation.NavigationStack.Count > 1)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        await Shell.Current.GoToAsync("..");
+    }
 }

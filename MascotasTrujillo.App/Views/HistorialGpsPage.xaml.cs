@@ -81,4 +81,26 @@ public partial class HistorialGpsPage : ContentPage
             );
         }
     }
+
+    private async void OnVolverClicked(object sender, EventArgs e)
+    {
+        await VolverAsync();
+    }
+
+    private async Task VolverAsync()
+    {
+        if (Navigation.ModalStack.Count > 0)
+        {
+            await Navigation.PopModalAsync();
+            return;
+        }
+
+        if (Navigation.NavigationStack.Count > 1)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        await Shell.Current.GoToAsync("..");
+    }
 }
