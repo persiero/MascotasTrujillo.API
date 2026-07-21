@@ -18,11 +18,16 @@ namespace MascotasTrujillo.API.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly R2StorageService _storageService;
+        private readonly IConfiguration _configuration;
 
-        public MascotasController(ApplicationDbContext context, R2StorageService storageService)
+        public MascotasController(
+            ApplicationDbContext context,
+            R2StorageService storageService,
+            IConfiguration configuration)
         {
             _context = context;
             _storageService = storageService;
+            _configuration = configuration;
         }
 
         // GET: api/mascotas/mis-mascotas
@@ -411,17 +416,61 @@ namespace MascotasTrujillo.API.Controllers
             return Ok(new { Mensaje = "Mascota reactivada correctamente." });
         }
 
-        // POST: api/mascotas/actualizar-ubicacion-iot
         [AllowAnonymous]
         [HttpPost("actualizar-ubicacion-iot")]
         public async Task<IActionResult> ActualizarUbicacionIoT([FromBody] MascotaUbicacionIoTRequest request)
         {
+            string apiKeyConfigurada = _configuration["IoT:ApiKey"] ?? string.Empty;
+            string apiKeyRecibida = Request.Headers["X-Device-Key"].ToString();
+
+            if (!string.IsNullOrWhiteSpace(apiKeyConfigurada) &&
+                apiKeyRecibida != apiKeyConfigurada)
+            {
+                return Unauthorized(new
+                {
+                    Mensaje = "Clave IoT inválida."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.DispositivoId))
+            {
+                return BadRequest(new
+                {
+                    Mensaje = "El identificador del dispositivo es obligatorio."
+                });
+            }
+
+            if (request.Latitud < -90 || request.Latitud > 90 ||
+                request.Longitud < -180 || request.Longitud > 180)
+            {
+                return BadRequest(new
+                {
+                    Mensaje = "Las coordenadas enviadas no son válidas."
+                });
+            }
+
+            if (request.Bateria.HasValue &&
+                (request.Bateria.Value < 0 || request.Bateria.Value > 100))
+            {
+                return BadRequest(new
+                {
+                    Mensaje = "El porcentaje de batería debe estar entre 0 y 100."
+                });
+            }
+
+            string codigoDispositivo = request.DispositivoId.Trim();
+
             var dispositivo = await _context.DispositivosGps
-                .FirstOrDefaultAsync(d => d.CodigoDispositivo == request.DispositivoId && d.Activo);
+                .FirstOrDefaultAsync(d =>
+                    d.CodigoDispositivo == codigoDispositivo &&
+                    d.Activo);
 
             if (dispositivo == null)
             {
-                return NotFound(new { Mensaje = "El identificador del dispositivo no está registrado." });
+                return NotFound(new
+                {
+                    Mensaje = "El identificador del dispositivo no está registrado o está inactivo."
+                });
             }
 
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
@@ -429,7 +478,9 @@ namespace MascotasTrujillo.API.Controllers
             var nuevaUbicacion = new UbicacionGps
             {
                 DispositivoGpsId = dispositivo.Id,
-                Ubicacion = geometryFactory.CreatePoint(new Coordinate(request.Longitud, request.Latitud)),
+                Ubicacion = geometryFactory.CreatePoint(
+                    new Coordinate(request.Longitud, request.Latitud)
+                ),
                 Bateria = request.Bateria,
                 FechaRegistro = DateTime.UtcNow
             };
@@ -439,7 +490,16 @@ namespace MascotasTrujillo.API.Controllers
             _context.UbicacionesGps.Add(nuevaUbicacion);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Mensaje = "Ubicación actualizada correctamente." });
+            return Ok(new
+            {
+                Mensaje = "Ubicación actualizada correctamente.",
+                DispositivoId = dispositivo.CodigoDispositivo,
+                MascotaId = dispositivo.MascotaId,
+                Latitud = request.Latitud,
+                Longitud = request.Longitud,
+                Bateria = request.Bateria,
+                FechaRegistro = nuevaUbicacion.FechaRegistro
+            });
         }
 
         // GET: api/mascotas/5/historial-gps

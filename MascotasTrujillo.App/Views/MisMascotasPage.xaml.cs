@@ -12,6 +12,7 @@ public partial class MisMascotasPage : ContentPage
 
     private bool _rastreoActivo = false;
     private bool _timerIniciado = false;
+    private bool _cargandoMascotas = false;
 
     public MisMascotasPage(ApiService apiService)
     {
@@ -49,10 +50,17 @@ public partial class MisMascotasPage : ContentPage
         BtnAccionesMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
     }
 
-    private async Task CargarMascotas()
+    private async Task CargarMascotas(bool mostrarErrores = true)
     {
+        if (_cargandoMascotas)
+            return;
+
+        _cargandoMascotas = true;
+
         try
         {
+            long? mascotaSeleccionadaId = _mascotaSeleccionada?.Id;
+
             var lista = await _apiService.GetMisMascotasAsync();
 
             if (lista != null && lista.Count > 0)
@@ -63,9 +71,30 @@ public partial class MisMascotasPage : ContentPage
 
                 MascotasCarousel.ItemsSource = lista;
 
-                if (_mascotaSeleccionada == null)
+                Mascota? mascotaParaSeleccionar = null;
+
+                if (mascotaSeleccionadaId.HasValue)
                 {
-                    MascotasCarousel.SelectedItem = lista.First();
+                    mascotaParaSeleccionar = lista.FirstOrDefault(
+                        x => x.Id == mascotaSeleccionadaId.Value
+                    );
+                }
+
+                mascotaParaSeleccionar ??= lista.First();
+
+                _mascotaSeleccionada = mascotaParaSeleccionar;
+                MascotasCarousel.SelectedItem = mascotaParaSeleccionar;
+
+                ActualizarEstadoBotonesMascota();
+
+                if (_mascotaSeleccionada.Latitud.HasValue &&
+                    _mascotaSeleccionada.Longitud.HasValue)
+                {
+                    ActualizarMapa();
+                }
+                else
+                {
+                    MostrarMascotaSinUbicacion();
                 }
             }
             else
@@ -83,7 +112,22 @@ public partial class MisMascotasPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Error", $"No se pudieron cargar tus mascotas: {ex.Message}", "OK");
+            if (mostrarErrores)
+            {
+                await DisplayAlertAsync(
+                    "Error",
+                    $"No se pudieron cargar tus mascotas: {ex.Message}",
+                    "OK"
+                );
+            }
+            else
+            {
+                Console.WriteLine($"Error actualizando mascotas/GPS: {ex.Message}");
+            }
+        }
+        finally
+        {
+            _cargandoMascotas = false;
         }
     }
 
@@ -94,9 +138,13 @@ public partial class MisMascotasPage : ContentPage
         ActualizarEstadoBotonesMascota();
 
         if (_mascotaSeleccionada == null)
+        {
+            MostrarMascotaSinUbicacion();
             return;
+        }
 
-        if (_mascotaSeleccionada.Latitud.HasValue && _mascotaSeleccionada.Longitud.HasValue)
+        if (_mascotaSeleccionada.Latitud.HasValue &&
+            _mascotaSeleccionada.Longitud.HasValue)
         {
             ActualizarMapa();
         }
@@ -171,50 +219,25 @@ public partial class MisMascotasPage : ContentPage
             if (!_rastreoActivo)
                 return true;
 
-            Task.Run(async () =>
-            {
-                try
-                {
-                    var listaActualizada = await _apiService.GetMisMascotasAsync();
-
-                    if (listaActualizada == null)
-                        return;
-
-                    var mascotaActual = _mascotaSeleccionada;
-
-                    if (mascotaActual == null)
-                        return;
-
-                    var mascotaActualizada = listaActualizada.FirstOrDefault(x => x.Id == mascotaActual.Id);
-
-                    if (mascotaActualizada == null)
-                        return;
-
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        mascotaActual.Latitud = mascotaActualizada.Latitud;
-                        mascotaActual.Longitud = mascotaActualizada.Longitud;
-                        mascotaActual.UltimaActualizacion = mascotaActualizada.UltimaActualizacion;
-                        mascotaActual.DispositivoId = mascotaActualizada.DispositivoId;
-                        mascotaActual.EstadoConexionGps = mascotaActualizada.EstadoConexionGps;
-                        mascotaActual.BateriaGps = mascotaActualizada.BateriaGps;
-
-                        ActualizarEstadoBotonesMascota();
-
-                        if (mascotaActual.Latitud.HasValue && mascotaActual.Longitud.HasValue)
-                        {
-                            ActualizarMapa();
-                        }
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error actualizando ubicación GPS: {ex.Message}");
-                }
-            });
+            _ = RefrescarGpsPrivadoAsync();
 
             return true;
         });
+    }
+
+    private async Task RefrescarGpsPrivadoAsync()
+    {
+        if (!_rastreoActivo)
+            return;
+
+        try
+        {
+            await CargarMascotas(mostrarErrores: false);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error en refresco GPS privado: {ex.Message}");
+        }
     }
 
     private void ActualizarMapa()
@@ -239,7 +262,7 @@ public partial class MisMascotasPage : ContentPage
             Type = PinType.Place
         });
 
-        LblTituloMapa.Text = $"Última ubicación de {mascotaActual.Nombre}";
+        LblTituloMapa.Text = $"Rastreo GPS de {mascotaActual.Nombre}";
 
         LblNotaSeguimiento.Text = mascotaActual.UltimaUbicacionTexto;
 
