@@ -1,10 +1,6 @@
-﻿using MascotasTrujillo.App.Models;
-using System;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
+﻿using System.Net.Http.Headers;
 using System.Text.Json;
+using Microsoft.Maui.Devices;
 
 namespace MascotasTrujillo.App.Services
 {
@@ -14,51 +10,86 @@ namespace MascotasTrujillo.App.Services
         private string? _token = string.Empty;
         private readonly JsonSerializerOptions _jsonOptions;
 
+        // ============================================================
+        // CAMBIA ESTO SEGÚN LO QUE QUIERAS PROBAR
+        // ============================================================
+        private static readonly bool UsarProduccionRailway = true;
+
+        // API en Railway
+        private const string ApiProduccion = "https://mascotastrujilloapi-production.up.railway.app/api/";
+
+        // API local en Windows
+        private const string ApiLocalWindows = "https://localhost:7013/api/";
+
+        // API local desde emulador Android
+        private const string ApiLocalAndroidEmulador = "https://10.0.2.2:7013/api/";
+
+        // API local desde celular físico conectado a la misma red WiFi
+        // Cambia la IP por la IP real de tu PC.
+        private const string ApiLocalAndroidFisico = "http://192.168.1.50:5139/api/";
+
         public ApiService()
         {
-            // EL TRUCO MULTIPLATAFORMA:
-            // Si corremos en Android, apuntamos a la IP del puente del emulador.
-            // Si corremos en Windows, usamos el localhost normal.
-            // OJO: Asegúrate de que el puerto "7013" coincida con el HTTPS de tu API.
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                ? "https://10.0.2.2:7013/api/"
-                : "https://localhost:7013/api/";
+            string baseUrl = ObtenerBaseUrl();
 
-            // NUEVO: Le decimos a Android que confíe en nuestro certificado local (HTTPS)
             var handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
-            {
-                // Solo permitimos esto porque estamos desarrollando en nuestra propia PC
-                return true;
-            };
 
-            // Le pasamos el handler a nuestro cliente
+            // Solo ignoramos certificados cuando estamos en LOCAL con HTTPS.
+            // En Railway NO se debe ignorar certificados.
+            if (EsApiLocalHttps(baseUrl))
+            {
+                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+                {
+                    return true;
+                };
+            }
+
             _httpClient = new HttpClient(handler)
             {
-                BaseAddress = new Uri(baseUrl)
+                BaseAddress = new Uri(baseUrl),
+                Timeout = TimeSpan.FromSeconds(60)
             };
 
-            // AGREGAR ESTA CONFIGURACIÓN:
             _jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
         }
 
-        // Método para guardar el token después de hacer Login
+        private static string ObtenerBaseUrl()
+        {
+            if (UsarProduccionRailway)
+                return ApiProduccion;
+
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                // Para emulador Android usa 10.0.2.2
+                return ApiLocalAndroidEmulador;
+
+                // Para celular físico, comenta la línea anterior y usa esta:
+                // return ApiLocalAndroidFisico;
+            }
+
+            return ApiLocalWindows;
+        }
+
+        private static bool EsApiLocalHttps(string baseUrl)
+        {
+            return baseUrl.StartsWith("https://localhost", StringComparison.OrdinalIgnoreCase) ||
+                   baseUrl.StartsWith("https://10.0.2.2", StringComparison.OrdinalIgnoreCase);
+        }
+
         public void SetToken(string token)
         {
             _token = token;
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", _token);
         }
-                       
 
         public void ClearToken()
         {
             _token = string.Empty;
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
-              
-
     }
 }
