@@ -22,7 +22,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,170,Auto,*"
+    <Grid RowDefinitions="Auto,300,Auto,*"
       Padding="12,12,12,8"
       RowSpacing="8">
 
@@ -116,7 +116,8 @@
             </Border.Shadow>
 
             <maps:Map x:Name="MapaMascotas"
-                      IsShowingUser="True" />
+                    IsShowingUser="True" />
+            
         </Border>
 
         <!-- Acciones rápidas -->
@@ -373,7 +374,7 @@
                            TextColor="{StaticResource TextMain}" />
 
                             <Label x:Name="LblFiltroActual"
-                           Text="Todos · 5 km"
+                           Text="Todos · 10 km"
                            FontSize="12"
                            TextColor="{StaticResource TextMuted}" />
                         </VerticalStackLayout>
@@ -435,43 +436,43 @@
                    TextColor="{StaticResource TextMuted}" />
 
                     <Grid ColumnDefinitions="*,*,*,*"
-                  ColumnSpacing="8">
-
-                        <Button x:Name="BtnRadio1"
-                        Grid.Column="0"
-                        Text="1 km"
-                        Clicked="OnRadio1Clicked"
-                        HeightRequest="42"
-                        CornerRadius="16"
-                        FontSize="12"
-                        FontAttributes="Bold" />
-
-                        <Button x:Name="BtnRadio3"
-                        Grid.Column="1"
-                        Text="3 km"
-                        Clicked="OnRadio3Clicked"
-                        HeightRequest="42"
-                        CornerRadius="16"
-                        FontSize="12"
-                        FontAttributes="Bold" />
+                        ColumnSpacing="8">
 
                         <Button x:Name="BtnRadio5"
-                        Grid.Column="2"
-                        Text="5 km"
-                        Clicked="OnRadio5Clicked"
-                        HeightRequest="42"
-                        CornerRadius="16"
-                        FontSize="12"
-                        FontAttributes="Bold" />
+                                Grid.Column="0"
+                                Text="5 km"
+                                Clicked="OnRadio5Clicked"
+                                HeightRequest="42"
+                                CornerRadius="16"
+                                FontSize="12"
+                                FontAttributes="Bold" />
 
                         <Button x:Name="BtnRadio10"
-                        Grid.Column="3"
-                        Text="10 km"
-                        Clicked="OnRadio10Clicked"
-                        HeightRequest="42"
-                        CornerRadius="16"
-                        FontSize="12"
-                        FontAttributes="Bold" />
+                                Grid.Column="1"
+                                Text="10 km"
+                                Clicked="OnRadio10Clicked"
+                                HeightRequest="42"
+                                CornerRadius="16"
+                                FontSize="12"
+                                FontAttributes="Bold" />
+
+                        <Button x:Name="BtnRadio15"
+                                Grid.Column="2"
+                                Text="15 km"
+                                Clicked="OnRadio15Clicked"
+                                HeightRequest="42"
+                                CornerRadius="16"
+                                FontSize="12"
+                                FontAttributes="Bold" />
+
+                        <Button x:Name="BtnRadio20"
+                                Grid.Column="3"
+                                Text="20 km"
+                                Clicked="OnRadio20Clicked"
+                                HeightRequest="42"
+                                CornerRadius="16"
+                                FontSize="12"
+                                FontAttributes="Bold" />
                     </Grid>
 
                     <Button Text="Listo"

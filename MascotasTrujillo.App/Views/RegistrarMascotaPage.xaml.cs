@@ -1,5 +1,7 @@
 using MascotasTrujillo.App.Models;
 using MascotasTrujillo.App.Services;
+using SkiaSharp;
+using System.Diagnostics;
 
 namespace MascotasTrujillo.App.Views;
 
@@ -95,26 +97,17 @@ public partial class RegistrarMascotaPage : ContentPage
     {
         try
         {
-            if (MediaPicker.Default.IsCaptureSupported)
-            {
-                FileResult? photo = await MediaPicker.Default.CapturePhotoAsync();
-
-                if (photo != null)
-                {
-                    string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
-
-                    using Stream sourceStream = await photo.OpenReadAsync();
-                    using FileStream localFileStream = File.OpenWrite(localFilePath);
-
-                    await sourceStream.CopyToAsync(localFileStream);
-
-                    _rutaFotoLocal = localFilePath;
-                    FotoMascotaImage.Source = ImageSource.FromFile(_rutaFotoLocal);
-                }
-            }
-            else
+            if (!MediaPicker.Default.IsCaptureSupported)
             {
                 await DisplayAlertAsync("No disponible", "La cámara no está soportada en este dispositivo.", "OK");
+                return;
+            }
+
+            FileResult? photo = await MediaPicker.Default.CapturePhotoAsync();
+
+            if (photo != null)
+            {
+                await ProcesarFotoMascotaAsync(photo);
             }
         }
         catch (Exception ex)
@@ -127,26 +120,160 @@ public partial class RegistrarMascotaPage : ContentPage
     {
         try
         {
-            IEnumerable<FileResult> photos = await MediaPicker.Default.PickPhotosAsync();
+            IEnumerable<FileResult> photos = await MediaPicker.Default.PickPhotosAsync(
+                new MediaPickerOptions
+                {
+                    Title = "Selecciona una foto de tu mascota"
+                }
+            );
+
             FileResult? photo = photos?.FirstOrDefault();
 
             if (photo != null)
             {
-                string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
-
-                using Stream sourceStream = await photo.OpenReadAsync();
-                using FileStream localFileStream = File.OpenWrite(localFilePath);
-
-                await sourceStream.CopyToAsync(localFileStream);
-
-                _rutaFotoLocal = localFilePath;
-                FotoMascotaImage.Source = ImageSource.FromFile(_rutaFotoLocal);
+                await ProcesarFotoMascotaAsync(photo);
             }
         }
         catch (Exception ex)
         {
             await DisplayAlertAsync("Error", $"No se pudo seleccionar la foto: {ex.Message}", "OK");
         }
+    }
+
+    private async Task ProcesarFotoMascotaAsync(FileResult foto)
+    {
+        try
+        {
+            byte[] bytesOriginales;
+
+            await using (Stream sourceStream = await foto.OpenReadAsync())
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await sourceStream.CopyToAsync(memoryStream);
+                bytesOriginales = memoryStream.ToArray();
+            }
+
+            const int maxBytes = 5 * 1024 * 1024;
+
+            byte[] bytesComprimidos = ComprimirImagenConLimite(
+                bytesOriginales,
+                maxBytes
+            );
+
+            string nombreArchivo = $"mascota_{Guid.NewGuid():N}.jpg";
+            string localFilePath = Path.Combine(FileSystem.CacheDirectory, nombreArchivo);
+
+            await File.WriteAllBytesAsync(localFilePath, bytesComprimidos);
+
+            _rutaFotoLocal = localFilePath;
+
+            FotoMascotaImage.Source = ImageSource.FromStream(
+                () => new MemoryStream(bytesComprimidos)
+            );
+
+            double pesoOriginalMb = bytesOriginales.Length / 1024.0 / 1024.0;
+            double pesoFinalMb = bytesComprimidos.Length / 1024.0 / 1024.0;
+
+            Debug.WriteLine($"Foto original: {pesoOriginalMb:0.00} MB");
+            Debug.WriteLine($"Foto comprimida: {pesoFinalMb:0.00} MB");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error con la imagen",
+                $"No se pudo preparar la foto para subirla.\n\nDetalle:\n{ex.Message}",
+                "OK"
+            );
+        }
+    }
+
+    private static byte[] ComprimirImagenConLimite(byte[] bytesOriginales, int maxBytes)
+    {
+        int[] tamaniosMaximos = { 1280, 1080, 900, 720 };
+        int[] calidades = { 80, 75, 70, 65, 60 };
+
+        byte[]? mejorResultado = null;
+
+        foreach (int tamanio in tamaniosMaximos)
+        {
+            foreach (int calidad in calidades)
+            {
+                byte[] comprimida = ComprimirImagenJpeg(
+                    bytesOriginales,
+                    maxWidth: tamanio,
+                    maxHeight: tamanio,
+                    calidad: calidad
+                );
+
+                mejorResultado = comprimida;
+
+                if (comprimida.Length <= maxBytes)
+                    return comprimida;
+            }
+        }
+
+        if (mejorResultado != null && mejorResultado.Length <= maxBytes)
+            return mejorResultado;
+
+        double pesoMb = (mejorResultado?.Length ?? bytesOriginales.Length) / 1024.0 / 1024.0;
+        double maxMb = maxBytes / 1024.0 / 1024.0;
+
+        throw new Exception(
+            $"La imagen sigue pesando {pesoMb:0.00} MB después de comprimirla. " +
+            $"El máximo permitido es {maxMb:0.00} MB. Intenta con otra foto."
+        );
+    }
+
+    private static byte[] ComprimirImagenJpeg(
+        byte[] bytesOriginales,
+        int maxWidth,
+        int maxHeight,
+        int calidad)
+    {
+        using var inputStream = new SKMemoryStream(bytesOriginales);
+        using var bitmapOriginal = SKBitmap.Decode(inputStream);
+
+        if (bitmapOriginal == null)
+        {
+            throw new Exception(
+                "No se pudo leer la imagen. Intenta con una foto en formato JPG o PNG."
+            );
+        }
+
+        int anchoOriginal = bitmapOriginal.Width;
+        int altoOriginal = bitmapOriginal.Height;
+
+        double ratioAncho = (double)maxWidth / anchoOriginal;
+        double ratioAlto = (double)maxHeight / altoOriginal;
+        double ratio = Math.Min(ratioAncho, ratioAlto);
+
+        if (ratio > 1)
+            ratio = 1;
+
+        int nuevoAncho = Math.Max(1, (int)(anchoOriginal * ratio));
+        int nuevoAlto = Math.Max(1, (int)(altoOriginal * ratio));
+
+        using var bitmapRedimensionado = new SKBitmap(
+            nuevoAncho,
+            nuevoAlto,
+            bitmapOriginal.ColorType,
+            bitmapOriginal.AlphaType
+        );
+
+        bitmapOriginal.ScalePixels(
+            bitmapRedimensionado,
+            new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear)
+        );
+
+        using var imagen = SKImage.FromBitmap(bitmapRedimensionado);
+        using var data = imagen.Encode(SKEncodedImageFormat.Jpeg, calidad);
+
+        if (data == null)
+        {
+            throw new Exception("No se pudo comprimir la imagen.");
+        }
+
+        return data.ToArray();
     }
 
     private async void OnGuardarMascotaClicked(object sender, EventArgs e)
@@ -206,7 +333,11 @@ public partial class RegistrarMascotaPage : ContentPage
                 }
                 else
                 {
-                    await DisplayAlertAsync("Error al actualizar", resultado.Mensaje, "OK");
+                    string mensaje = string.IsNullOrWhiteSpace(resultado.Mensaje)
+                        ? "No se pudo actualizar la mascota. Revisa los datos ingresados e inténtalo nuevamente."
+                        : resultado.Mensaje;
+
+                    await DisplayAlertAsync("Error al actualizar", mensaje, "OK");
                 }
             }
             else
@@ -237,9 +368,39 @@ public partial class RegistrarMascotaPage : ContentPage
                 }
                 else
                 {
-                    await DisplayAlertAsync("Error de registro", resultado.Mensaje, "OK");
+                    string mensaje = string.IsNullOrWhiteSpace(resultado.Mensaje)
+                        ? "No se pudo registrar la mascota. Revisa los datos ingresados e inténtalo nuevamente."
+                        : resultado.Mensaje;
+
+                    await DisplayAlertAsync("Error de registro", mensaje, "OK");
                 }
             }
+        }
+        catch (HttpRequestException ex)
+        {
+            await DisplayAlertAsync(
+                "Error de conexión",
+                $"No se pudo conectar con el servidor.\n\nDetalle técnico:\n{ex.Message}",
+                "OK"
+            );
+        }
+        catch (TaskCanceledException)
+        {
+            await DisplayAlertAsync(
+                "Tiempo agotado",
+                "El servidor tardó demasiado en responder. Verifica tu conexión a Internet e inténtalo nuevamente.",
+                "OK"
+            );
+        }
+        catch (Exception ex)
+        {
+            string accion = EsModoEdicion ? "actualizar" : "registrar";
+
+            await DisplayAlertAsync(
+                $"Error al {accion}",
+                $"Ocurrió un error inesperado al {accion} la mascota.\n\nDetalle técnico:\n{ex.Message}",
+                "OK"
+            );
         }
         finally
         {

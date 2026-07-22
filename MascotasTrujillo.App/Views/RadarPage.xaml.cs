@@ -16,7 +16,7 @@ public partial class RadarPage : ContentPage
     private double _miLongitud = -79.0287;
 
     private string _tipoFiltro = "Todos";
-    private double _radioMetros = 5000;
+    private double _radioMetros = 10000;
 
     private bool _cargandoRadar = false;
     private bool _radarInicializado = false;
@@ -28,7 +28,7 @@ public partial class RadarPage : ContentPage
         _apiService = apiService;
 
         LblResumenFiltro.Text = "0 reportes";
-        LblResumenFiltroSuperior.Text = "5 km";
+        LblResumenFiltroSuperior.Text = "10 km";
 
         ActualizarEstiloFiltros();
     }
@@ -256,10 +256,10 @@ public partial class RadarPage : ContentPage
         AplicarEstado(BtnTipoPerdidas, _tipoFiltro == "Perdidas");
         AplicarEstado(BtnTipoEncontradas, _tipoFiltro == "Encontradas");
 
-        AplicarEstado(BtnRadio1, _radioMetros == 1000);
-        AplicarEstado(BtnRadio3, _radioMetros == 3000);
         AplicarEstado(BtnRadio5, _radioMetros == 5000);
         AplicarEstado(BtnRadio10, _radioMetros == 10000);
+        AplicarEstado(BtnRadio15, _radioMetros == 15000);
+        AplicarEstado(BtnRadio20, _radioMetros == 20000);
 
         LblFiltroActual.Text = $"{_tipoFiltro} · {_radioMetros / 1000:0} km";
         LblResumenFiltroSuperior.Text = $"{_radioMetros / 1000:0} km";
@@ -295,21 +295,7 @@ public partial class RadarPage : ContentPage
         _tipoFiltro = "Encontradas";
         AplicarFiltroTipoSinRecargar();
     }
-
-    private async void OnRadio1Clicked(object sender, EventArgs e)
-    {
-        _radioMetros = 1000;
-        ActualizarEstiloFiltros();
-        await CargarRadarAsync();
-    }
-
-    private async void OnRadio3Clicked(object sender, EventArgs e)
-    {
-        _radioMetros = 3000;
-        ActualizarEstiloFiltros();
-        await CargarRadarAsync();
-    }
-
+        
     private async void OnRadio5Clicked(object sender, EventArgs e)
     {
         _radioMetros = 5000;
@@ -320,6 +306,20 @@ public partial class RadarPage : ContentPage
     private async void OnRadio10Clicked(object sender, EventArgs e)
     {
         _radioMetros = 10000;
+        ActualizarEstiloFiltros();
+        await CargarRadarAsync();
+    }
+
+    private async void OnRadio15Clicked(object sender, EventArgs e)
+    {
+        _radioMetros = 15000;
+        ActualizarEstiloFiltros();
+        await CargarRadarAsync();
+    }
+
+    private async void OnRadio20Clicked(object sender, EventArgs e)
+    {
+        _radioMetros = 20000;
         ActualizarEstiloFiltros();
         await CargarRadarAsync();
     }
@@ -338,4 +338,5 @@ public partial class RadarPage : ContentPage
             await Navigation.PushAsync(new DetalleReportePage(_apiService, reporteSeleccionado));
         }
     }
+        
 }
