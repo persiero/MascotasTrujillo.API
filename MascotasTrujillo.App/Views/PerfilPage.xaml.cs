@@ -207,34 +207,30 @@ public partial class PerfilPage : ContentPage
 
     private async Task ProcesarFotoPerfilAsync(FileResult photo)
     {
-        string extension = Path.GetExtension(photo.FileName);
-
-        if (string.IsNullOrWhiteSpace(extension))
-            extension = ".jpg";
-
-        string nombreArchivo = $"perfil_{DateTime.Now:yyyyMMddHHmmss}{extension}";
-        string localFilePath = Path.Combine(FileSystem.CacheDirectory, nombreArchivo);
-
-        byte[] imageBytes;
-
-        using (Stream sourceStream = await photo.OpenReadAsync())
-        using (MemoryStream memoryStream = new MemoryStream())
+        try
         {
-            await sourceStream.CopyToAsync(memoryStream);
-            imageBytes = memoryStream.ToArray();
+            var resultado = await ImageCompressionService.ComprimirFileResultAsync(
+                photo,
+                prefijoArchivo: "perfil",
+                maxMb: 5
+            );
+
+            _rutaFotoPerfilLocal = resultado.RutaLocal;
+
+            FotoPerfilImage.Source = ImageSource.FromStream(
+                () => new MemoryStream(resultado.Bytes)
+            );
+
+            await SubirFotoPerfilAsync();
         }
-
-        await File.WriteAllBytesAsync(localFilePath, imageBytes);
-
-        _rutaFotoPerfilLocal = localFilePath;
-
-        // Mostramos la imagen desde memoria, no desde el archivo físico.
-        // Así evitamos que Android bloquee el archivo que luego vamos a subir.
-        FotoPerfilImage.Source = ImageSource.FromStream(
-            () => new MemoryStream(imageBytes)
-        );
-
-        await SubirFotoPerfilAsync();
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error con la imagen",
+                $"No se pudo preparar la foto de perfil.\n\nDetalle:\n{ex.Message}",
+                "OK"
+            );
+        }
     }
 
     private async Task SubirFotoPerfilAsync()

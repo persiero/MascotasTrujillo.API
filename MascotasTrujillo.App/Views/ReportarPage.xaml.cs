@@ -342,12 +342,32 @@ public partial class ReportarPage : ContentPage
         if (foto == null)
             return;
 
-        _fotoCapturada = foto;
+        try
+        {
+            var resultado = await ImageCompressionService.ComprimirFileResultAsync(
+                foto,
+                prefijoArchivo: "reporte",
+                maxMb: 5
+            );
 
-        var stream = await foto.OpenReadAsync();
-        FotoPreview.Source = ImageSource.FromStream(() => stream);
+            // Reemplazamos la foto original por la foto comprimida.
+            // Así el resto del código puede seguir usando _fotoCapturada normalmente.
+            _fotoCapturada = new FileResult(resultado.RutaLocal, "image/jpeg");
 
-        BotonesCaptura.IsVisible = false;
+            FotoPreview.Source = ImageSource.FromStream(
+                () => new MemoryStream(resultado.Bytes)
+            );
+
+            BotonesCaptura.IsVisible = false;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error con la imagen",
+                $"No se pudo preparar la foto del reporte.\n\nDetalle:\n{ex.Message}",
+                "OK"
+            );
+        }
     }
 
     private void ActualizarTextosSegunTipo()

@@ -126,22 +126,31 @@ public partial class RegistrarAvistamientoPage : ContentPage
         if (foto == null)
             return;
 
-        _fotoCapturada = foto;
-
-        byte[] imageBytes;
-
-        using (Stream sourceStream = await foto.OpenReadAsync())
-        using (MemoryStream memoryStream = new MemoryStream())
+        try
         {
-            await sourceStream.CopyToAsync(memoryStream);
-            imageBytes = memoryStream.ToArray();
+            var resultado = await ImageCompressionService.ComprimirFileResultAsync(
+                foto,
+                prefijoArchivo: "avistamiento",
+                maxMb: 5
+            );
+
+            // Reemplazamos la foto original por la comprimida.
+            _fotoCapturada = new FileResult(resultado.RutaLocal, "image/jpeg");
+
+            FotoPreview.Source = ImageSource.FromStream(
+                () => new MemoryStream(resultado.Bytes)
+            );
+
+            BotonesCaptura.IsVisible = false;
         }
-
-        FotoPreview.Source = ImageSource.FromStream(
-            () => new MemoryStream(imageBytes)
-        );
-
-        BotonesCaptura.IsVisible = false;
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error con la imagen",
+                $"No se pudo preparar la foto del avistamiento.\n\nDetalle:\n{ex.Message}",
+                "OK"
+            );
+        }
     }
 
     private async void OnGuardarAvistamientoClicked(object sender, EventArgs e)
