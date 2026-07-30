@@ -4,12 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MascotasTrujillo.App.Views.DetalleAvistamientoPage"
     Title="Detalle del Avistamiento"
-    BackgroundColor="#F8FAFC">
+    BackgroundColor="#F5F1FF">
 
     <ScrollView>
         <VerticalStackLayout Padding="18" Spacing="16">
 
-            <!-- Encabezado con volver -->
+            <!-- Encabezado principal -->
             <Border BackgroundColor="#FFFFFF"
                     Stroke="{StaticResource CardBorder}"
                     StrokeThickness="1"
@@ -24,10 +24,10 @@
                             Opacity="0.10"
                             Offset="0,4"
                             Radius="12" />
-                </Border.Shadow>
+                            </Border.Shadow>
 
-                <Grid ColumnDefinitions="Auto,*"
-                  ColumnSpacing="10">
+                <Grid ColumnDefinitions="Auto,Auto,*"
+                    ColumnSpacing="10">
 
                     <Button Grid.Column="0"
                             Text="←"
@@ -42,89 +42,65 @@
                             Padding="0"
                             VerticalOptions="Center" />
 
-                    <VerticalStackLayout Grid.Column="1"
-                                     Spacing="1"
-                                     VerticalOptions="Center">
+                    <Border Grid.Column="1"
+                            BackgroundColor="{StaticResource PrimarySoft}"
+                            Stroke="Transparent"
+                            HeightRequest="42"
+                            WidthRequest="42"
+                            VerticalOptions="Center">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="21" />
+                        </Border.StrokeShape>
+
+                        <Label Text="👀"
+                               FontSize="22"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="2"
+                                         Spacing="2"
+                                         VerticalOptions="Center">
 
                         <Label Text="Detalle del avistamiento"
                                FontSize="18"
                                FontAttributes="Bold"
                                TextColor="{StaticResource TextMain}" />
 
-                        <Label Text="Información registrada por la comunidad"
-                               FontSize="12"
-                               TextColor="{StaticResource TextMuted}" />
-                    </VerticalStackLayout>
-                </Grid>
-            </Border>
-
-            <!-- Encabezado -->
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="Transparent"
-                    Padding="16">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
-
-                <Border.Shadow>
-                    <Shadow Brush="Black"
-                            Opacity="0.06"
-                            Offset="0,3"
-                            Radius="8" />
-                </Border.Shadow>
-
-                <Grid ColumnDefinitions="Auto,*"
-                      ColumnSpacing="12">
-
-                    <Border Grid.Column="0"
-                            BackgroundColor="#DCFCE7"
-                            Stroke="Transparent"
-                            HeightRequest="50"
-                            WidthRequest="50"
-                            VerticalOptions="Center">
-
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="25" />
-                        </Border.StrokeShape>
-
-                        <Label Text="👀"
-                               FontSize="25"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center" />
-                    </Border>
-
-                    <VerticalStackLayout Grid.Column="1"
-                                         Spacing="3"
-                                         VerticalOptions="Center">
-
-                        <Label Text="Detalle del avistamiento"
-                               FontSize="22"
-                               FontAttributes="Bold"
-                               TextColor="#1E1B4B" />
-
                         <Label x:Name="LblReporteTitulo"
                                Text="Información registrada por la comunidad."
                                FontSize="12"
-                               TextColor="#64748B"
-                               LineBreakMode="WordWrap" />
+                               TextColor="{StaticResource TextMuted}"
+                               LineBreakMode="TailTruncation" />
                     </VerticalStackLayout>
-
                 </Grid>
             </Border>
 
             <!-- Foto -->
-            <Border BackgroundColor="#E2E8F0"
-                    Stroke="Transparent"
-                    HeightRequest="240">
+            <Border BackgroundColor="#F8F5FF"
+                    Stroke="{StaticResource CardBorder}"
+                    StrokeThickness="1"
+                    HeightRequest="270">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="22" />
                 </Border.StrokeShape>
 
-                <Grid>
+                <Border.Shadow>
+                    <Shadow Brush="#2B0B98"
+                            Opacity="0.10"
+                            Offset="0,4"
+                            Radius="12" />
+                </Border.Shadow>
+
+                <Grid BackgroundColor="#F8F5FF">
+
                     <Image x:Name="FotoAvistamientoImage"
-                           Aspect="AspectFill" />
+                           Aspect="AspectFit"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           BackgroundColor="#F8F5FF" />
 
                     <Border BackgroundColor="#DCFCE7"
                             Stroke="Transparent"

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MascotasTrujillo.App.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -33,6 +34,12 @@ namespace MascotasTrujillo.App.Models
 
         public string? DispositivoId { get; set; }
         public DateTime? UltimaActualizacion { get; set; }
+
+        public DateTime? UltimaActualizacionLocal =>
+            FechaHoraHelper.ConvertirALocal(UltimaActualizacion);
+
+        public string UltimaActualizacionTexto =>
+            FechaHoraHelper.FormatearFechaHoraLocal(UltimaActualizacion, "Sin actualización GPS");
 
         public double? Latitud { get; set; }
         public double? Longitud { get; set; }
@@ -99,7 +106,7 @@ namespace MascotasTrujillo.App.Models
                     : string.Empty;
 
                 if (UltimaActualizacion.HasValue)
-                    return $"Última actualización GPS: {UltimaActualizacion.Value:dd/MM/yyyy HH:mm}{bateriaTexto}";
+                    return $"Última ubicación GPS: {UltimaActualizacionTexto}{bateriaTexto}";
 
                 return $"Última ubicación GPS registrada{bateriaTexto}";
             }

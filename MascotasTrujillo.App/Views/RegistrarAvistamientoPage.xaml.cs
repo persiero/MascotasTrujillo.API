@@ -13,6 +13,9 @@ public partial class RegistrarAvistamientoPage : ContentPage
     private double? _latitudAvistamiento;
     private double? _longitudAvistamiento;
 
+    private TaskCompletionSource<bool>? _confirmacionSalirTcs;
+    private bool _procesandoSalida = false;
+
     private readonly double _latitudTrujillo = -8.1118;
     private readonly double _longitudTrujillo = -79.0287;
         
@@ -74,7 +77,7 @@ public partial class RegistrarAvistamientoPage : ContentPage
         _longitudAvistamiento = longitud;
 
         LblUbicacionSeleccionada.Text =
-            $"Ubicación lista para publicar.\nLat. {latitud:F6}, Long. {longitud:F6}";
+            $"{mensaje}\nLat. {latitud:F6}, Long. {longitud:F6}";
     }
 
     public RegistrarAvistamientoPage(ApiService apiService, Reporte reporte)
@@ -141,7 +144,7 @@ public partial class RegistrarAvistamientoPage : ContentPage
                 () => new MemoryStream(resultado.Bytes)
             );
 
-            BotonesCaptura.IsVisible = false;
+            BotonesCaptura.IsVisible = true;
         }
         catch (Exception ex)
         {
@@ -226,20 +229,73 @@ public partial class RegistrarAvistamientoPage : ContentPage
 
     private async void OnVolverClicked(object sender, EventArgs e)
     {
-        if (HayDatosSinGuardar())
+        await IntentarVolverAsync();
+    }
+
+    private async Task IntentarVolverAsync()
+    {
+        if (_procesandoSalida)
+            return;
+
+        _procesandoSalida = true;
+
+        try
         {
-            bool salir = await DisplayAlertAsync(
-                "Salir sin guardar",
-                "¿Deseas volver? Los datos ingresados no se guardarán.",
-                "Sí, volver",
-                "Cancelar"
-            );
+            if (HayDatosSinGuardar())
+            {
+                bool salir = await MostrarConfirmacionSalirAsync();
 
-            if (!salir)
-                return;
+                if (!salir)
+                    return;
+            }
+
+            await VolverAsync();
         }
+        finally
+        {
+            _procesandoSalida = false;
+        }
+    }
 
-        await VolverAsync();
+    private async Task<bool> MostrarConfirmacionSalirAsync()
+    {
+        if (SalirSinGuardarOverlay.IsVisible)
+            return false;
+
+        _confirmacionSalirTcs = new TaskCompletionSource<bool>();
+
+        SalirSinGuardarOverlay.IsVisible = true;
+        SalirSinGuardarOverlay.Opacity = 0;
+
+        await SalirSinGuardarOverlay.FadeToAsync(1, 150);
+
+        return await _confirmacionSalirTcs.Task;
+    }
+
+    private async Task CerrarConfirmacionSalirAsync(bool confirmarSalida)
+    {
+        await SalirSinGuardarOverlay.FadeToAsync(0, 120);
+
+        SalirSinGuardarOverlay.IsVisible = false;
+        SalirSinGuardarOverlay.Opacity = 0;
+
+        _confirmacionSalirTcs?.TrySetResult(confirmarSalida);
+        _confirmacionSalirTcs = null;
+    }
+
+    private async void OnCancelarSalirClicked(object sender, EventArgs e)
+    {
+        await CerrarConfirmacionSalirAsync(false);
+    }
+
+    private async void OnConfirmarSalirClicked(object sender, EventArgs e)
+    {
+        await CerrarConfirmacionSalirAsync(true);
+    }
+
+    private async void OnCancelarSalirOverlayTapped(object sender, TappedEventArgs e)
+    {
+        await CerrarConfirmacionSalirAsync(false);
     }
 
     private bool HayDatosSinGuardar()
@@ -266,5 +322,21 @@ public partial class RegistrarAvistamientoPage : ContentPage
         }
 
         await Shell.Current.GoToAsync("..");
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            if (SalirSinGuardarOverlay.IsVisible)
+            {
+                await CerrarConfirmacionSalirAsync(false);
+                return;
+            }
+
+            await IntentarVolverAsync();
+        });
+
+        return true;
     }
 }

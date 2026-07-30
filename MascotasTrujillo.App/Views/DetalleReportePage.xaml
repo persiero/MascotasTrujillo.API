@@ -83,10 +83,10 @@
                 </Border>
 
                 <!-- Imagen principal -->
-                <Border BackgroundColor="#FFFFFF"
+                <Border BackgroundColor="#F8F5FF"
                         Stroke="{StaticResource CardBorder}"
                         StrokeThickness="1"
-                        HeightRequest="220">
+                        HeightRequest="280">
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="24" />
@@ -94,7 +94,7 @@
 
                     <Border.Shadow>
                         <Shadow Brush="#2B0B98"
-                                Opacity="0.13"
+                                Opacity="0.12"
                                 Offset="0,5"
                                 Radius="14" />
                     </Border.Shadow>
@@ -102,11 +102,13 @@
                     <Grid BackgroundColor="#F8F5FF">
 
                         <Image x:Name="FotoReporteImage"
-                               Source="{Binding FotoUrl}"
+                               Source="{Binding FotoMostrar}"
                                Aspect="AspectFit"
                                HorizontalOptions="Fill"
-                               VerticalOptions="Fill" />
+                               VerticalOptions="Fill"
+                               BackgroundColor="#F8F5FF" />
 
+                        <!-- Etiqueta del tipo de reporte -->
                         <Border BackgroundColor="{Binding TipoReporteFondo}"
                                 Stroke="Transparent"
                                 Padding="10,5"
@@ -180,7 +182,7 @@
                                    Text="📅"
                                    FontSize="15" />
 
-                            <Label Text="{Binding FechaReporte, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                            <Label Text="{Binding FechaReporteTexto}"
                                    Grid.Row="1"
                                    Grid.Column="1"
                                    FontSize="13"

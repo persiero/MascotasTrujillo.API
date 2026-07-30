@@ -16,6 +16,12 @@ public partial class ReportarPage : ContentPage
     private int _tipoReporteSeleccionado = -1; // 0 = perdida, 1 = encontrada
     private bool _datosMascotaExpandido = false;
 
+    private TaskCompletionSource<bool>? _confirmacionSalirTcs;
+    private bool _procesandoSalida = false;
+
+    private string? _especieSeleccionada;
+    private string? _sexoSeleccionado;
+
     private double? _latitudReporte;
     private double? _longitudReporte;
 
@@ -35,7 +41,6 @@ public partial class ReportarPage : ContentPage
         ActualizarTextosSegunTipo();
         ActualizarEstadoSeccionMascota();
     }
-
 
     protected override async void OnAppearing()
     {
@@ -233,17 +238,11 @@ public partial class ReportarPage : ContentPage
             return;
 
         NombreMascotaEntry.Text = _mascotaSeleccionada.Nombre;
-        EspecieEntry.Text = _mascotaSeleccionada.Especie;
+        SeleccionarEspecie(_mascotaSeleccionada.Especie);
         RazaEntry.Text = _mascotaSeleccionada.Raza;
         ColorEntry.Text = _mascotaSeleccionada.ColorPrincipal;
 
-        if (!string.IsNullOrWhiteSpace(_mascotaSeleccionada.Sexo))
-        {
-            int index = SexoPicker.Items.IndexOf(_mascotaSeleccionada.Sexo);
-
-            if (index >= 0)
-                SexoPicker.SelectedIndex = index;
-        }
+        SeleccionarSexo(_mascotaSeleccionada.Sexo);
 
         if (!string.IsNullOrWhiteSpace(_mascotaSeleccionada.FotoPerfilUrl))
         {
@@ -273,11 +272,12 @@ public partial class ReportarPage : ContentPage
     private void HabilitarCamposMascota(bool habilitar)
     {
         NombreMascotaEntry.IsReadOnly = !habilitar;
-        EspecieEntry.IsReadOnly = !habilitar;
         RazaEntry.IsReadOnly = !habilitar;
         ColorEntry.IsReadOnly = !habilitar;
 
-        SexoPicker.IsEnabled = habilitar;
+        BtnEspeciePerro.IsEnabled = habilitar;
+        BtnEspecieGato.IsEnabled = habilitar;
+        BtnSexoSelector.IsEnabled = habilitar;
 
         Color fondoEditable = Color.FromArgb("#F8F5FF");
         Color fondoBloqueado = Color.FromArgb("#EEE7FF");
@@ -292,21 +292,28 @@ public partial class ReportarPage : ContentPage
         }
 
         AplicarCampo(NombreMascotaField, NombreMascotaEntry);
-        AplicarCampo(EspecieField, EspecieEntry);
         AplicarCampo(RazaField, RazaEntry);
         AplicarCampo(ColorField, ColorEntry);
 
+        EspecieField.BackgroundColor = habilitar ? fondoEditable : fondoBloqueado;
         SexoField.BackgroundColor = habilitar ? fondoEditable : fondoBloqueado;
-        SexoPicker.TextColor = habilitar ? textoEditable : textoBloqueado;
+
+        BtnSexoSelector.TextColor = habilitar ? textoEditable : textoBloqueado;
+
+        ActualizarEstiloEspecie();
     }
 
     private void LimpiarDatosMascota()
     {
         NombreMascotaEntry.Text = string.Empty;
-        EspecieEntry.Text = string.Empty;
         RazaEntry.Text = string.Empty;
         ColorEntry.Text = string.Empty;
-        SexoPicker.SelectedIndex = -1;
+
+        _especieSeleccionada = null;
+        _sexoSeleccionado = null;
+
+        ActualizarEstiloEspecie();
+        ActualizarTextoSexo();
     }
 
     private async void OnTomarFotoClicked(object? sender, EventArgs e)
@@ -358,7 +365,7 @@ public partial class ReportarPage : ContentPage
                 () => new MemoryStream(resultado.Bytes)
             );
 
-            BotonesCaptura.IsVisible = false;
+            BotonesCaptura.IsVisible = true;
         }
         catch (Exception ex)
         {
@@ -404,6 +411,105 @@ public partial class ReportarPage : ContentPage
             LblTituloFotoReporte.Text = "Foto";
             LblAyudaFotoReporte.Text = "Agrega una imagen clara.";
         }
+    }
+
+    private void OnEspeciePerroClicked(object sender, EventArgs e)
+    {
+        SeleccionarEspecie("Perro");
+    }
+
+    private void OnEspecieGatoClicked(object sender, EventArgs e)
+    {
+        SeleccionarEspecie("Gato");
+    }
+
+    private void SeleccionarEspecie(string? especie)
+    {
+        _especieSeleccionada = string.IsNullOrWhiteSpace(especie)
+            ? null
+            : especie.Trim();
+
+        ActualizarEstiloEspecie();
+    }
+
+    private void ActualizarEstiloEspecie()
+    {
+        Color primary = Color.FromArgb("#5B21E6");
+        Color soft = Color.FromArgb("#F8F5FF");
+        Color primaryDark = Color.FromArgb("#2B0B98");
+        Color border = Color.FromArgb("#D8CCFF");
+
+        void Aplicar(Button boton, bool seleccionado)
+        {
+            boton.BackgroundColor = seleccionado ? primary : soft;
+            boton.TextColor = seleccionado ? Colors.White : primaryDark;
+            boton.BorderColor = seleccionado ? primary : border;
+            boton.BorderWidth = seleccionado ? 0 : 1;
+        }
+
+        Aplicar(BtnEspeciePerro, _especieSeleccionada == "Perro");
+        Aplicar(BtnEspecieGato, _especieSeleccionada == "Gato");
+    }
+
+    private async void OnAbrirSexoSelectorClicked(object sender, EventArgs e)
+    {
+        if (!BtnSexoSelector.IsEnabled)
+            return;
+
+        SexoOverlay.IsVisible = true;
+        SexoOverlay.Opacity = 0;
+
+        await SexoOverlay.FadeToAsync(1, 150);
+    }
+
+    private async void OnCerrarSexoOverlayClicked(object sender, EventArgs e)
+    {
+        await CerrarSexoOverlayAsync();
+    }
+
+    private async void OnCerrarSexoOverlayTapped(object sender, TappedEventArgs e)
+    {
+        await CerrarSexoOverlayAsync();
+    }
+
+    private async void OnSexoMachoClicked(object sender, EventArgs e)
+    {
+        SeleccionarSexo("Macho");
+        await CerrarSexoOverlayAsync();
+    }
+
+    private async void OnSexoHembraClicked(object sender, EventArgs e)
+    {
+        SeleccionarSexo("Hembra");
+        await CerrarSexoOverlayAsync();
+    }
+
+    private async void OnSexoNoIdentificadoClicked(object sender, EventArgs e)
+    {
+        SeleccionarSexo("No identificado");
+        await CerrarSexoOverlayAsync();
+    }
+
+    private void SeleccionarSexo(string? sexo)
+    {
+        _sexoSeleccionado = string.IsNullOrWhiteSpace(sexo)
+            ? null
+            : sexo.Trim();
+
+        ActualizarTextoSexo();
+    }
+
+    private void ActualizarTextoSexo()
+    {
+        BtnSexoSelector.Text = string.IsNullOrWhiteSpace(_sexoSeleccionado)
+            ? "Seleccionar sexo"
+            : $"Sexo: {_sexoSeleccionado}";
+    }
+
+    private async Task CerrarSexoOverlayAsync()
+    {
+        await SexoOverlay.FadeToAsync(0, 120);
+        SexoOverlay.IsVisible = false;
     }
 
     private async void OnEnviarClicked(object? sender, EventArgs e)
@@ -456,7 +562,7 @@ public partial class ReportarPage : ContentPage
 
             if (esMascotaEncontrada)
             {
-                if (string.IsNullOrWhiteSpace(EspecieEntry.Text))
+                if (string.IsNullOrWhiteSpace(_especieSeleccionada))
                 {
                     await DisplayAlertAsync(
                         "Dato requerido",
@@ -490,9 +596,7 @@ public partial class ReportarPage : ContentPage
                 return;
             }
 
-            string? sexoSeleccionado = SexoPicker.SelectedIndex >= 0
-                ? SexoPicker.Items[SexoPicker.SelectedIndex]
-                : null;
+            string? sexoSeleccionado = _sexoSeleccionado;
 
             var resultado = await _apiService.CrearReporteAsync(
                 mascotaId: esMascotaPerdida ? _mascotaSeleccionada?.Id : null,
@@ -504,7 +608,7 @@ public partial class ReportarPage : ContentPage
                 direccionReferencia: DireccionReferenciaEntry.Text,
                 foto: _fotoCapturada,
                 nombreMascotaReferencial: esMascotaEncontrada ? NombreMascotaEntry.Text : null,
-                especieReferencial: esMascotaEncontrada ? EspecieEntry.Text : null,
+                especieReferencial: esMascotaEncontrada ? _especieSeleccionada : null,
                 razaReferencial: esMascotaEncontrada ? RazaEntry.Text : null,
                 colorReferencial: esMascotaEncontrada ? ColorEntry.Text : null,
                 sexoReferencial: esMascotaEncontrada ? sexoSeleccionado : null
@@ -539,20 +643,89 @@ public partial class ReportarPage : ContentPage
 
     private async void OnVolverClicked(object sender, EventArgs e)
     {
-        if (HayDatosSinGuardar())
+        await IntentarVolverAsync();
+    }
+
+    private async Task IntentarVolverAsync()
+    {
+        if (_procesandoSalida)
+            return;
+
+        _procesandoSalida = true;
+
+        try
         {
-            bool salir = await DisplayAlertAsync(
-                "Salir sin guardar",
-                "¿Deseas volver? Los datos ingresados no se guardarán.",
-                "Sí, volver",
-                "Cancelar"
-            );
+            if (HayDatosSinGuardar())
+            {
+                bool salir = await MostrarConfirmacionSalirAsync();
 
-            if (!salir)
-                return;
+                if (!salir)
+                    return;
+            }
+
+            await VolverAsync();
         }
+        finally
+        {
+            _procesandoSalida = false;
+        }
+    }
 
-        await VolverAsync();
+    protected override bool OnBackButtonPressed()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            if (SalirSinGuardarOverlay.IsVisible)
+            {
+                await CerrarConfirmacionSalirAsync(false);
+                return;
+            }
+
+            await IntentarVolverAsync();
+        });
+
+        return true;
+    }
+
+    private async Task<bool> MostrarConfirmacionSalirAsync()
+    {
+        if (SalirSinGuardarOverlay.IsVisible)
+            return false;
+
+        _confirmacionSalirTcs = new TaskCompletionSource<bool>();
+
+        SalirSinGuardarOverlay.IsVisible = true;
+        SalirSinGuardarOverlay.Opacity = 0;
+
+        await SalirSinGuardarOverlay.FadeToAsync(1, 150);
+
+        return await _confirmacionSalirTcs.Task;
+    }
+
+    private async Task CerrarConfirmacionSalirAsync(bool confirmarSalida)
+    {
+        await SalirSinGuardarOverlay.FadeToAsync(0, 120);
+
+        SalirSinGuardarOverlay.IsVisible = false;
+        SalirSinGuardarOverlay.Opacity = 0;
+
+        _confirmacionSalirTcs?.TrySetResult(confirmarSalida);
+        _confirmacionSalirTcs = null;
+    }
+
+    private async void OnCancelarSalirClicked(object sender, EventArgs e)
+    {
+        await CerrarConfirmacionSalirAsync(false);
+    }
+
+    private async void OnConfirmarSalirClicked(object sender, EventArgs e)
+    {
+        await CerrarConfirmacionSalirAsync(true);
+    }
+
+    private async void OnCancelarSalirOverlayTapped(object sender, TappedEventArgs e)
+    {
+        await CerrarConfirmacionSalirAsync(false);
     }
 
     private bool HayDatosSinGuardar()
@@ -563,10 +736,10 @@ public partial class ReportarPage : ContentPage
                !string.IsNullOrWhiteSpace(DescripcionEntry.Text) ||
                !string.IsNullOrWhiteSpace(DireccionReferenciaEntry.Text) ||
                !string.IsNullOrWhiteSpace(NombreMascotaEntry.Text) ||
-               !string.IsNullOrWhiteSpace(EspecieEntry.Text) ||
+               !string.IsNullOrWhiteSpace(_especieSeleccionada) ||
                !string.IsNullOrWhiteSpace(RazaEntry.Text) ||
                !string.IsNullOrWhiteSpace(ColorEntry.Text) ||
-               SexoPicker.SelectedIndex >= 0 ||
+               !string.IsNullOrWhiteSpace(_sexoSeleccionado) ||
                _latitudReporte.HasValue ||
                _longitudReporte.HasValue ||
                _fotoCapturada != null;

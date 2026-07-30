@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MascotasTrujillo.App.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,6 +18,15 @@ namespace MascotasTrujillo.App.Models
         public string? DireccionReferencia { get; set; }
 
         public DateTime FechaAvistamiento { get; set; }
+
+        public DateTime FechaAvistamientoLocal =>
+            FechaHoraHelper.ConvertirALocal(FechaAvistamiento);
+
+        public string FechaAvistamientoTexto =>
+            FechaHoraHelper.FormatearFechaHoraLocal(FechaAvistamiento);
+
+        public string FechaResumen =>
+            FechaHoraHelper.FormatearFechaHoraLocal(FechaAvistamiento);
 
         public double Latitud { get; set; }
         public double Longitud { get; set; }
@@ -40,11 +50,6 @@ namespace MascotasTrujillo.App.Models
             string.IsNullOrWhiteSpace(DireccionReferencia)
                 ? $"Lat. {Latitud:F5}, Long. {Longitud:F5}"
                 : DireccionReferencia;
-
-        public string FechaResumen =>
-            FechaAvistamiento == default
-                ? "Fecha no registrada"
-                : $"📅 {FechaAvistamiento:dd/MM/yyyy HH:mm}";
 
         public string DetalleChipTexto =>
             PuedeVerDetalle

@@ -43,6 +43,8 @@ public partial class PerfilPage : ContentPage
             }
 
             _perfilActual = perfil;
+            _fotoPerfilPendiente = false;
+            _rutaFotoPerfilLocal = string.Empty;
 
             LblNombrePerfil.Text = perfil.NombreCompleto;
             LblEmailPerfil.Text = perfil.Email;
@@ -102,36 +104,64 @@ public partial class PerfilPage : ContentPage
 
         try
         {
-            var resultado = await _apiService.ActualizarPerfilAsync(
+            // 1. Guardar datos del perfil
+            var resultadoPerfil = await _apiService.ActualizarPerfilAsync(
                 nombreCompleto: nombre,
                 telefono: telefono
             );
 
-            if (resultado.Exito)
-            {
-                await SecureStorage.Default.SetAsync("usuario_nombre", nombre);
-
-                if (!string.IsNullOrWhiteSpace(telefono))
-                    await SecureStorage.Default.SetAsync("usuario_telefono", telefono);
-                else
-                    SecureStorage.Default.Remove("usuario_telefono");
-
-                await DisplayAlertAsync(
-                    "Perfil actualizado",
-                    "Tus datos fueron actualizados correctamente.",
-                    "OK"
-                );
-
-                await CargarPerfilAsync();
-            }
-            else
+            if (!resultadoPerfil.Exito)
             {
                 await DisplayAlertAsync(
                     "No se pudo actualizar",
-                    resultado.Mensaje,
+                    resultadoPerfil.Mensaje,
                     "OK"
                 );
+
+                return;
             }
+
+            await SecureStorage.Default.SetAsync("usuario_nombre", nombre);
+
+            if (!string.IsNullOrWhiteSpace(telefono))
+                await SecureStorage.Default.SetAsync("usuario_telefono", telefono);
+            else
+                SecureStorage.Default.Remove("usuario_telefono");
+
+            // 2. Si hay foto pendiente, subirla recién aquí
+            if (_fotoPerfilPendiente &&
+                !string.IsNullOrWhiteSpace(_rutaFotoPerfilLocal) &&
+                File.Exists(_rutaFotoPerfilLocal))
+            {
+                var resultadoFoto = await _apiService.ActualizarFotoPerfilAsync(_rutaFotoPerfilLocal);
+
+                if (!resultadoFoto.Exito)
+                {
+                    await DisplayAlertAsync(
+                        "Perfil guardado, pero no la foto",
+                        resultadoFoto.Mensaje,
+                        "OK"
+                    );
+
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(resultadoFoto.FotoPerfilUrl))
+                {
+                    await SecureStorage.Default.SetAsync("usuario_foto", resultadoFoto.FotoPerfilUrl);
+                }
+
+                _fotoPerfilPendiente = false;
+                _rutaFotoPerfilLocal = string.Empty;
+            }
+
+            await DisplayAlertAsync(
+                "Perfil actualizado",
+                "Tus datos fueron actualizados correctamente.",
+                "OK"
+            );
+
+            await CargarPerfilAsync();
         }
         catch (Exception ex)
         {
@@ -205,6 +235,8 @@ public partial class PerfilPage : ContentPage
         }
     }
 
+    private bool _fotoPerfilPendiente = false;
+
     private async Task ProcesarFotoPerfilAsync(FileResult photo)
     {
         try
@@ -212,16 +244,22 @@ public partial class PerfilPage : ContentPage
             var resultado = await ImageCompressionService.ComprimirFileResultAsync(
                 photo,
                 prefijoArchivo: "perfil",
-                maxMb: 5
+                maxMb: 5,
+                tipoRecorte: TipoRecorteImagen.CuadradoCentrado
             );
 
             _rutaFotoPerfilLocal = resultado.RutaLocal;
+            _fotoPerfilPendiente = true;
 
             FotoPerfilImage.Source = ImageSource.FromStream(
                 () => new MemoryStream(resultado.Bytes)
             );
 
-            await SubirFotoPerfilAsync();
+            await DisplayAlertAsync(
+                "Foto seleccionada",
+                "La foto se actualizará cuando presiones Guardar cambios.",
+                "OK"
+            );
         }
         catch (Exception ex)
         {
@@ -231,57 +269,7 @@ public partial class PerfilPage : ContentPage
                 "OK"
             );
         }
-    }
-
-    private async Task SubirFotoPerfilAsync()
-    {
-        if (string.IsNullOrWhiteSpace(_rutaFotoPerfilLocal))
-            return;
-
-        try
-        {
-            LoadingIndicator.IsRunning = true;
-            LoadingIndicator.IsVisible = true;
-
-            var resultado = await _apiService.ActualizarFotoPerfilAsync(_rutaFotoPerfilLocal);
-
-            if (resultado.Exito)
-            {
-                if (!string.IsNullOrWhiteSpace(resultado.FotoPerfilUrl))
-                {
-                    await SecureStorage.Default.SetAsync("usuario_foto", resultado.FotoPerfilUrl);
-                    FotoPerfilImage.Source = resultado.FotoPerfilUrl;
-                }
-
-                await DisplayAlertAsync(
-                    "Foto actualizada",
-                    "Tu foto de perfil fue actualizada correctamente.",
-                    "OK"
-                );
-            }
-            else
-            {
-                await DisplayAlertAsync(
-                    "No se pudo actualizar",
-                    resultado.Mensaje,
-                    "OK"
-                );
-            }
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlertAsync(
-                "Error",
-                $"No se pudo actualizar la foto: {ex.Message}",
-                "OK"
-            );
-        }
-        finally
-        {
-            LoadingIndicator.IsRunning = false;
-            LoadingIndicator.IsVisible = false;
-        }
-    }
+    }       
 
     private async void OnCerrarSesionTapped(object sender, TappedEventArgs e)
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MascotasTrujillo.App.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -43,6 +44,21 @@ namespace MascotasTrujillo.App.Models
 
         public DateTime FechaReporte { get; set; }
         public DateTime? FechaResolucion { get; set; }
+
+        public DateTime FechaReporteLocal =>
+            FechaHoraHelper.ConvertirALocal(FechaReporte);
+
+        public DateTime? FechaResolucionLocal =>
+            FechaHoraHelper.ConvertirALocal(FechaResolucion);
+
+        public string FechaReporteTexto =>
+            FechaHoraHelper.FormatearFechaHoraLocal(FechaReporte);
+
+        public string FechaResolucionTexto =>
+            FechaHoraHelper.FormatearFechaHoraLocal(FechaResolucion, "Sin fecha de resolución");
+
+        public string FechaResumen =>
+            FechaHoraHelper.FormatearFechaHoraLocal(FechaReporte);
 
         public double Latitud { get; set; }
         public double Longitud { get; set; }

@@ -3,6 +3,12 @@ using System.Diagnostics;
 
 namespace MascotasTrujillo.App.Services
 {
+    public enum TipoRecorteImagen
+    {
+        SinRecorte,
+        CuadradoCentrado
+    }
+
     public class ImagenComprimidaResultado
     {
         public string RutaLocal { get; set; } = string.Empty;
@@ -16,7 +22,8 @@ namespace MascotasTrujillo.App.Services
         public static async Task<ImagenComprimidaResultado> ComprimirFileResultAsync(
             FileResult foto,
             string prefijoArchivo = "imagen",
-            int maxMb = 5)
+            int maxMb = 5,
+            TipoRecorteImagen tipoRecorte = TipoRecorteImagen.SinRecorte)
         {
             byte[] bytesOriginales;
 
@@ -31,7 +38,8 @@ namespace MascotasTrujillo.App.Services
 
             byte[] bytesComprimidos = ComprimirImagenConLimite(
                 bytesOriginales,
-                maxBytes
+                maxBytes,
+                tipoRecorte
             );
 
             string nombreArchivo = $"{prefijoArchivo}_{Guid.NewGuid():N}.jpg";
@@ -54,7 +62,10 @@ namespace MascotasTrujillo.App.Services
             };
         }
 
-        private static byte[] ComprimirImagenConLimite(byte[] bytesOriginales, int maxBytes)
+        private static byte[] ComprimirImagenConLimite(
+            byte[] bytesOriginales,
+            int maxBytes,
+            TipoRecorteImagen tipoRecorte)
         {
             int[] tamaniosMaximos = { 1280, 1080, 900, 720 };
             int[] calidades = { 80, 75, 70, 65, 60 };
@@ -69,7 +80,8 @@ namespace MascotasTrujillo.App.Services
                         bytesOriginales,
                         maxWidth: tamanio,
                         maxHeight: tamanio,
-                        calidad: calidad
+                        calidad: calidad,
+                        tipoRecorte: tipoRecorte
                     );
 
                     mejorResultado = comprimida;
@@ -92,7 +104,8 @@ namespace MascotasTrujillo.App.Services
             byte[] bytesOriginales,
             int maxWidth,
             int maxHeight,
-            int calidad)
+            int calidad,
+            TipoRecorteImagen tipoRecorte)
         {
             using var inputStream = new SKMemoryStream(bytesOriginales);
             using var bitmapOriginal = SKBitmap.Decode(inputStream);
@@ -104,40 +117,96 @@ namespace MascotasTrujillo.App.Services
                 );
             }
 
-            int anchoOriginal = bitmapOriginal.Width;
-            int altoOriginal = bitmapOriginal.Height;
+            SKBitmap bitmapFuente = bitmapOriginal;
+            SKBitmap? bitmapRecortado = null;
 
-            double ratioAncho = (double)maxWidth / anchoOriginal;
-            double ratioAlto = (double)maxHeight / altoOriginal;
-            double ratio = Math.Min(ratioAncho, ratioAlto);
+            try
+            {
+                if (tipoRecorte == TipoRecorteImagen.CuadradoCentrado)
+                {
+                    bitmapRecortado = RecortarCuadradoCentrado(bitmapOriginal);
+                    bitmapFuente = bitmapRecortado;
+                }
 
-            if (ratio > 1)
-                ratio = 1;
+                int anchoOriginal = bitmapFuente.Width;
+                int altoOriginal = bitmapFuente.Height;
 
-            int nuevoAncho = Math.Max(1, (int)(anchoOriginal * ratio));
-            int nuevoAlto = Math.Max(1, (int)(altoOriginal * ratio));
+                double ratioAncho = (double)maxWidth / anchoOriginal;
+                double ratioAlto = (double)maxHeight / altoOriginal;
+                double ratio = Math.Min(ratioAncho, ratioAlto);
 
-            using var bitmapRedimensionado = new SKBitmap(
-                nuevoAncho,
-                nuevoAlto,
+                if (ratio > 1)
+                    ratio = 1;
+
+                int nuevoAncho = Math.Max(1, (int)(anchoOriginal * ratio));
+                int nuevoAlto = Math.Max(1, (int)(altoOriginal * ratio));
+
+                using var bitmapRedimensionado = new SKBitmap(
+                    nuevoAncho,
+                    nuevoAlto,
+                    bitmapFuente.ColorType,
+                    bitmapFuente.AlphaType
+                );
+
+                bitmapFuente.ScalePixels(
+                    bitmapRedimensionado,
+                    new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear)
+                );
+
+                using var imagen = SKImage.FromBitmap(bitmapRedimensionado);
+                using var data = imagen.Encode(SKEncodedImageFormat.Jpeg, calidad);
+
+                if (data == null)
+                    throw new Exception("No se pudo comprimir la imagen.");
+
+                return data.ToArray();
+            }
+            finally
+            {
+                bitmapRecortado?.Dispose();
+            }
+        }
+
+        private static SKBitmap RecortarCuadradoCentrado(SKBitmap bitmapOriginal)
+        {
+            int lado = Math.Min(bitmapOriginal.Width, bitmapOriginal.Height);
+
+            int x = (bitmapOriginal.Width - lado) / 2;
+            int y = (bitmapOriginal.Height - lado) / 2;
+
+            var origen = new SKRectI(
+                x,
+                y,
+                x + lado,
+                y + lado
+            );
+
+            var destino = new SKRect(
+                0,
+                0,
+                lado,
+                lado
+            );
+
+            var bitmapRecortado = new SKBitmap(
+                lado,
+                lado,
                 bitmapOriginal.ColorType,
                 bitmapOriginal.AlphaType
             );
 
-            bitmapOriginal.ScalePixels(
-                bitmapRedimensionado,
+            using var canvas = new SKCanvas(bitmapRecortado);
+
+            canvas.Clear(SKColors.White);
+
+            canvas.DrawBitmap(
+                bitmapOriginal,
+                origen,
+                destino,
                 new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear)
             );
 
-            using var imagen = SKImage.FromBitmap(bitmapRedimensionado);
-            using var data = imagen.Encode(SKEncodedImageFormat.Jpeg, calidad);
-
-            if (data == null)
-            {
-                throw new Exception("No se pudo comprimir la imagen.");
-            }
-
-            return data.ToArray();
+            return bitmapRecortado;
         }
     }
 }
