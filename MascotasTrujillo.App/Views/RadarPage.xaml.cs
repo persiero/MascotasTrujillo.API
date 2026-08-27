@@ -37,6 +37,8 @@ public partial class RadarPage : ContentPage
     {
         base.OnAppearing();
 
+        await ReactivarUbicacionEnMapaAsync();
+
         if (_radarInicializado)
             return;
 
@@ -70,6 +72,27 @@ public partial class RadarPage : ContentPage
         await CargarRadarAsync();
     }
 
+    private async Task ReactivarUbicacionEnMapaAsync()
+    {
+        try
+        {
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                MapaMascotas.IsShowingUser = false;
+
+                await Task.Delay(300);
+
+                MapaMascotas.IsShowingUser = true;
+
+                await Task.Delay(300);
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"No se pudo reactivar la ubicación del mapa: {ex.Message}");
+        }
+    }
+
     private async Task CargarRadarAsync()
     {
         if (_cargandoRadar)
@@ -91,6 +114,11 @@ public partial class RadarPage : ContentPage
 
             _miLatitud = ubicacionActual.Latitude;
             _miLongitud = ubicacionActual.Longitude;
+
+            // Importante:
+            // Si el GPS estaba apagado y luego se activó, el mapa necesita refrescar
+            // el indicador nativo de ubicación.
+            await ReactivarUbicacionEnMapaAsync();
 
             _reportesCargados = await _apiService.ObtenerReportesCercanosAsync(
                 _miLatitud,
@@ -147,6 +175,16 @@ public partial class RadarPage : ContentPage
             );
 
             return location;
+        }
+        catch (FeatureNotEnabledException)
+        {
+            await DisplayAlertAsync(
+                "GPS desactivado",
+                "Activa la ubicación/GPS del celular y vuelve a presionar Actualizar.",
+                "OK"
+            );
+
+            return null;
         }
         catch (Exception ex)
         {

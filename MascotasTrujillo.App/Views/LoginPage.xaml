@@ -25,16 +25,44 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="24">
+    <Grid Padding="24,18,24,18">
 
         <!-- Fondo suave con degradado -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#F8F5FF" Offset="0.0" />
-                <GradientStop Color="#F3EDFF" Offset="0.55" />
-                <GradientStop Color="#FDFBFF" Offset="1.0" />
+                <GradientStop Color="#E8DEF8" Offset="0.0" />
+                <GradientStop Color="#EFE7FB" Offset="0.45" />
+                <GradientStop Color="#F5F1FC" Offset="1.0" />
             </LinearGradientBrush>
         </Grid.Background>
+
+        <!-- Decoración superior -->
+        <Ellipse WidthRequest="260"
+                 HeightRequest="260"
+                 Fill="#8B5CF6"
+                 Opacity="0.14"
+                 HorizontalOptions="Start"
+                 VerticalOptions="Start"
+                 TranslationX="-120"
+                 TranslationY="-110" />
+
+        <Ellipse WidthRequest="220"
+                 HeightRequest="220"
+                 Fill="#F472B6"
+                 Opacity="0.10"
+                 HorizontalOptions="End"
+                 VerticalOptions="Start"
+                 TranslationX="95"
+                 TranslationY="-80" />
+
+        <Ellipse WidthRequest="260"
+                 HeightRequest="260"
+                 Fill="#A855F7"
+                 Opacity="0.09"
+                 HorizontalOptions="End"
+                 VerticalOptions="End"
+                 TranslationX="120"
+                 TranslationY="120" />
 
         <ScrollView VerticalOptions="Center">
             <VerticalStackLayout Spacing="22"
@@ -45,68 +73,101 @@
                                      HorizontalOptions="Center"
                                      Margin="0,8,0,4">
 
-                    <Border HeightRequest="145"
-                            WidthRequest="145"
-                            BackgroundColor="White"
-                            Stroke="#E9DDFF"
-                            StrokeThickness="1"
+                    <Border HeightRequest="155"
+                            WidthRequest="155"
+                            BackgroundColor="#FFFFFF"
+                            Stroke="#FFFFFF"
+                            StrokeThickness="2"
                             Padding="12">
 
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="73" />
+                            <RoundRectangle CornerRadius="78" />
                         </Border.StrokeShape>
 
                         <Border.Shadow>
                             <Shadow Brush="#5B21E6"
-                                    Opacity="0.22"
-                                    Offset="0,8"
-                                    Radius="22" />
+                                    Opacity="0.30"
+                                    Offset="0,10"
+                                    Radius="28" />
                         </Border.Shadow>
 
-                        <Image Source="logo_petguardian.png"
-                               Aspect="AspectFit"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                        <Grid>
+                            <Ellipse Fill="#F3EDFF"
+                                    Opacity="0.75" />
+
+                            <Image Source="logo_petguardian.png"
+                                   Aspect="AspectFit"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Grid>
                     </Border>
 
                     <Label Text="Pet Guardian 365"
-                           FontSize="28"
+                           FontSize="22"
                            FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryDark}"
+                           TextColor="#2B0B98"
                            HorizontalOptions="Center" />
 
-                    <Label Text="Protege y localiza a tu mascota"
-                           FontSize="13"
-                           TextColor="{StaticResource TextMuted}"
+                    <Label Text="Localiza a tu mascota en tiempo real"
+                           FontSize="14"
+                           TextColor="#7A7298"
                            HorizontalOptions="Center" />
                 </VerticalStackLayout>
 
                 <!-- Tarjeta principal -->
-                <Border BackgroundColor="White"
-                        Stroke="{StaticResource CardBorder}"
+                <Border BackgroundColor="#FCFBFF"
                         StrokeThickness="1"
-                        Padding="18"
-                        Margin="0,4,0,0">
+                        Padding="20,22"
+                        Margin="0,8,0,0">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#E9D8FD" Offset="0.0" />
+                            <GradientStop Color="#C084FC" Offset="0.55" />
+                            <GradientStop Color="#A855F7" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="26" />
+                        <RoundRectangle CornerRadius="28" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.13"
-                                Offset="0,8"
-                                Radius="22" />
+                        <Shadow Brush="#6D28D9"
+                                Opacity="0.22"
+                                Offset="0,10"
+                                Radius="26" />
                     </Border.Shadow>
 
-                    <VerticalStackLayout Spacing="14">
+                    <VerticalStackLayout Spacing="16">
+
+                        <VerticalStackLayout Spacing="3"
+                                            Margin="0,0,0,6">
+
+                            <Label Text="Bienvenido de nuevo"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextMain}" />
+
+                            <Label Text="Ingresa para ver tus mascotas, reportes y ubicación GPS."
+                                   FontSize="12"
+                                   TextColor="{StaticResource TextMuted}"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
 
                         <!-- Campo correo -->
-                        <Border Stroke="{StaticResource InputBorder}"
+                        <Border BackgroundColor="#FFFFFF"
                                 StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,0"
-                                HeightRequest="56">
+                                Padding="0"
+                                Margin="0,0,0,2">
+
+                            <Border.Stroke>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#EEE7FF" Offset="0.0" />
+                                    <GradientStop Color="#D8B4FE" Offset="0.55" />
+                                    <GradientStop Color="#C084FC" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Stroke>
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="18" />
@@ -125,6 +186,13 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="15" />
                                     </Border.StrokeShape>
+
+                                    <Border.Shadow>
+                                        <Shadow Brush="#8B5CF6"
+                                                Opacity="0.12"
+                                                Offset="0,4"
+                                                Radius="10" />
+                                    </Border.Shadow>
 
                                     <Label Text="✉"
                                            FontSize="14"
@@ -146,11 +214,18 @@
                         </Border>
 
                         <!-- Campo contraseña -->
-                        <Border Stroke="{StaticResource InputBorder}"
+                        <Border BackgroundColor="#FFFFFF"
                                 StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,0"
-                                HeightRequest="56">
+                                Padding="0"
+                                Margin="0,0,0,2">
+
+                            <Border.Stroke>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#EEE7FF" Offset="0.0" />
+                                    <GradientStop Color="#D8B4FE" Offset="0.55" />
+                                    <GradientStop Color="#C084FC" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Stroke>
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="18" />
@@ -169,6 +244,13 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="15" />
                                     </Border.StrokeShape>
+
+                                    <Border.Shadow>
+                                        <Shadow Brush="#8B5CF6"
+                                                Opacity="0.12"
+                                                Offset="0,4"
+                                                Radius="10" />
+                                    </Border.Shadow>
 
                                     <Label Text="🔒"
                                            FontSize="13"
@@ -215,20 +297,20 @@
 
                         <!-- Botón principal -->
                         <Button x:Name="BtnLogin"
-                                Text="Iniciar sesión"
+                                Text="Entrar a mi cuenta"
                                 Clicked="OnLoginClicked"
-                                BackgroundColor="{StaticResource PrimaryColor}"
+                                BackgroundColor="#5B21E6"
                                 TextColor="White"
                                 FontAttributes="Bold"
                                 FontSize="16"
-                                CornerRadius="18"
-                                HeightRequest="56">
+                                CornerRadius="22"
+                                HeightRequest="58">
 
                             <Button.Shadow>
                                 <Shadow Brush="#5B21E6"
-                                        Opacity="0.28"
-                                        Offset="0,5"
-                                        Radius="12" />
+                                        Opacity="0.38"
+                                        Offset="0,7"
+                                        Radius="16" />
                             </Button.Shadow>
                         </Button>
 
@@ -243,17 +325,16 @@
                 <!-- Registro -->
                 <HorizontalStackLayout HorizontalOptions="Center"
                                        Spacing="5"
-                                       Margin="0,2,0,0">
+                                       Margin="0,8,0,0">
 
                     <Label Text="¿No tienes cuenta?"
-                           FontSize="13"
-                           TextColor="{StaticResource TextMuted}" />
+                           FontSize="14"
+                           TextColor="#7B7694" />
 
                     <Label Text="Crear cuenta"
-                           FontSize="13"
-                           TextColor="{StaticResource PrimaryColor}"
+                           FontSize="14"
+                           TextColor="#5B21E6"
                            FontAttributes="Bold">
-
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnRegistrarseTapped" />
                         </Label.GestureRecognizers>
