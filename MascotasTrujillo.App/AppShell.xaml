@@ -4,41 +4,46 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:MascotasTrujillo.App.Views"
-    Shell.FlyoutBehavior="Disabled"
-    Shell.NavBarIsVisible="False"
-
-    Shell.TabBarBackgroundColor="#FFFFFF"
-    Shell.TabBarTitleColor="#5B21E6"
-    Shell.TabBarUnselectedColor="#94A3B8"
-    Shell.TabBarForegroundColor="#5B21E6"
-
     Shell.BackgroundColor="#FFFFFF"
-    Shell.TitleColor="#1E1B4B">
+    Shell.FlyoutBehavior="Disabled"
+    Shell.ForegroundColor="#5B21E6"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarBackgroundColor="#FFFFFF"
+    Shell.TabBarDisabledColor="#CBD5E1"
+    Shell.TabBarForegroundColor="#5B21E6"
+    Shell.TabBarIsVisible="False"
+    Shell.TabBarTitleColor="#5B21E6"
+    Shell.TabBarUnselectedColor="#64748B"
+    Shell.TitleColor="#1F2340">
 
     <TabBar>
 
-        <Tab Title=" " Icon="icon_radar.png">
-            <ShellContent 
-            Title="Radar"
-            ContentTemplate="{DataTemplate views:RadarPage}" />
+        <Tab
+            Title=" "
+            Icon="icon_radar.png"
+            Route="radar">
+            <ShellContent Title="Radar" ContentTemplate="{DataTemplate views:RadarPage}" />
         </Tab>
 
-        <Tab Title=" " Icon="icon_clipboard.png">
-            <ShellContent 
-            Title="Mis Reportes"
-            ContentTemplate="{DataTemplate views:MisReportesPage}" />
+        <Tab
+            Title=" "
+            Icon="icon_clipboard.png"
+            Route="reportes">
+            <ShellContent Title="Mis Reportes" ContentTemplate="{DataTemplate views:MisReportesPage}" />
         </Tab>
 
-        <Tab Title=" " Icon="icon_paw.png">
-            <ShellContent 
-            Title="Mis Mascotas"
-            ContentTemplate="{DataTemplate views:MisMascotasPage}" />
+        <Tab
+            Title=" "
+            Icon="icon_paw.png"
+            Route="mascotas">
+            <ShellContent Title="Mis Mascotas" ContentTemplate="{DataTemplate views:MisMascotasPage}" />
         </Tab>
 
-        <Tab Title=" " Icon="icon_user.png">
-            <ShellContent 
-            Title="Perfil"
-            ContentTemplate="{DataTemplate views:PerfilPage}" />
+        <Tab
+            Title=" "
+            Icon="icon_user.png"
+            Route="perfil">
+            <ShellContent Title="Perfil" ContentTemplate="{DataTemplate views:PerfilPage}" />
         </Tab>
 
     </TabBar>

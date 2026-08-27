@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage 
+<ContentPage
+    x:Class="MascotasTrujillo.App.Views.DetalleReportePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="MascotasTrujillo.App.Views.DetalleReportePage"
     Title="Detalle del Reporte"
     BackgroundColor="#F5F1FF">
 
@@ -23,328 +23,402 @@
 
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#F8F5FF" Offset="0.0" />
-                <GradientStop Color="#F3EDFF" Offset="0.55" />
-                <GradientStop Color="#FDFBFF" Offset="1.0" />
+                <GradientStop Offset="0.0" Color="#E8DEF8" />
+                <GradientStop Offset="0.45" Color="#EFE7FB" />
+                <GradientStop Offset="1.0" Color="#F5F1FC" />
             </LinearGradientBrush>
         </Grid.Background>
 
         <ScrollView>
-            <VerticalStackLayout Padding="12,12,12,20"
-                                 Spacing="10">
+            <VerticalStackLayout Padding="12,12,12,20" Spacing="10">
 
-                <!-- Encabezado con volver -->
-                <Border BackgroundColor="#FFFFFF"
-                Stroke="{StaticResource CardBorder}"
-                StrokeThickness="1"
-                Padding="12,10">
+                <!--  Encabezado con volver  -->
+                <Border
+                    Padding="12,10"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#E9D8FD" />
+                            <GradientStop Offset="0.55" Color="#C084FC" />
+                            <GradientStop Offset="1.0" Color="#A855F7" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="22" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.10"
-                                Offset="0,4"
-                                Radius="12" />
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.18"
+                            Radius="18"
+                            Offset="0,7" />
                     </Border.Shadow>
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
 
-                    <Grid ColumnDefinitions="Auto,*"
-                        ColumnSpacing="10">
+                        <Button
+                            Grid.Column="0"
+                            Padding="0"
+                            BackgroundColor="#F3E8FF"
+                            BorderColor="#D8B4FE"
+                            BorderWidth="1"
+                            Clicked="OnVolverClicked"
+                            CornerRadius="21"
+                            FontAttributes="Bold"
+                            FontSize="22"
+                            HeightRequest="42"
+                            Text="←"
+                            TextColor="{StaticResource PrimaryColor}"
+                            VerticalOptions="Center"
+                            WidthRequest="42" />
 
-                        <Button Grid.Column="0"
-                                Text="←"
-                                Clicked="OnVolverClicked"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                TextColor="{StaticResource PrimaryColor}"
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="1"
+                            VerticalOptions="Center">
+
+                            <Label
                                 FontAttributes="Bold"
-                                FontSize="22"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                CornerRadius="21"
-                                Padding="0"
-                                VerticalOptions="Center" />
+                                FontSize="18"
+                                Text="Detalle del reporte"
+                                TextColor="{StaticResource TextMain}" />
 
-                        <VerticalStackLayout Grid.Column="1"
-                                     Spacing="1"
-                                     VerticalOptions="Center">
-
-                            <Label Text="Detalle del reporte"
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource TextMain}" />
-
-                            <Label Text="Información y acciones disponibles"
-                                   FontSize="12"
-                                   TextColor="{StaticResource TextMuted}" />
+                            <Label
+                                FontSize="12"
+                                Text="Información y acciones disponibles"
+                                TextColor="{StaticResource TextMuted}" />
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
 
-                <!-- Imagen principal -->
-                <Border BackgroundColor="#F8F5FF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        HeightRequest="280">
+                <!--  Imagen principal  -->
+                <Border
+                    BackgroundColor="#FCFBFF"
+                    HeightRequest="290"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#E9D8FD" />
+                            <GradientStop Offset="0.55" Color="#C084FC" />
+                            <GradientStop Offset="1.0" Color="#A855F7" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="24" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.12"
-                                Offset="0,5"
-                                Radius="14" />
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.18"
+                            Radius="16"
+                            Offset="0,6" />
                     </Border.Shadow>
 
                     <Grid BackgroundColor="#F8F5FF">
 
-                        <Image x:Name="FotoReporteImage"
-                               Source="{Binding FotoMostrar}"
-                               Aspect="AspectFit"
-                               HorizontalOptions="Fill"
-                               VerticalOptions="Fill"
-                               BackgroundColor="#F8F5FF" />
+                        <Image
+                            x:Name="FotoReporteImage"
+                            Aspect="AspectFit"
+                            BackgroundColor="#F8F5FF"
+                            HorizontalOptions="Fill"
+                            Source="{Binding FotoMostrar}"
+                            VerticalOptions="Fill" />
 
-                        <!-- Etiqueta del tipo de reporte -->
-                        <Border BackgroundColor="{Binding TipoReporteFondo}"
-                                Stroke="Transparent"
-                                Padding="10,5"
-                                HorizontalOptions="Start"
-                                VerticalOptions="Start"
-                                Margin="12">
+                        <!--  Etiqueta del tipo de reporte  -->
+                        <Border
+                            Margin="12"
+                            Padding="10,5"
+                            BackgroundColor="{Binding TipoReporteFondo}"
+                            HorizontalOptions="Start"
+                            Stroke="Transparent"
+                            VerticalOptions="Start">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="14" />
                             </Border.StrokeShape>
 
-                            <Label Text="{Binding TipoReporte}"
-                                   FontSize="12"
-                                   FontAttributes="Bold"
-                                   TextColor="{Binding TipoReporteTexto}" />
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                Text="{Binding TipoReporte}"
+                                TextColor="{Binding TipoReporteTexto}" />
                         </Border>
 
                     </Grid>
                 </Border>
 
-                <!-- Información principal -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="16">
+                <!--  Información principal  -->
+                <Border
+                    Padding="16"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#E9D8FD" />
+                            <GradientStop Offset="0.65" Color="#D8B4FE" />
+                            <GradientStop Offset="1.0" Color="#C084FC" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="24" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.10"
-                                Offset="0,4"
-                                Radius="12" />
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.14"
+                            Radius="14"
+                            Offset="0,5" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="10">
 
-                        <Label Text="{Binding Titulo}"
-                               FontSize="22"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource TextMain}"
-                               LineBreakMode="WordWrap" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="22"
+                            LineBreakMode="WordWrap"
+                            Text="{Binding Titulo}"
+                            TextColor="{StaticResource TextMain}" />
 
-                        <Label Text="{Binding Descripcion}"
-                               FontSize="14"
-                               TextColor="{StaticResource TextMuted}"
-                               LineBreakMode="WordWrap" />
+                        <Label
+                            FontSize="14"
+                            LineBreakMode="WordWrap"
+                            Text="{Binding Descripcion}"
+                            TextColor="{StaticResource TextMuted}" />
 
-                        <Grid ColumnDefinitions="Auto,*"
-                              RowDefinitions="Auto,Auto,Auto"
-                              ColumnSpacing="10"
-                              RowSpacing="8"
-                              Margin="0,4,0,0">
+                        <Grid
+                            Margin="0,4,0,0"
+                            ColumnDefinitions="Auto,*"
+                            ColumnSpacing="10"
+                            RowDefinitions="Auto,Auto,Auto"
+                            RowSpacing="8">
 
-                            <Label Grid.Row="0"
-                                   Grid.Column="0"
-                                   Text="📍"
-                                   FontSize="15" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="📍" />
 
-                            <Label x:Name="LblDistancia"
-                                   Grid.Row="0"
-                                   Grid.Column="1"
-                                   FontSize="13"
-                                   TextColor="{StaticResource PrimaryColor}"
-                                   FontAttributes="Bold" />
+                            <Label
+                                x:Name="LblDistancia"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                FontAttributes="Bold"
+                                FontSize="13"
+                                TextColor="{StaticResource PrimaryColor}" />
 
-                            <Label Grid.Row="1"
-                                   Grid.Column="0"
-                                   Text="📅"
-                                   FontSize="15" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="📅" />
 
-                            <Label Text="{Binding FechaReporteTexto}"
-                                   Grid.Row="1"
-                                   Grid.Column="1"
-                                   FontSize="13"
-                                   TextColor="{StaticResource TextMuted}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FontSize="13"
+                                Text="{Binding FechaReporteTexto}"
+                                TextColor="{StaticResource TextMuted}" />
 
-                            <Label Grid.Row="2"
-                                   Grid.Column="0"
-                                   Text="📌"
-                                   FontSize="15" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="📌" />
 
-                            <Border Grid.Row="2"
-                                    Grid.Column="1"
-                                    BackgroundColor="{Binding EstadoReporteFondo}"
-                                    Stroke="Transparent"
-                                    Padding="10,4"
-                                    HorizontalOptions="Start">
+                            <Border
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Padding="10,4"
+                                BackgroundColor="{Binding EstadoReporteFondo}"
+                                HorizontalOptions="Start"
+                                Stroke="Transparent">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
 
-                                <Label Text="{Binding EstadoReporte}"
-                                       FontSize="12"
-                                       TextColor="{Binding EstadoReporteTexto}"
-                                       FontAttributes="Bold" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    Text="{Binding EstadoReporte}"
+                                    TextColor="{Binding EstadoReporteTexto}" />
                             </Border>
 
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Datos referenciales de la mascota -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="16">
+                <!--  Datos referenciales de la mascota  -->
+                <Border
+                    Padding="16"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#E9D8FD" />
+                            <GradientStop Offset="0.65" Color="#D8B4FE" />
+                            <GradientStop Offset="1.0" Color="#C084FC" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="24" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.14"
+                            Radius="14"
+                            Offset="0,5" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="12">
 
-                        <Label Text="Mascota"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource TextMain}" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Text="Mascota"
+                            TextColor="{StaticResource TextMain}" />
 
-                        <Grid ColumnDefinitions="*,*"
-                              RowDefinitions="Auto,Auto,Auto"
-                              ColumnSpacing="12"
-                              RowSpacing="10">
+                        <Grid
+                            ColumnDefinitions="*,*"
+                            ColumnSpacing="12"
+                            RowDefinitions="Auto,Auto,Auto"
+                            RowSpacing="10">
 
-                            <Border Grid.Row="0"
-                                    Grid.Column="0"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Stroke="Transparent"
-                                    Padding="10">
+                            <Border
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Padding="10"
+                                BackgroundColor="#FFFFFF"
+                                Stroke="#EEE7FF"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
                                 </Border.StrokeShape>
 
                                 <VerticalStackLayout Spacing="2">
-                                    <Label Text="Nombre"
-                                           FontSize="11"
-                                           TextColor="#94A3B8" />
-                                    <Label x:Name="LblNombreMascota"
-                                           FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource TextMain}" />
+                                    <Label
+                                        FontSize="11"
+                                        Text="Nombre"
+                                        TextColor="#7A7298" />
+                                    <Label
+                                        x:Name="LblNombreMascota"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        TextColor="{StaticResource TextMain}" />
                                 </VerticalStackLayout>
                             </Border>
 
-                            <Border Grid.Row="0"
-                                    Grid.Column="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Stroke="Transparent"
-                                    Padding="10">
+                            <Border
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Padding="10"
+                                BackgroundColor="#FFFFFF"
+                                Stroke="#EEE7FF"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
                                 </Border.StrokeShape>
 
                                 <VerticalStackLayout Spacing="2">
-                                    <Label Text="Especie"
-                                           FontSize="11"
-                                           TextColor="#94A3B8" />
-                                    <Label x:Name="LblEspecie"
-                                           FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource TextMain}" />
+                                    <Label
+                                        FontSize="11"
+                                        Text="Especie"
+                                        TextColor="#7A7298" />
+                                    <Label
+                                        x:Name="LblEspecie"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        TextColor="{StaticResource TextMain}" />
                                 </VerticalStackLayout>
                             </Border>
 
-                            <Border Grid.Row="1"
-                                    Grid.Column="0"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Stroke="Transparent"
-                                    Padding="10">
+                            <Border
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Padding="10"
+                                BackgroundColor="#FFFFFF"
+                                Stroke="#EEE7FF"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
                                 </Border.StrokeShape>
 
                                 <VerticalStackLayout Spacing="2">
-                                    <Label Text="Raza"
-                                           FontSize="11"
-                                           TextColor="#94A3B8" />
-                                    <Label x:Name="LblRaza"
-                                           FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource TextMain}" />
+                                    <Label
+                                        FontSize="11"
+                                        Text="Raza"
+                                        TextColor="#7A7298" />
+                                    <Label
+                                        x:Name="LblRaza"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        TextColor="{StaticResource TextMain}" />
                                 </VerticalStackLayout>
                             </Border>
 
-                            <Border Grid.Row="1"
-                                    Grid.Column="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Stroke="Transparent"
-                                    Padding="10">
+                            <Border
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Padding="10"
+                                BackgroundColor="#FFFFFF"
+                                Stroke="#EEE7FF"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
                                 </Border.StrokeShape>
 
                                 <VerticalStackLayout Spacing="2">
-                                    <Label Text="Color"
-                                           FontSize="11"
-                                           TextColor="#94A3B8" />
-                                    <Label x:Name="LblColor"
-                                           FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource TextMain}" />
+                                    <Label
+                                        FontSize="11"
+                                        Text="Color"
+                                        TextColor="#7A7298" />
+                                    <Label
+                                        x:Name="LblColor"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        TextColor="{StaticResource TextMain}" />
                                 </VerticalStackLayout>
                             </Border>
 
-                            <Border Grid.Row="2"
-                                    Grid.Column="0"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Stroke="Transparent"
-                                    Padding="10">
+                            <Border
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Padding="10"
+                                BackgroundColor="#FFFFFF"
+                                Stroke="#EEE7FF"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
                                 </Border.StrokeShape>
 
                                 <VerticalStackLayout Spacing="2">
-                                    <Label Text="Sexo"
-                                           FontSize="11"
-                                           TextColor="#94A3B8" />
-                                    <Label x:Name="LblSexo"
-                                           FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource TextMain}" />
+                                    <Label
+                                        FontSize="11"
+                                        Text="Sexo"
+                                        TextColor="#7A7298" />
+                                    <Label
+                                        x:Name="LblSexo"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        TextColor="{StaticResource TextMain}" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -352,144 +426,174 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Información de salud -->
-                <Border x:Name="SeccionSalud"
-                        BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="16"
-                        IsVisible="False">
+                <!--  Información de salud  -->
+                <Border
+                    x:Name="SeccionSalud"
+                    Padding="16"
+                    BackgroundColor="#FCFBFF"
+                    IsVisible="False"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#E9D8FD" />
+                            <GradientStop Offset="0.65" Color="#D8B4FE" />
+                            <GradientStop Offset="1.0" Color="#C084FC" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="24" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.14"
+                            Radius="14"
+                            Offset="0,5" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="12">
 
-                        <Grid ColumnDefinitions="Auto,*"
-                              ColumnSpacing="10">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
 
-                            <Border BackgroundColor="#FEF3C7"
-                                    Stroke="Transparent"
-                                    WidthRequest="38"
-                                    HeightRequest="38"
-                                    VerticalOptions="Center">
+                            <Border
+                                BackgroundColor="#FFF7ED"
+                                HeightRequest="38"
+                                Stroke="#FED7AA"
+                                StrokeThickness="1"
+                                VerticalOptions="Center"
+                                WidthRequest="38">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="19" />
                                 </Border.StrokeShape>
 
-                                <Label Text="🩺"
-                                       FontSize="19"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center" />
+                                <Label
+                                    FontSize="19"
+                                    HorizontalOptions="Center"
+                                    Text="🩺"
+                                    VerticalOptions="Center" />
                             </Border>
 
-                            <VerticalStackLayout Grid.Column="1"
-                                                 Spacing="1"
-                                                 VerticalOptions="Center">
+                            <VerticalStackLayout
+                                Grid.Column="1"
+                                Spacing="1"
+                                VerticalOptions="Center">
 
-                                <Label Text="Salud"
-                                       FontSize="18"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    Text="Salud"
+                                    TextColor="{StaticResource TextMain}" />
 
-                                <Label Text="Cuidados importantes"
-                                       FontSize="12"
-                                       TextColor="{StaticResource TextMuted}" />
+                                <Label
+                                    FontSize="12"
+                                    Text="Cuidados importantes"
+                                    TextColor="{StaticResource TextMuted}" />
                             </VerticalStackLayout>
                         </Grid>
 
-                        <Grid ColumnDefinitions="Auto,*"
-                              RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-                              ColumnSpacing="10"
-                              RowSpacing="10">
+                        <Grid
+                            ColumnDefinitions="Auto,*"
+                            ColumnSpacing="10"
+                            RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                            RowSpacing="10">
 
-                            <Label Grid.Row="0"
-                                   Grid.Column="0"
-                                   Text="🩺"
-                                   FontSize="15" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="🩺" />
 
                             <VerticalStackLayout Grid.Row="0" Grid.Column="1">
-                                <Label Text="Enfermedades"
-                                       FontSize="11"
-                                       TextColor="#94A3B8" />
-                                <Label x:Name="LblEnfermedades"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}"
-                                       LineBreakMode="WordWrap" />
+                                <Label
+                                    FontSize="11"
+                                    Text="Enfermedades"
+                                    TextColor="#7A7298" />
+                                <Label
+                                    x:Name="LblEnfermedades"
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    LineBreakMode="WordWrap"
+                                    TextColor="{StaticResource TextMain}" />
                             </VerticalStackLayout>
 
-                            <Label Grid.Row="1"
-                                   Grid.Column="0"
-                                   Text="♿"
-                                   FontSize="15" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="♿" />
 
                             <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-                                <Label Text="Discapacidades"
-                                       FontSize="11"
-                                       TextColor="#94A3B8" />
-                                <Label x:Name="LblDiscapacidades"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}"
-                                       LineBreakMode="WordWrap" />
+                                <Label
+                                    FontSize="11"
+                                    Text="Discapacidades"
+                                    TextColor="#7A7298" />
+                                <Label
+                                    x:Name="LblDiscapacidades"
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    LineBreakMode="WordWrap"
+                                    TextColor="{StaticResource TextMain}" />
                             </VerticalStackLayout>
 
-                            <Label Grid.Row="2"
-                                   Grid.Column="0"
-                                   Text="💊"
-                                   FontSize="15" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="💊" />
 
                             <VerticalStackLayout Grid.Row="2" Grid.Column="1">
-                                <Label Text="Tratamientos"
-                                       FontSize="11"
-                                       TextColor="#94A3B8" />
-                                <Label x:Name="LblTratamientos"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}"
-                                       LineBreakMode="WordWrap" />
+                                <Label
+                                    FontSize="11"
+                                    Text="Tratamientos"
+                                    TextColor="#7A7298" />
+                                <Label
+                                    x:Name="LblTratamientos"
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    LineBreakMode="WordWrap"
+                                    TextColor="{StaticResource TextMain}" />
                             </VerticalStackLayout>
 
-                            <Label Grid.Row="3"
-                                   Grid.Column="0"
-                                   Text="⚠️"
-                                   FontSize="15" />
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="⚠️" />
 
                             <VerticalStackLayout Grid.Row="3" Grid.Column="1">
-                                <Label Text="Necesidades especiales"
-                                       FontSize="11"
-                                       TextColor="#94A3B8" />
-                                <Label x:Name="LblNecesidadesEspeciales"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}"
-                                       LineBreakMode="WordWrap" />
+                                <Label
+                                    FontSize="11"
+                                    Text="Necesidades especiales"
+                                    TextColor="#7A7298" />
+                                <Label
+                                    x:Name="LblNecesidadesEspeciales"
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    LineBreakMode="WordWrap"
+                                    TextColor="{StaticResource TextMain}" />
                             </VerticalStackLayout>
 
-                            <Label Grid.Row="4"
-                                   Grid.Column="0"
-                                   Text="📝"
-                                   FontSize="15" />
+                            <Label
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="📝" />
 
                             <VerticalStackLayout Grid.Row="4" Grid.Column="1">
-                                <Label Text="Observaciones"
-                                       FontSize="11"
-                                       TextColor="#94A3B8" />
-                                <Label x:Name="LblObservacionesSalud"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}"
-                                       LineBreakMode="WordWrap" />
+                                <Label
+                                    FontSize="11"
+                                    Text="Observaciones"
+                                    TextColor="#7A7298" />
+                                <Label
+                                    x:Name="LblObservacionesSalud"
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    LineBreakMode="WordWrap"
+                                    TextColor="{StaticResource TextMain}" />
                             </VerticalStackLayout>
 
                         </Grid>
@@ -497,157 +601,189 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Avistamientos registrados -->
-                <Border x:Name="SeccionAvistamientos"
-                        BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="16">
+                <!--  Avistamientos registrados  -->
+                <Border
+                    x:Name="SeccionAvistamientos"
+                    Padding="16"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#E9D8FD" />
+                            <GradientStop Offset="0.65" Color="#D8B4FE" />
+                            <GradientStop Offset="1.0" Color="#C084FC" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="24" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.14"
+                            Radius="14"
+                            Offset="0,5" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="12">
 
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Spacing="1">
-                                <Label Text="Avistamientos"
-                                       FontSize="18"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    Text="Avistamientos"
+                                    TextColor="{StaticResource TextMain}" />
 
-                                <Label x:Name="LblAvistamientosResumen"
-                                       Text="Sin avistamientos registrados."
-                                       FontSize="12"
-                                       TextColor="{StaticResource TextMuted}"
-                                       LineBreakMode="TailTruncation" />
+                                <Label
+                                    x:Name="LblAvistamientosResumen"
+                                    FontSize="12"
+                                    LineBreakMode="TailTruncation"
+                                    Text="Sin avistamientos registrados."
+                                    TextColor="{StaticResource TextMuted}" />
                             </VerticalStackLayout>
 
-                            <Button Grid.Column="1"
-                                    Text="↻"
-                                    Clicked="OnActualizarAvistamientosClicked"
-                                    BackgroundColor="{StaticResource PrimarySoft}"
-                                    TextColor="{StaticResource PrimaryColor}"
-                                    BorderColor="{StaticResource CardBorder}"
-                                    BorderWidth="1"
-                                    CornerRadius="14"
-                                    FontAttributes="Bold"
-                                    HeightRequest="38"
-                                    WidthRequest="42"
-                                    Padding="0"
-                                    VerticalOptions="Center" />
+                            <Button
+                                Grid.Column="1"
+                                Padding="0"
+                                BackgroundColor="{StaticResource PrimarySoft}"
+                                BorderColor="{StaticResource CardBorder}"
+                                BorderWidth="1"
+                                Clicked="OnActualizarAvistamientosClicked"
+                                CornerRadius="14"
+                                FontAttributes="Bold"
+                                HeightRequest="38"
+                                Text="↻"
+                                TextColor="{StaticResource PrimaryColor}"
+                                VerticalOptions="Center"
+                                WidthRequest="42" />
                         </Grid>
 
-                        <CollectionView x:Name="AvistamientosList"
-                                        SelectionMode="None"
-                                        HeightRequest="210">
+                        <CollectionView
+                            x:Name="AvistamientosList"
+                            HeightRequest="210"
+                            SelectionMode="None">
 
                             <CollectionView.EmptyView>
-                                <VerticalStackLayout Padding="20"
-                                                     Spacing="8"
-                                                     HorizontalOptions="Center"
-                                                     VerticalOptions="Center">
+                                <VerticalStackLayout
+                                    Padding="20"
+                                    HorizontalOptions="Center"
+                                    Spacing="8"
+                                    VerticalOptions="Center">
 
-                                    <Label Text="👀"
-                                           FontSize="34"
-                                           HorizontalOptions="Center" />
+                                    <Label
+                                        FontSize="34"
+                                        HorizontalOptions="Center"
+                                        Text="👀" />
 
-                                    <Label Text="Sin avistamientos"
-                                           FontSize="15"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource TextMain}"
-                                           HorizontalOptions="Center" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="15"
+                                        HorizontalOptions="Center"
+                                        Text="Sin avistamientos"
+                                        TextColor="{StaticResource TextMain}" />
 
-                                    <Label Text="Aparecerán aquí cuando alguien reporte una pista."
-                                           FontSize="12"
-                                           TextColor="{StaticResource TextMuted}"
-                                           HorizontalTextAlignment="Center" />
+                                    <Label
+                                        FontSize="12"
+                                        HorizontalTextAlignment="Center"
+                                        Text="Aparecerán aquí cuando alguien reporte una pista."
+                                        TextColor="{StaticResource TextMuted}" />
                                 </VerticalStackLayout>
                             </CollectionView.EmptyView>
 
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
 
-                                    <Border Margin="0,0,0,10"
-                                            Padding="10"
-                                            BackgroundColor="{StaticResource InputBackground}"
-                                            Stroke="{StaticResource CardBorder}"
-                                            StrokeThickness="1">
+                                    <Border
+                                        Margin="0,0,0,12"
+                                        Padding="10"
+                                        BackgroundColor="#FFFFFF"
+                                        Stroke="#E1D6FF"
+                                        StrokeThickness="1">
 
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnAvistamientoTapped"
-                                                                  CommandParameter="{Binding .}" />
+                                            <TapGestureRecognizer CommandParameter="{Binding .}" Tapped="OnAvistamientoTapped" />
                                         </Border.GestureRecognizers>
 
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="18" />
                                         </Border.StrokeShape>
 
-                                        <Grid ColumnDefinitions="70,*"
-                                              ColumnSpacing="10">
+                                        <Border.Shadow>
+                                            <Shadow
+                                                Brush="#5B21E6"
+                                                Opacity="0.08"
+                                                Radius="8"
+                                                Offset="0,3" />
+                                        </Border.Shadow>
 
-                                            <Border Grid.Column="0"
-                                                    BackgroundColor="#E2E8F0"
-                                                    Stroke="Transparent"
-                                                    HeightRequest="64"
-                                                    WidthRequest="64"
-                                                    VerticalOptions="Center">
+                                        <Grid ColumnDefinitions="70,*" ColumnSpacing="10">
+
+                                            <Border
+                                                Grid.Column="0"
+                                                BackgroundColor="#E2E8F0"
+                                                HeightRequest="68"
+                                                Stroke="Transparent"
+                                                VerticalOptions="Center"
+                                                WidthRequest="68">
 
                                                 <Border.StrokeShape>
                                                     <RoundRectangle CornerRadius="14" />
                                                 </Border.StrokeShape>
 
-                                                <Image Source="{Binding FotoMostrar}"
-                                                       Aspect="AspectFill"
-                                                       HeightRequest="64"
-                                                       WidthRequest="64" />
+                                                <Image
+                                                    Aspect="AspectFill"
+                                                    HeightRequest="68"
+                                                    Source="{Binding FotoMostrar}"
+                                                    WidthRequest="68" />
                                             </Border>
 
-                                            <VerticalStackLayout Grid.Column="1"
-                                                                 Spacing="4"
-                                                                 VerticalOptions="Center">
+                                            <VerticalStackLayout
+                                                Grid.Column="1"
+                                                Spacing="4"
+                                                VerticalOptions="Center">
 
-                                                <Label Text="{Binding Descripcion}"
-                                                       FontSize="13"
-                                                       FontAttributes="Bold"
-                                                       TextColor="{StaticResource TextMain}"
-                                                       LineBreakMode="TailTruncation"
-                                                       MaxLines="2" />
+                                                <Label
+                                                    FontAttributes="Bold"
+                                                    FontSize="13"
+                                                    LineBreakMode="TailTruncation"
+                                                    MaxLines="2"
+                                                    Text="{Binding Descripcion}"
+                                                    TextColor="{StaticResource TextMain}" />
 
-                                                <Label Text="{Binding ResumenUbicacion}"
-                                                       FontSize="12"
-                                                       TextColor="{StaticResource TextMuted}"
-                                                       LineBreakMode="TailTruncation"
-                                                       MaxLines="1" />
+                                                <Label
+                                                    FontSize="12"
+                                                    LineBreakMode="TailTruncation"
+                                                    MaxLines="1"
+                                                    Text="{Binding ResumenUbicacion}"
+                                                    TextColor="{StaticResource TextMuted}" />
 
                                                 <Grid ColumnDefinitions="*,Auto">
-                                                    <Label Text="{Binding FechaResumen}"
-                                                           FontSize="11"
-                                                           TextColor="#94A3B8"
-                                                           LineBreakMode="TailTruncation" />
+                                                    <Label
+                                                        FontSize="11"
+                                                        LineBreakMode="TailTruncation"
+                                                        Text="{Binding FechaResumen}"
+                                                        TextColor="#94A3B8" />
 
-                                                    <Border Grid.Column="1"
-                                                            BackgroundColor="{Binding DetalleChipFondo}"
-                                                            Stroke="Transparent"
-                                                            Padding="7,3"
-                                                            HorizontalOptions="End">
+                                                    <Border
+                                                        Grid.Column="1"
+                                                        Padding="7,3"
+                                                        BackgroundColor="{Binding DetalleChipFondo}"
+                                                        HorizontalOptions="End"
+                                                        Stroke="Transparent">
 
                                                         <Border.StrokeShape>
                                                             <RoundRectangle CornerRadius="10" />
                                                         </Border.StrokeShape>
 
-                                                        <Label Text="{Binding DetalleChipTexto}"
-                                                               FontSize="10"
-                                                               FontAttributes="Bold"
-                                                               TextColor="{Binding DetalleChipColor}" />
+                                                        <Label
+                                                            FontAttributes="Bold"
+                                                            FontSize="10"
+                                                            Text="{Binding DetalleChipTexto}"
+                                                            TextColor="{Binding DetalleChipColor}" />
                                                     </Border>
                                                 </Grid>
 
@@ -662,72 +798,105 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Acciones -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="16">
+                <!--  Acciones  -->
+                <Border
+                    Padding="16"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#E9D8FD" />
+                            <GradientStop Offset="0.65" Color="#D8B4FE" />
+                            <GradientStop Offset="1.0" Color="#C084FC" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="24" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.14"
+                            Radius="14"
+                            Offset="0,5" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="10">
 
-                        <Label Text="Acciones"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource TextMain}" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Text="Acciones"
+                            TextColor="{StaticResource TextMain}" />
 
-                        <Button Text="📍 Ver ubicación"
-                                Clicked="OnVerUbicacionClicked"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                TextColor="{StaticResource PrimaryDark}"
-                                BorderColor="{StaticResource CardBorder}"
-                                BorderWidth="1"
-                                FontAttributes="Bold"
-                                CornerRadius="16"
-                                HeightRequest="46" />
+                        <Button
+                            BackgroundColor="#F3E8FF"
+                            BorderColor="#C084FC"
+                            BorderWidth="1"
+                            Clicked="OnVerUbicacionClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            HeightRequest="46"
+                            Text="📍 Ver ubicación"
+                            TextColor="{StaticResource PrimaryColor}" />
 
-                        <Button x:Name="BtnRegistrarAvistamiento"
-                                Text="👀 Registrar avistamiento"
-                                Clicked="OnRegistrarAvistamientoClicked"
-                                BackgroundColor="#0F766E"
-                                TextColor="White"
-                                FontAttributes="Bold"
-                                CornerRadius="16"
-                                HeightRequest="46" />
+                        <Button
+                            x:Name="BtnRegistrarAvistamiento"
+                            BackgroundColor="#0F766E"
+                            Clicked="OnRegistrarAvistamientoClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            HeightRequest="46"
+                            Text="👀 Registrar avistamiento"
+                            TextColor="White">
 
-                        <Label x:Name="LblAvistamientoNoDisponible"
-                               Text="Acción no disponible para este reporte."
-                               FontSize="12"
-                               TextColor="{StaticResource TextMuted}"
-                               HorizontalTextAlignment="Center"
-                               IsVisible="False" />
+                            <Button.Shadow>
+                                <Shadow
+                                    Brush="#0F766E"
+                                    Opacity="0.22"
+                                    Radius="10"
+                                    Offset="0,4" />
+                            </Button.Shadow>
+                        </Button>
 
-                        <Button x:Name="BtnWhatsApp"
-                                Text="💬 Contactar por WhatsApp"
-                                Clicked="OnWhatsAppClicked"
-                                BackgroundColor="#22C55E"
-                                TextColor="White"
-                                FontAttributes="Bold"
-                                CornerRadius="16"
-                                HeightRequest="46" />
+                        <Label
+                            x:Name="LblAvistamientoNoDisponible"
+                            FontSize="12"
+                            HorizontalTextAlignment="Center"
+                            IsVisible="False"
+                            Text="Acción no disponible para este reporte."
+                            TextColor="{StaticResource TextMuted}" />
 
-                        <Label x:Name="LblReportePropio"
-                               Text="Este reporte fue creado por ti."
-                               FontSize="12"
-                               TextColor="{StaticResource TextMuted}"
-                               HorizontalTextAlignment="Center"
-                               LineBreakMode="WordWrap"
-                               IsVisible="False" />
+                        <Button
+                            x:Name="BtnWhatsApp"
+                            BackgroundColor="#22C55E"
+                            Clicked="OnWhatsAppClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            HeightRequest="46"
+                            Text="💬 Contactar por WhatsApp"
+                            TextColor="White">
+
+                            <Button.Shadow>
+                                <Shadow
+                                    Brush="#22C55E"
+                                    Opacity="0.22"
+                                    Radius="10"
+                                    Offset="0,4" />
+                            </Button.Shadow>
+                        </Button>
+
+                        <Label
+                            x:Name="LblReportePropio"
+                            FontSize="12"
+                            HorizontalTextAlignment="Center"
+                            IsVisible="False"
+                            LineBreakMode="WordWrap"
+                            Text="Este reporte fue creado por ti."
+                            TextColor="{StaticResource TextMuted}" />
 
                     </VerticalStackLayout>
                 </Border>

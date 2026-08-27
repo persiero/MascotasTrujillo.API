@@ -158,7 +158,8 @@
                         <!-- Campo correo -->
                         <Border BackgroundColor="#FFFFFF"
                                 StrokeThickness="1"
-                                Padding="0"
+                                Padding="12,0"
+                                HeightRequest="56"
                                 Margin="0,0,0,2">
 
                             <Border.Stroke>
@@ -173,38 +174,41 @@
                                 <RoundRectangle CornerRadius="18" />
                             </Border.StrokeShape>
 
+                            <Border.Shadow>
+                                <Shadow Brush="#8B5CF6"
+                                        Opacity="0.10"
+                                        Offset="0,4"
+                                        Radius="10" />
+                            </Border.Shadow>
+
                             <Grid ColumnDefinitions="Auto,*"
-                                  ColumnSpacing="10"
+                                  ColumnSpacing="12"
                                   VerticalOptions="Center">
 
-                                <Border WidthRequest="30"
-                                        HeightRequest="30"
-                                        BackgroundColor="{StaticResource PrimarySoft}"
-                                        Stroke="Transparent"
+                                <Border WidthRequest="34"
+                                        HeightRequest="34"
+                                        BackgroundColor="#F3E8FF"
+                                        Stroke="#E9D5FF"
+                                        StrokeThickness="1"
                                         VerticalOptions="Center">
 
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="15" />
+                                        <RoundRectangle CornerRadius="17" />
                                     </Border.StrokeShape>
 
-                                    <Border.Shadow>
-                                        <Shadow Brush="#8B5CF6"
-                                                Opacity="0.12"
-                                                Offset="0,4"
-                                                Radius="10" />
-                                    </Border.Shadow>
-
                                     <Label Text="✉"
-                                           FontSize="14"
-                                           TextColor="{StaticResource PrimaryColor}"
+                                           FontSize="17"
+                                           TextColor="#6D28D9"
                                            HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                           VerticalOptions="Center"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center" />
                                 </Border>
 
                                 <Entry x:Name="EmailEntry"
                                        Grid.Column="1"
                                        Placeholder="Correo electrónico"
-                                       PlaceholderColor="#8C84A6"
+                                       PlaceholderColor="#7B728F"
                                        Keyboard="Email"
                                        ReturnType="Next"
                                        TextColor="{StaticResource TextMain}"
@@ -216,7 +220,8 @@
                         <!-- Campo contraseña -->
                         <Border BackgroundColor="#FFFFFF"
                                 StrokeThickness="1"
-                                Padding="0"
+                                Padding="12,0"
+                                HeightRequest="56"
                                 Margin="0,0,0,2">
 
                             <Border.Stroke>
@@ -231,38 +236,41 @@
                                 <RoundRectangle CornerRadius="18" />
                             </Border.StrokeShape>
 
+                            <Border.Shadow>
+                                <Shadow Brush="#8B5CF6"
+                                        Opacity="0.10"
+                                        Offset="0,4"
+                                        Radius="10" />
+                            </Border.Shadow>
+
                             <Grid ColumnDefinitions="Auto,*,Auto"
-                                  ColumnSpacing="10"
+                                  ColumnSpacing="12"
                                   VerticalOptions="Center">
 
-                                <Border WidthRequest="30"
-                                        HeightRequest="30"
-                                        BackgroundColor="{StaticResource PrimarySoft}"
-                                        Stroke="Transparent"
+                                <Border WidthRequest="34"
+                                        HeightRequest="34"
+                                        BackgroundColor="#F3E8FF"
+                                        Stroke="#E9D5FF"
+                                        StrokeThickness="1"
                                         VerticalOptions="Center">
 
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="15" />
+                                        <RoundRectangle CornerRadius="17" />
                                     </Border.StrokeShape>
 
-                                    <Border.Shadow>
-                                        <Shadow Brush="#8B5CF6"
-                                                Opacity="0.12"
-                                                Offset="0,4"
-                                                Radius="10" />
-                                    </Border.Shadow>
-
                                     <Label Text="🔒"
-                                           FontSize="13"
-                                           TextColor="{StaticResource PrimaryColor}"
+                                           FontSize="15"
+                                           TextColor="#6D28D9"
                                            HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                           VerticalOptions="Center"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center" />
                                 </Border>
 
                                 <Entry x:Name="PasswordEntry"
                                        Grid.Column="1"
                                        Placeholder="Contraseña"
-                                       PlaceholderColor="#8C84A6"
+                                       PlaceholderColor="#7B728F"
                                        IsPassword="True"
                                        ReturnType="Go"
                                        Completed="OnLoginClicked"
@@ -273,12 +281,14 @@
                                         Grid.Column="2"
                                         Text="👁"
                                         Clicked="OnTogglePasswordClicked"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMuted}"
-                                        FontSize="15"
+                                        BackgroundColor="#F3E8FF"
+                                        TextColor="#6D28D9"
+                                        FontSize="14"
                                         Padding="0"
                                         WidthRequest="34"
-                                        HeightRequest="34" />
+                                        HeightRequest="34"
+                                        CornerRadius="17"
+                                        VerticalOptions="Center" />
                             </Grid>
                         </Border>
 
