@@ -13,12 +13,24 @@
         <ResourceDictionary>
             <Color x:Key="PrimaryColor">#5B21E6</Color>
             <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimaryDeep">#4C1D95</Color>
             <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="PrimarySoft2">#F3E8FF</Color>
+
             <Color x:Key="AccentPink">#FF4FB3</Color>
+            <Color x:Key="AccentPinkSoft">#FDF2F8</Color>
+            <Color x:Key="AccentPinkBorder">#F9A8D4</Color>
+            <Color x:Key="AccentPinkText">#DB2777</Color>
+
             <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextTitle">#1E1B4B</Color>
             <Color x:Key="TextMuted">#64748B</Color>
-            <Color x:Key="CardBorder">#E1D6FF</Color>
-            <Color x:Key="InputBorder">#D8CCFF</Color>
+            <Color x:Key="TextSecondary">#475569</Color>
+            <Color x:Key="TextLight">#8A86A3</Color>
+
+            <Color x:Key="CardBorder">#DCCBFF</Color>
+            <Color x:Key="CardBorderStrong">#A855F7</Color>
+            <Color x:Key="InputBorder">#D8B4FE</Color>
             <Color x:Key="InputBackground">#F8F5FF</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -33,9 +45,9 @@
 
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0.0" Color="#E8DEF8" />
-                    <GradientStop Offset="0.45" Color="#EFE7FB" />
-                    <GradientStop Offset="1.0" Color="#F5F1FC" />
+                    <GradientStop Offset="0.0" Color="#E1D2FF" />
+                    <GradientStop Offset="0.45" Color="#EADFFF" />
+                    <GradientStop Offset="1.0" Color="#F4ECFF" />
                 </LinearGradientBrush>
             </Grid.Background>
 
@@ -48,9 +60,9 @@
 
                 <Border.Stroke>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0.0" Color="#E9D8FD" />
-                        <GradientStop Offset="0.55" Color="#C084FC" />
-                        <GradientStop Offset="1.0" Color="#A855F7" />
+                        <GradientStop Offset="0.0" Color="#D8B4FE" />
+                        <GradientStop Offset="0.55" Color="#A855F7" />
+                        <GradientStop Offset="1.0" Color="#6D28D9" />
                     </LinearGradientBrush>
                 </Border.Stroke>
 
@@ -61,7 +73,7 @@
                 <Border.Shadow>
                     <Shadow
                         Brush="#6D28D9"
-                        Opacity="0.18"
+                        Opacity="0.26"
                         Radius="18"
                         Offset="0,7" />
                 </Border.Shadow>
@@ -96,14 +108,15 @@
                         FontAttributes="Bold"
                         FontSize="20"
                         Text="Mis Mascotas"
-                        TextColor="{StaticResource TextMain}"
+                        TextColor="{StaticResource PrimaryDark}"
                         VerticalOptions="Center" />
 
                     <Border
                         Grid.Column="2"
                         Padding="9,5"
-                        BackgroundColor="{StaticResource PrimarySoft}"
-                        Stroke="Transparent"
+                        BackgroundColor="#F3E8FF"
+                        Stroke="#A855F7"
+                        StrokeThickness="1"
                         VerticalOptions="Center">
 
                         <Border.StrokeShape>
@@ -115,7 +128,7 @@
                             FontAttributes="Bold"
                             FontSize="11"
                             Text="0 mascotas"
-                            TextColor="{StaticResource PrimaryColor}" />
+                            TextColor="{StaticResource PrimaryDark}" />
                     </Border>
 
                     <Button
@@ -152,9 +165,9 @@
 
                 <Border.Stroke>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0.0" Color="#E9D8FD" />
-                        <GradientStop Offset="0.65" Color="#D8B4FE" />
-                        <GradientStop Offset="1.0" Color="#C084FC" />
+                        <GradientStop Offset="0.0" Color="#D8B4FE" />
+                        <GradientStop Offset="0.65" Color="#A855F7" />
+                        <GradientStop Offset="1.0" Color="#7C3AED" />
                     </LinearGradientBrush>
                 </Border.Stroke>
 
@@ -165,7 +178,7 @@
                 <Border.Shadow>
                     <Shadow
                         Brush="#6D28D9"
-                        Opacity="0.14"
+                        Opacity="0.20"
                         Radius="14"
                         Offset="0,5" />
                 </Border.Shadow>
@@ -177,15 +190,15 @@
                             FontAttributes="Bold"
                             FontSize="16"
                             Text="Selecciona una mascota"
-                            TextColor="{StaticResource TextMain}"
+                            TextColor="{StaticResource PrimaryDark}"
                             VerticalOptions="Center" />
 
                         <Button
                             x:Name="BtnAccionesMascota"
                             Grid.Column="1"
                             Padding="12,0"
-                            BackgroundColor="{StaticResource PrimarySoft}"
-                            BorderColor="{StaticResource CardBorder}"
+                            BackgroundColor="#EEE7FF"
+                            BorderColor="#7C3AED"
                             BorderWidth="1"
                             Clicked="OnAccionesMascotaClicked"
                             CornerRadius="14"
@@ -194,7 +207,15 @@
                             HeightRequest="36"
                             IsEnabled="False"
                             Text="Acciones"
-                            TextColor="{StaticResource PrimaryDark}" />
+                            TextColor="#4C1D95">
+                            <Button.Shadow>
+                                <Shadow
+                                    Brush="#5B21E6"
+                                    Opacity="0.16"
+                                    Radius="8"
+                                    Offset="0,3" />
+                            </Button.Shadow>
+                        </Button>
                     </Grid>
 
                     <CollectionView
@@ -237,10 +258,10 @@
                                     x:Name="CardBorder"
                                     Margin="0,0,10,0"
                                     Padding="10"
-                                    BackgroundColor="#FFFFFF"
+                                    BackgroundColor="#FFFCFF"
                                     HeightRequest="140"
-                                    Stroke="#E1D6FF"
-                                    StrokeThickness="1"
+                                    Stroke="#CDB7FF"
+                                    StrokeThickness="1.2"
                                     WidthRequest="124">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="18" />
@@ -249,7 +270,7 @@
                                     <Border.Shadow>
                                         <Shadow
                                             Brush="#5B21E6"
-                                            Opacity="0.10"
+                                            Opacity="0.16"
                                             Radius="10"
                                             Offset="0,4" />
                                     </Border.Shadow>
@@ -263,8 +284,8 @@
                                             BackgroundColor="{StaticResource PrimarySoft}"
                                             HeightRequest="64"
                                             HorizontalOptions="Center"
-                                            Stroke="{StaticResource PrimaryColor}"
-                                            StrokeThickness="2"
+                                            Stroke="#6D28D9"
+                                            StrokeThickness="2.3"
                                             WidthRequest="64">
 
                                             <Border.StrokeShape>
@@ -312,9 +333,9 @@
 
                                             <VisualState Name="Selected">
                                                 <VisualState.Setters>
-                                                    <Setter TargetName="CardBorder" Property="BackgroundColor" Value="#F3E8FF" />
-                                                    <Setter TargetName="CardBorder" Property="Stroke" Value="#5B21E6" />
-                                                    <Setter TargetName="CardBorder" Property="StrokeThickness" Value="2.2" />
+                                                    <Setter TargetName="CardBorder" Property="BackgroundColor" Value="#EEE7FF" />
+                                                    <Setter TargetName="CardBorder" Property="Stroke" Value="#4C1D95" />
+                                                    <Setter TargetName="CardBorder" Property="StrokeThickness" Value="2.5" />
                                                 </VisualState.Setters>
                                             </VisualState>
 
@@ -336,9 +357,9 @@
 
                 <Border.Stroke>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0.0" Color="#E9D8FD" />
-                        <GradientStop Offset="0.55" Color="#C084FC" />
-                        <GradientStop Offset="1.0" Color="#A855F7" />
+                        <GradientStop Offset="0.0" Color="#D8B4FE" />
+                        <GradientStop Offset="0.55" Color="#A855F7" />
+                        <GradientStop Offset="1.0" Color="#6D28D9" />
                     </LinearGradientBrush>
                 </Border.Stroke>
 
@@ -349,7 +370,7 @@
                 <Border.Shadow>
                     <Shadow
                         Brush="#6D28D9"
-                        Opacity="0.18"
+                        Opacity="0.24"
                         Radius="16"
                         Offset="0,6" />
                 </Border.Shadow>
@@ -360,9 +381,9 @@
                     <Border
                         Margin="12"
                         Padding="11,7"
-                        BackgroundColor="#FFFFFF"
+                        BackgroundColor="#F3E8FF"
                         HorizontalOptions="Start"
-                        Stroke="{StaticResource CardBorder}"
+                        Stroke="#A855F7"
                         StrokeThickness="1"
                         VerticalOptions="Start">
 
@@ -375,7 +396,7 @@
                             FontAttributes="Bold"
                             FontSize="12"
                             Text="Última ubicación GPS"
-                            TextColor="{StaticResource PrimaryColor}" />
+                            TextColor="{StaticResource PrimaryDark}" />
                     </Border>
                 </Grid>
             </Border>
@@ -385,7 +406,7 @@
                 Grid.Row="3"
                 Padding="12"
                 BackgroundColor="#F3E8FF"
-                Stroke="#D8B4FE"
+                Stroke="#A855F7"
                 StrokeThickness="1">
 
                 <Border.StrokeShape>
@@ -395,7 +416,7 @@
                 <Border.Shadow>
                     <Shadow
                         Brush="#5B21E6"
-                        Opacity="0.08"
+                        Opacity="0.16"
                         Radius="8"
                         Offset="0,3" />
                 </Border.Shadow>
@@ -428,9 +449,9 @@
                 <Border
                     Margin="0,0,0,12"
                     Padding="16"
-                    BackgroundColor="#FFFFFF"
-                    Stroke="{StaticResource CardBorder}"
-                    StrokeThickness="1"
+                    BackgroundColor="#FFFCFF"
+                    Stroke="#A855F7"
+                    StrokeThickness="1.2"
                     VerticalOptions="End">
 
                     <Border.StrokeShape>
@@ -439,8 +460,8 @@
 
                     <Border.Shadow>
                         <Shadow
-                            Brush="Black"
-                            Opacity="0.18"
+                            Brush="#5B21E6"
+                            Opacity="0.25"
                             Radius="18"
                             Offset="0,6" />
                     </Border.Shadow>
@@ -453,7 +474,7 @@
                                     FontAttributes="Bold"
                                     FontSize="18"
                                     Text="Acciones de mascota"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
 
                                 <Label
                                     x:Name="LblAccionesMascotaTitulo"
@@ -479,25 +500,29 @@
                         <BoxView HeightRequest="1" Color="#EEE7FF" />
 
                         <Button
-                            BackgroundColor="{StaticResource PrimarySoft}"
+                            BackgroundColor="#EEE7FF"
+                            BorderColor="#A855F7"
+                            BorderWidth="1"
                             Clicked="OnAccionEditarMascotaClicked"
                             CornerRadius="16"
                             FontAttributes="Bold"
                             FontSize="14"
                             HeightRequest="46"
                             Text="✏️ Editar mascota"
-                            TextColor="{StaticResource PrimaryDark}" />
+                            TextColor="#4C1D95" />
 
                         <Button
                             x:Name="BtnAccionHistorialGps"
-                            BackgroundColor="#DCFCE7"
+                            BackgroundColor="#D1FAE5"
+                            BorderColor="#10B981"
+                            BorderWidth="1"
                             Clicked="OnAccionHistorialGpsClicked"
                             CornerRadius="16"
                             FontAttributes="Bold"
                             FontSize="14"
                             HeightRequest="46"
                             Text="📍 Historial GPS"
-                            TextColor="#0F766E" />
+                            TextColor="#047857" />
 
                         <Button
                             BackgroundColor="#FEE2E2"
@@ -510,14 +535,16 @@
                             TextColor="#B91C1C" />
 
                         <Button
-                            BackgroundColor="#F8F5FF"
+                            BackgroundColor="#F3E8FF"
+                            BorderColor="#D8B4FE"
+                            BorderWidth="1"
                             Clicked="OnCerrarAccionesMascotaClicked"
                             CornerRadius="16"
                             FontAttributes="Bold"
                             FontSize="14"
                             HeightRequest="44"
                             Text="Cancelar"
-                            TextColor="{StaticResource TextMuted}" />
+                            TextColor="#4C1D95" />
 
                     </VerticalStackLayout>
                 </Border>

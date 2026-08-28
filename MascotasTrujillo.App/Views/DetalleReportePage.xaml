@@ -10,11 +10,23 @@
         <ResourceDictionary>
             <Color x:Key="PrimaryColor">#5B21E6</Color>
             <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimaryDeep">#4C1D95</Color>
             <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="PrimarySoft2">#F3E8FF</Color>
+
             <Color x:Key="AccentPink">#FF4FB3</Color>
+            <Color x:Key="AccentPinkSoft">#FDF2F8</Color>
+            <Color x:Key="AccentPinkBorder">#F9A8D4</Color>
+            <Color x:Key="AccentPinkText">#DB2777</Color>
+
             <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextTitle">#1E1B4B</Color>
             <Color x:Key="TextMuted">#64748B</Color>
-            <Color x:Key="CardBorder">#E1D6FF</Color>
+            <Color x:Key="TextSecondary">#475569</Color>
+            <Color x:Key="TextLight">#8A86A3</Color>
+
+            <Color x:Key="CardBorder">#DCCBFF</Color>
+            <Color x:Key="CardBorderStrong">#A855F7</Color>
             <Color x:Key="InputBackground">#F8F5FF</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -23,9 +35,9 @@
 
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Offset="0.0" Color="#E8DEF8" />
-                <GradientStop Offset="0.45" Color="#EFE7FB" />
-                <GradientStop Offset="1.0" Color="#F5F1FC" />
+                <GradientStop Offset="0.0" Color="#E1D2FF" />
+                <GradientStop Offset="0.45" Color="#EADFFF" />
+                <GradientStop Offset="1.0" Color="#F4ECFF" />
             </LinearGradientBrush>
         </Grid.Background>
 
@@ -40,9 +52,9 @@
 
                     <Border.Stroke>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0.0" Color="#E9D8FD" />
-                            <GradientStop Offset="0.55" Color="#C084FC" />
-                            <GradientStop Offset="1.0" Color="#A855F7" />
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.55" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#6D28D9" />
                         </LinearGradientBrush>
                     </Border.Stroke>
 
@@ -53,7 +65,7 @@
                     <Border.Shadow>
                         <Shadow
                             Brush="#6D28D9"
-                            Opacity="0.18"
+                            Opacity="0.26"
                             Radius="18"
                             Offset="0,7" />
                     </Border.Shadow>
@@ -62,8 +74,8 @@
                         <Button
                             Grid.Column="0"
                             Padding="0"
-                            BackgroundColor="#F3E8FF"
-                            BorderColor="#D8B4FE"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            BorderColor="#6D28D9"
                             BorderWidth="1"
                             Clicked="OnVolverClicked"
                             CornerRadius="21"
@@ -71,9 +83,18 @@
                             FontSize="22"
                             HeightRequest="42"
                             Text="←"
-                            TextColor="{StaticResource PrimaryColor}"
+                            TextColor="White"
                             VerticalOptions="Center"
-                            WidthRequest="42" />
+                            WidthRequest="42">
+
+                            <Button.Shadow>
+                                <Shadow
+                                    Brush="#2B0B98"
+                                    Opacity="0.35"
+                                    Radius="10"
+                                    Offset="0,4" />
+                            </Button.Shadow>
+                        </Button>
 
                         <VerticalStackLayout
                             Grid.Column="1"
@@ -84,7 +105,7 @@
                                 FontAttributes="Bold"
                                 FontSize="18"
                                 Text="Detalle del reporte"
-                                TextColor="{StaticResource TextMain}" />
+                                TextColor="{StaticResource PrimaryDark}" />
 
                             <Label
                                 FontSize="12"
@@ -102,9 +123,9 @@
 
                     <Border.Stroke>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0.0" Color="#E9D8FD" />
-                            <GradientStop Offset="0.55" Color="#C084FC" />
-                            <GradientStop Offset="1.0" Color="#A855F7" />
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.55" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#6D28D9" />
                         </LinearGradientBrush>
                     </Border.Stroke>
 
@@ -115,7 +136,7 @@
                     <Border.Shadow>
                         <Shadow
                             Brush="#6D28D9"
-                            Opacity="0.18"
+                            Opacity="0.24"
                             Radius="16"
                             Offset="0,6" />
                     </Border.Shadow>
@@ -161,9 +182,9 @@
 
                     <Border.Stroke>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0.0" Color="#E9D8FD" />
-                            <GradientStop Offset="0.65" Color="#D8B4FE" />
-                            <GradientStop Offset="1.0" Color="#C084FC" />
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
                         </LinearGradientBrush>
                     </Border.Stroke>
 
@@ -174,7 +195,7 @@
                     <Border.Shadow>
                         <Shadow
                             Brush="#6D28D9"
-                            Opacity="0.14"
+                            Opacity="0.22"
                             Radius="14"
                             Offset="0,5" />
                     </Border.Shadow>
@@ -186,7 +207,7 @@
                             FontSize="22"
                             LineBreakMode="WordWrap"
                             Text="{Binding Titulo}"
-                            TextColor="{StaticResource TextMain}" />
+                            TextColor="{StaticResource PrimaryDark}" />
 
                         <Label
                             FontSize="14"
@@ -213,7 +234,7 @@
                                 Grid.Column="1"
                                 FontAttributes="Bold"
                                 FontSize="13"
-                                TextColor="{StaticResource PrimaryColor}" />
+                                TextColor="{StaticResource PrimaryDeep}" />
 
                             <Label
                                 Grid.Row="1"
@@ -226,7 +247,7 @@
                                 Grid.Column="1"
                                 FontSize="13"
                                 Text="{Binding FechaReporteTexto}"
-                                TextColor="{StaticResource TextMuted}" />
+                                TextColor="{StaticResource TextSecondary}" />
 
                             <Label
                                 Grid.Row="2"
@@ -265,9 +286,9 @@
 
                     <Border.Stroke>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0.0" Color="#E9D8FD" />
-                            <GradientStop Offset="0.65" Color="#D8B4FE" />
-                            <GradientStop Offset="1.0" Color="#C084FC" />
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
                         </LinearGradientBrush>
                     </Border.Stroke>
 
@@ -278,7 +299,7 @@
                     <Border.Shadow>
                         <Shadow
                             Brush="#6D28D9"
-                            Opacity="0.14"
+                            Opacity="0.22"
                             Radius="14"
                             Offset="0,5" />
                     </Border.Shadow>
@@ -289,7 +310,7 @@
                             FontAttributes="Bold"
                             FontSize="18"
                             Text="Mascota"
-                            TextColor="{StaticResource TextMain}" />
+                            TextColor="{StaticResource PrimaryDark}" />
 
                         <Grid
                             ColumnDefinitions="*,*"
@@ -302,7 +323,7 @@
                                 Grid.Column="0"
                                 Padding="10"
                                 BackgroundColor="#FFFFFF"
-                                Stroke="#EEE7FF"
+                                Stroke="#D8B4FE"
                                 StrokeThickness="1">
 
                                 <Border.StrokeShape>
@@ -318,7 +339,7 @@
                                         x:Name="LblNombreMascota"
                                         FontAttributes="Bold"
                                         FontSize="14"
-                                        TextColor="{StaticResource TextMain}" />
+                                        TextColor="#1E1B4B" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -327,7 +348,7 @@
                                 Grid.Column="1"
                                 Padding="10"
                                 BackgroundColor="#FFFFFF"
-                                Stroke="#EEE7FF"
+                                Stroke="#D8B4FE"
                                 StrokeThickness="1">
 
                                 <Border.StrokeShape>
@@ -343,7 +364,7 @@
                                         x:Name="LblEspecie"
                                         FontAttributes="Bold"
                                         FontSize="14"
-                                        TextColor="{StaticResource TextMain}" />
+                                        TextColor="#1E1B4B" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -352,7 +373,7 @@
                                 Grid.Column="0"
                                 Padding="10"
                                 BackgroundColor="#FFFFFF"
-                                Stroke="#EEE7FF"
+                                Stroke="#D8B4FE"
                                 StrokeThickness="1">
 
                                 <Border.StrokeShape>
@@ -368,7 +389,7 @@
                                         x:Name="LblRaza"
                                         FontAttributes="Bold"
                                         FontSize="14"
-                                        TextColor="{StaticResource TextMain}" />
+                                        TextColor="#1E1B4B" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -377,7 +398,7 @@
                                 Grid.Column="1"
                                 Padding="10"
                                 BackgroundColor="#FFFFFF"
-                                Stroke="#EEE7FF"
+                                Stroke="#D8B4FE"
                                 StrokeThickness="1">
 
                                 <Border.StrokeShape>
@@ -393,7 +414,7 @@
                                         x:Name="LblColor"
                                         FontAttributes="Bold"
                                         FontSize="14"
-                                        TextColor="{StaticResource TextMain}" />
+                                        TextColor="#1E1B4B" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -402,7 +423,7 @@
                                 Grid.Column="0"
                                 Padding="10"
                                 BackgroundColor="#FFFFFF"
-                                Stroke="#EEE7FF"
+                                Stroke="#D8B4FE"
                                 StrokeThickness="1">
 
                                 <Border.StrokeShape>
@@ -418,7 +439,7 @@
                                         x:Name="LblSexo"
                                         FontAttributes="Bold"
                                         FontSize="14"
-                                        TextColor="{StaticResource TextMain}" />
+                                        TextColor="#1E1B4B" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -436,9 +457,9 @@
 
                     <Border.Stroke>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0.0" Color="#E9D8FD" />
-                            <GradientStop Offset="0.65" Color="#D8B4FE" />
-                            <GradientStop Offset="1.0" Color="#C084FC" />
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
                         </LinearGradientBrush>
                     </Border.Stroke>
 
@@ -449,7 +470,7 @@
                     <Border.Shadow>
                         <Shadow
                             Brush="#6D28D9"
-                            Opacity="0.14"
+                            Opacity="0.22"
                             Radius="14"
                             Offset="0,5" />
                     </Border.Shadow>
@@ -486,7 +507,7 @@
                                     FontAttributes="Bold"
                                     FontSize="18"
                                     Text="Salud"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
 
                                 <Label
                                     FontSize="12"
@@ -517,7 +538,7 @@
                                     FontAttributes="Bold"
                                     FontSize="14"
                                     LineBreakMode="WordWrap"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </VerticalStackLayout>
 
                             <Label
@@ -536,7 +557,7 @@
                                     FontAttributes="Bold"
                                     FontSize="14"
                                     LineBreakMode="WordWrap"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </VerticalStackLayout>
 
                             <Label
@@ -555,7 +576,7 @@
                                     FontAttributes="Bold"
                                     FontSize="14"
                                     LineBreakMode="WordWrap"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </VerticalStackLayout>
 
                             <Label
@@ -574,7 +595,7 @@
                                     FontAttributes="Bold"
                                     FontSize="14"
                                     LineBreakMode="WordWrap"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </VerticalStackLayout>
 
                             <Label
@@ -593,7 +614,7 @@
                                     FontAttributes="Bold"
                                     FontSize="14"
                                     LineBreakMode="WordWrap"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </VerticalStackLayout>
 
                         </Grid>
@@ -610,9 +631,9 @@
 
                     <Border.Stroke>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0.0" Color="#E9D8FD" />
-                            <GradientStop Offset="0.65" Color="#D8B4FE" />
-                            <GradientStop Offset="1.0" Color="#C084FC" />
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
                         </LinearGradientBrush>
                     </Border.Stroke>
 
@@ -623,7 +644,7 @@
                     <Border.Shadow>
                         <Shadow
                             Brush="#6D28D9"
-                            Opacity="0.14"
+                            Opacity="0.22"
                             Radius="14"
                             Offset="0,5" />
                     </Border.Shadow>
@@ -636,7 +657,7 @@
                                     FontAttributes="Bold"
                                     FontSize="18"
                                     Text="Avistamientos"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
 
                                 <Label
                                     x:Name="LblAvistamientosResumen"
@@ -684,7 +705,7 @@
                                         FontSize="15"
                                         HorizontalOptions="Center"
                                         Text="Sin avistamientos"
-                                        TextColor="{StaticResource TextMain}" />
+                                        TextColor="{StaticResource PrimaryDark}" />
 
                                     <Label
                                         FontSize="12"
@@ -700,9 +721,9 @@
                                     <Border
                                         Margin="0,0,0,12"
                                         Padding="10"
-                                        BackgroundColor="#FFFFFF"
-                                        Stroke="#E1D6FF"
-                                        StrokeThickness="1">
+                                        BackgroundColor="#FFFCFF"
+                                        Stroke="#CDB7FF"
+                                        StrokeThickness="1.2">
 
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer CommandParameter="{Binding .}" Tapped="OnAvistamientoTapped" />
@@ -715,7 +736,7 @@
                                         <Border.Shadow>
                                             <Shadow
                                                 Brush="#5B21E6"
-                                                Opacity="0.08"
+                                                Opacity="0.16"
                                                 Radius="8"
                                                 Offset="0,3" />
                                         </Border.Shadow>
@@ -806,9 +827,9 @@
 
                     <Border.Stroke>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0.0" Color="#E9D8FD" />
-                            <GradientStop Offset="0.65" Color="#D8B4FE" />
-                            <GradientStop Offset="1.0" Color="#C084FC" />
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
                         </LinearGradientBrush>
                     </Border.Stroke>
 
@@ -819,7 +840,7 @@
                     <Border.Shadow>
                         <Shadow
                             Brush="#6D28D9"
-                            Opacity="0.14"
+                            Opacity="0.22"
                             Radius="14"
                             Offset="0,5" />
                     </Border.Shadow>
@@ -830,22 +851,31 @@
                             FontAttributes="Bold"
                             FontSize="18"
                             Text="Acciones"
-                            TextColor="{StaticResource TextMain}" />
+                            TextColor="{StaticResource PrimaryDark}" />
 
                         <Button
-                            BackgroundColor="#F3E8FF"
-                            BorderColor="#C084FC"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            BorderColor="#6D28D9"
                             BorderWidth="1"
                             Clicked="OnVerUbicacionClicked"
                             CornerRadius="16"
                             FontAttributes="Bold"
-                            HeightRequest="46"
+                            HeightRequest="48"
                             Text="📍 Ver ubicación"
-                            TextColor="{StaticResource PrimaryColor}" />
+                            TextColor="White">
+
+                            <Button.Shadow>
+                                <Shadow
+                                    Brush="#2B0B98"
+                                    Opacity="0.32"
+                                    Radius="12"
+                                    Offset="0,5" />
+                            </Button.Shadow>
+                        </Button>
 
                         <Button
                             x:Name="BtnRegistrarAvistamiento"
-                            BackgroundColor="#0F766E"
+                            BackgroundColor="#047857"
                             Clicked="OnRegistrarAvistamientoClicked"
                             CornerRadius="16"
                             FontAttributes="Bold"
@@ -856,7 +886,7 @@
                             <Button.Shadow>
                                 <Shadow
                                     Brush="#0F766E"
-                                    Opacity="0.22"
+                                    Opacity="0.30"
                                     Radius="10"
                                     Offset="0,4" />
                             </Button.Shadow>
@@ -872,7 +902,7 @@
 
                         <Button
                             x:Name="BtnWhatsApp"
-                            BackgroundColor="#22C55E"
+                            BackgroundColor="#16A34A"
                             Clicked="OnWhatsAppClicked"
                             CornerRadius="16"
                             FontAttributes="Bold"
@@ -883,7 +913,7 @@
                             <Button.Shadow>
                                 <Shadow
                                     Brush="#22C55E"
-                                    Opacity="0.22"
+                                    Opacity="0.30"
                                     Radius="10"
                                     Offset="0,4" />
                             </Button.Shadow>

@@ -13,12 +13,24 @@
         <ResourceDictionary>
             <Color x:Key="PrimaryColor">#5B21E6</Color>
             <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimaryDeep">#4C1D95</Color>
             <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="PrimarySoft2">#F3E8FF</Color>
+
             <Color x:Key="AccentPink">#FF4FB3</Color>
+            <Color x:Key="AccentPinkSoft">#FDF2F8</Color>
+            <Color x:Key="AccentPinkBorder">#F9A8D4</Color>
+            <Color x:Key="AccentPinkText">#DB2777</Color>
+
             <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextTitle">#1E1B4B</Color>
             <Color x:Key="TextMuted">#64748B</Color>
-            <Color x:Key="CardBorder">#E1D6FF</Color>
-            <Color x:Key="InputBorder">#D8CCFF</Color>
+            <Color x:Key="TextSecondary">#475569</Color>
+            <Color x:Key="TextLight">#8A86A3</Color>
+
+            <Color x:Key="CardBorder">#DCCBFF</Color>
+            <Color x:Key="CardBorderStrong">#A855F7</Color>
+            <Color x:Key="InputBorder">#D8B4FE</Color>
             <Color x:Key="InputBackground">#F8F5FF</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -33,9 +45,9 @@
 
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0.0" Color="#E8DEF8" />
-                    <GradientStop Offset="0.45" Color="#EFE7FB" />
-                    <GradientStop Offset="1.0" Color="#F5F1FC" />
+                    <GradientStop Offset="0.0" Color="#E1D2FF" />
+                    <GradientStop Offset="0.45" Color="#EADFFF" />
+                    <GradientStop Offset="1.0" Color="#F4ECFF" />
                 </LinearGradientBrush>
             </Grid.Background>
 
@@ -48,9 +60,9 @@
 
                 <Border.Stroke>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0.0" Color="#E9D8FD" />
-                        <GradientStop Offset="0.55" Color="#C084FC" />
-                        <GradientStop Offset="1.0" Color="#A855F7" />
+                        <GradientStop Offset="0.0" Color="#D8B4FE" />
+                        <GradientStop Offset="0.55" Color="#A855F7" />
+                        <GradientStop Offset="1.0" Color="#6D28D9" />
                     </LinearGradientBrush>
                 </Border.Stroke>
 
@@ -61,7 +73,7 @@
                 <Border.Shadow>
                     <Shadow
                         Brush="#6D28D9"
-                        Opacity="0.18"
+                        Opacity="0.26"
                         Radius="18"
                         Offset="0,7" />
                 </Border.Shadow>
@@ -96,7 +108,7 @@
                         FontAttributes="Bold"
                         FontSize="20"
                         Text="Reportes cerca de ti"
-                        TextColor="{StaticResource TextMain}"
+                        TextColor="{StaticResource PrimaryDark}"
                         VerticalOptions="Center" />
 
                     <Border
@@ -129,9 +141,9 @@
 
                 <Border.Stroke>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0.0" Color="#E9D8FD" />
-                        <GradientStop Offset="0.55" Color="#C084FC" />
-                        <GradientStop Offset="1.0" Color="#A855F7" />
+                        <GradientStop Offset="0.0" Color="#D8B4FE" />
+                        <GradientStop Offset="0.55" Color="#A855F7" />
+                        <GradientStop Offset="1.0" Color="#6D28D9" />
                     </LinearGradientBrush>
                 </Border.Stroke>
 
@@ -142,7 +154,7 @@
                 <Border.Shadow>
                     <Shadow
                         Brush="#6D28D9"
-                        Opacity="0.18"
+                        Opacity="0.24"
                         Radius="16"
                         Offset="0,6" />
                 </Border.Shadow>
@@ -180,8 +192,8 @@
                 <Button
                     Grid.Column="1"
                     Padding="14,0"
-                    BackgroundColor="#FCFBFF"
-                    BorderColor="#C084FC"
+                    BackgroundColor="#F3E8FF"
+                    BorderColor="#A855F7"
                     BorderWidth="1"
                     Clicked="OnAbrirFiltrosClicked"
                     CornerRadius="16"
@@ -189,12 +201,12 @@
                     FontSize="13"
                     HeightRequest="46"
                     Text="⚙️ Filtros"
-                    TextColor="#5B21E6" />
+                    TextColor="#4C1D95" />
 
                 <Button
                     Grid.Column="2"
-                    BackgroundColor="#FDF2F8"
-                    BorderColor="#F9A8D4"
+                    BackgroundColor="#FFF1F8"
+                    BorderColor="#FF4FB3"
                     BorderWidth="1"
                     Clicked="OnIrAReportarClicked"
                     CornerRadius="16"
@@ -202,7 +214,7 @@
                     FontSize="13"
                     HeightRequest="46"
                     Text="➕ Reportar"
-                    TextColor="#DB2777" />
+                    TextColor="#BE185D" />
             </Grid>
 
             <!--  Lista de reportes  -->
@@ -214,9 +226,9 @@
 
                 <Border.Stroke>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0.0" Color="#E9D8FD" />
-                        <GradientStop Offset="0.65" Color="#D8B4FE" />
-                        <GradientStop Offset="1.0" Color="#C084FC" />
+                        <GradientStop Offset="0.0" Color="#D8B4FE" />
+                        <GradientStop Offset="0.65" Color="#A855F7" />
+                        <GradientStop Offset="1.0" Color="#7C3AED" />
                     </LinearGradientBrush>
                 </Border.Stroke>
 
@@ -227,7 +239,7 @@
                 <Border.Shadow>
                     <Shadow
                         Brush="#6D28D9"
-                        Opacity="0.15"
+                        Opacity="0.22"
                         Radius="16"
                         Offset="0,6" />
                 </Border.Shadow>
@@ -249,8 +261,9 @@
                         <Border
                             Grid.Column="1"
                             Padding="10,5"
-                            BackgroundColor="{StaticResource PrimarySoft}"
-                            Stroke="Transparent"
+                            BackgroundColor="#F3E8FF"
+                            Stroke="#A855F7"
+                            StrokeThickness="1"
                             VerticalOptions="Center">
 
                             <Border.StrokeShape>
@@ -262,7 +275,7 @@
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 Text="0 reportes"
-                                TextColor="{StaticResource PrimaryColor}" />
+                                TextColor="{StaticResource PrimaryDark}" />
                         </Border>
                     </Grid>
 
@@ -305,9 +318,9 @@
                                 <Border
                                     Margin="0,0,0,12"
                                     Padding="0"
-                                    BackgroundColor="#FFFFFF"
-                                    Stroke="#E5D9FF"
-                                    StrokeThickness="1.2">
+                                    BackgroundColor="#FFFCFF"
+                                    Stroke="#CDB7FF"
+                                    StrokeThickness="1.3">
 
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="20" />
@@ -316,7 +329,7 @@
                                     <Border.Shadow>
                                         <Shadow
                                             Brush="#5B21E6"
-                                            Opacity="0.10"
+                                            Opacity="0.16"
                                             Radius="12"
                                             Offset="0,4" />
                                     </Border.Shadow>
@@ -394,7 +407,7 @@
                                                     LineBreakMode="TailTruncation"
                                                     MaxLines="2"
                                                     Text="{Binding Descripcion}"
-                                                    TextColor="#6B7280" />
+                                                    TextColor="#475569" />
 
                                                 <!--  Distancia + botón  -->
                                                 <Grid
@@ -417,7 +430,7 @@
                                                             FontAttributes="Bold"
                                                             FontSize="11"
                                                             Text="{Binding DistanciaMetros, StringFormat='📍 A {0:N0} m de ti'}"
-                                                            TextColor="#6D28D9" />
+                                                            TextColor="#4C1D95" />
                                                     </Border>
 
                                                     <Border
@@ -470,9 +483,9 @@
                 <Border
                     Margin="0,0,0,12"
                     Padding="16"
-                    BackgroundColor="#FFFFFF"
-                    Stroke="{StaticResource CardBorder}"
-                    StrokeThickness="1"
+                    BackgroundColor="#FFFCFF"
+                    Stroke="#A855F7"
+                    StrokeThickness="1.2"
                     VerticalOptions="End">
 
                     <Border.StrokeShape>
@@ -481,8 +494,8 @@
 
                     <Border.Shadow>
                         <Shadow
-                            Brush="Black"
-                            Opacity="0.18"
+                            Brush="#5B21E6"
+                            Opacity="0.24"
                             Radius="18"
                             Offset="0,6" />
                     </Border.Shadow>
@@ -495,7 +508,7 @@
                                     FontAttributes="Bold"
                                     FontSize="18"
                                     Text="Filtros del radar"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
 
                                 <Label
                                     x:Name="LblFiltroActual"

@@ -1,22 +1,34 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage 
+<ContentPage
+    x:Class="MascotasTrujillo.App.Views.RegistrarMascotaPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="MascotasTrujillo.App.Views.RegistrarMascotaPage"
     Title="Registrar Mascota"
-    Shell.NavBarIsVisible="False"
-    BackgroundColor="#F5F1FF">
+    BackgroundColor="#F5F1FF"
+    Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="PrimaryColor">#5B21E6</Color>
             <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimaryDeep">#4C1D95</Color>
             <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="PrimarySoft2">#F3E8FF</Color>
+
             <Color x:Key="AccentPink">#FF4FB3</Color>
+            <Color x:Key="AccentPinkSoft">#FDF2F8</Color>
+            <Color x:Key="AccentPinkBorder">#F9A8D4</Color>
+            <Color x:Key="AccentPinkText">#DB2777</Color>
+
             <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextTitle">#1E1B4B</Color>
             <Color x:Key="TextMuted">#64748B</Color>
-            <Color x:Key="CardBorder">#E1D6FF</Color>
-            <Color x:Key="InputBorder">#D8CCFF</Color>
+            <Color x:Key="TextSecondary">#475569</Color>
+            <Color x:Key="TextLight">#8A86A3</Color>
+
+            <Color x:Key="CardBorder">#DCCBFF</Color>
+            <Color x:Key="CardBorderStrong">#A855F7</Color>
+            <Color x:Key="InputBorder">#D8B4FE</Color>
             <Color x:Key="InputBackground">#F8F5FF</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -25,284 +37,359 @@
 
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#F8F5FF" Offset="0.0" />
-                <GradientStop Color="#F3EDFF" Offset="0.55" />
-                <GradientStop Color="#FDFBFF" Offset="1.0" />
+                <GradientStop Offset="0.0" Color="#E1D2FF" />
+                <GradientStop Offset="0.45" Color="#EADFFF" />
+                <GradientStop Offset="1.0" Color="#F4ECFF" />
             </LinearGradientBrush>
         </Grid.Background>
 
         <ScrollView>
-            <VerticalStackLayout Spacing="10"
-                                 Padding="14,12,14,22">
+            <VerticalStackLayout Padding="14,12,14,22" Spacing="10">
 
-                <!-- Encabezado con volver -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="12,10">
+                <!--  Encabezado con volver  -->
+                <Border
+                    Padding="12,10"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.55" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#6D28D9" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="22" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.10"
-                                Offset="0,4"
-                                Radius="12" />
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.26"
+                            Radius="18"
+                            Offset="0,7" />
                     </Border.Shadow>
 
-                    <Grid ColumnDefinitions="Auto,*"
-                        ColumnSpacing="10">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
 
-                        <Button Grid.Column="0"
-                                Text="←"
-                                Clicked="OnVolverClicked"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                TextColor="{StaticResource PrimaryColor}"
+                        <Button
+                            Grid.Column="0"
+                            Padding="0"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            BorderColor="#6D28D9"
+                            BorderWidth="1"
+                            Clicked="OnVolverClicked"
+                            CornerRadius="21"
+                            FontAttributes="Bold"
+                            FontSize="22"
+                            HeightRequest="42"
+                            Text="←"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            WidthRequest="42">
+
+                            <Button.Shadow>
+                                <Shadow
+                                    Brush="#2B0B98"
+                                    Opacity="0.35"
+                                    Radius="10"
+                                    Offset="0,4" />
+                            </Button.Shadow>
+                        </Button>
+
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="1"
+                            VerticalOptions="Center">
+
+                            <Label
+                                x:Name="LblTituloHeader"
                                 FontAttributes="Bold"
-                                FontSize="22"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                CornerRadius="21"
-                                Padding="0"
-                                VerticalOptions="Center" />
+                                FontSize="18"
+                                Text="Registrar mascota"
+                                TextColor="{StaticResource PrimaryDark}" />
 
-                        <VerticalStackLayout Grid.Column="1"
-                                             Spacing="1"
-                                             VerticalOptions="Center">
-
-                            <Label x:Name="LblTituloHeader"
-                                   Text="Registrar mascota"
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource TextMain}" />
-
-                            <Label x:Name="LblSubtituloHeader"
-                                   Text="Completa los datos de tu mascota"
-                                   FontSize="12"
-                                   TextColor="{StaticResource TextMuted}" />
+                            <Label
+                                x:Name="LblSubtituloHeader"
+                                FontSize="12"
+                                Text="Completa los datos de tu mascota"
+                                TextColor="{StaticResource TextSecondary}" />
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
 
-                <!-- Encabezado compacto -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="14"
-                        IsVisible="False">
+                <!--  Encabezado compacto  -->
+                <Border
+                    Padding="14"
+                    BackgroundColor="#FFFFFF"
+                    IsVisible="False"
+                    Stroke="{StaticResource CardBorder}"
+                    StrokeThickness="1">
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="22" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.10"
-                                Offset="0,4"
-                                Radius="12" />
+                        <Shadow
+                            Brush="#2B0B98"
+                            Opacity="0.10"
+                            Radius="12"
+                            Offset="0,4" />
                     </Border.Shadow>
 
-                    <Grid ColumnDefinitions="Auto,*"
-                          ColumnSpacing="10">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
 
-                        <Border Grid.Column="0"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                Stroke="Transparent"
-                                HeightRequest="42"
-                                WidthRequest="42"
-                                VerticalOptions="Center">
+                        <Border
+                            Grid.Column="0"
+                            BackgroundColor="{StaticResource PrimarySoft}"
+                            HeightRequest="42"
+                            Stroke="Transparent"
+                            VerticalOptions="Center"
+                            WidthRequest="42">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="21" />
                             </Border.StrokeShape>
 
-                            <Label x:Name="LblIconoFormulario"
-                                   Text="🐾"
-                                   FontSize="22"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
+                            <Label
+                                x:Name="LblIconoFormulario"
+                                FontSize="22"
+                                HorizontalOptions="Center"
+                                Text="🐾"
+                                VerticalOptions="Center" />
                         </Border>
 
-                        <VerticalStackLayout Grid.Column="1"
-                                             Spacing="1"
-                                             VerticalOptions="Center">
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="1"
+                            VerticalOptions="Center">
 
-                            <Label x:Name="LblTituloFormulario"
-                                   Text="Registrar mascota"
-                                   FontSize="20"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource TextMain}" />
+                            <Label
+                                x:Name="LblTituloFormulario"
+                                FontAttributes="Bold"
+                                FontSize="20"
+                                Text="Registrar mascota"
+                                TextColor="{StaticResource TextMain}" />
 
-                            <Label x:Name="LblSubtituloFormulario"
-                                   Text="Datos básicos y seguimiento GPS."
-                                   FontSize="12"
-                                   TextColor="{StaticResource TextMuted}"
-                                   LineBreakMode="TailTruncation" />
+                            <Label
+                                x:Name="LblSubtituloFormulario"
+                                FontSize="12"
+                                LineBreakMode="TailTruncation"
+                                Text="Datos básicos y seguimiento GPS."
+                                TextColor="{StaticResource TextMuted}" />
                         </VerticalStackLayout>
 
                     </Grid>
                 </Border>
 
-                <!-- Foto -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="14">
+                <!--  Foto  -->
+                <Border
+                    Padding="14"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="22" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#2B0B98"
+                            Opacity="0.22"
+                            Radius="10"
+                            Offset="0,3" />
                     </Border.Shadow>
 
-                    <VerticalStackLayout Spacing="10"
-                                         HorizontalOptions="Center">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
 
-                        <Grid ColumnDefinitions="*,Auto"
-                              WidthRequest="260">
+                        <Grid ColumnDefinitions="*,Auto" WidthRequest="260">
 
-                            <Label Text="Foto"
-                                   FontSize="17"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource TextMain}"
-                                   VerticalOptions="Center" />
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="17"
+                                Text="Foto"
+                                TextColor="{StaticResource PrimaryDark}"
+                                VerticalOptions="Center" />
 
-                            <Border Grid.Column="1"
-                                    BackgroundColor="{StaticResource PrimarySoft}"
-                                    Stroke="Transparent"
-                                    Padding="8,3"
-                                    VerticalOptions="Center">
+                            <Border
+                                Grid.Column="1"
+                                Padding="8,3"
+                                BackgroundColor="#F3E8FF"
+                                Stroke="#A855F7"
+                                StrokeThickness="1"
+                                VerticalOptions="Center">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10" />
                                 </Border.StrokeShape>
 
-                                <Label Text="Opcional"
-                                       FontSize="11"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource PrimaryColor}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="11"
+                                    Text="Opcional"
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
                         </Grid>
 
-                        <Border Stroke="{StaticResource PrimaryColor}"
-                                StrokeThickness="2"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                HeightRequest="128"
-                                WidthRequest="128">
+                        <Border
+                            BackgroundColor="{StaticResource PrimarySoft2}"
+                            HeightRequest="128"
+                            Stroke="{StaticResource PrimaryDark}"
+                            StrokeThickness="2.8"
+                            WidthRequest="128">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="64" />
                             </Border.StrokeShape>
 
-                            <Image x:Name="FotoMascotaImage"
-                                   Source="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-                                   Aspect="AspectFill"
-                                   HeightRequest="128"
-                                   WidthRequest="128" />
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="#5B21E6"
+                                    Opacity="0.24"
+                                    Radius="12"
+                                    Offset="0,5" />
+                            </Border.Shadow>
+
+                            <Image
+                                x:Name="FotoMascotaImage"
+                                Aspect="AspectFill"
+                                HeightRequest="128"
+                                Source="https://cdn-icons-png.flaticon.com/512/616/616408.png"
+                                WidthRequest="128" />
                         </Border>
 
-                        <HorizontalStackLayout Spacing="10"
-                                               HorizontalOptions="Center">
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
 
-                            <Button Text="📷 Cámara"
-                                    Clicked="OnTomarFotoClicked"
-                                    BackgroundColor="{StaticResource PrimaryColor}"
-                                    TextColor="White"
-                                    CornerRadius="14"
-                                    HeightRequest="40"
-                                    Padding="16,0"
-                                    FontAttributes="Bold"
-                                    FontSize="13" />
+                            <Button
+                                Padding="16,0"
+                                BackgroundColor="{StaticResource PrimaryColor}"
+                                Clicked="OnTomarFotoClicked"
+                                CornerRadius="14"
+                                FontAttributes="Bold"
+                                FontSize="13"
+                                HeightRequest="40"
+                                Text="📷 Cámara"
+                                TextColor="White">
 
-                            <Button Text="🖼️ Galería"
-                                    Clicked="OnSeleccionarFotoClicked"
-                                    BackgroundColor="#FFFFFF"
-                                    BorderColor="{StaticResource CardBorder}"
-                                    BorderWidth="1"
-                                    TextColor="{StaticResource PrimaryColor}"
-                                    CornerRadius="14"
-                                    HeightRequest="40"
-                                    Padding="16,0"
-                                    FontAttributes="Bold"
-                                    FontSize="13" />
+                                <Button.Shadow>
+                                    <Shadow
+                                        Brush="#5B21E6"
+                                        Opacity="0.36"
+                                        Radius="10"
+                                        Offset="0,4" />
+                                </Button.Shadow>
+                            </Button>
+
+                            <Button
+                                Padding="16,0"
+                                BackgroundColor="#EEE7FF"
+                                BorderColor="#7C3AED"
+                                BorderWidth="1"
+                                Clicked="OnSeleccionarFotoClicked"
+                                CornerRadius="14"
+                                FontAttributes="Bold"
+                                FontSize="13"
+                                HeightRequest="40"
+                                Text="🖼️ Galería"
+                                TextColor="#4C1D95" />
                         </HorizontalStackLayout>
 
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Datos principales -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="14">
+                <!--  Datos principales  -->
+                <Border
+                    Padding="14"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="22" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#2B0B98"
+                            Opacity="0.20"
+                            Radius="10"
+                            Offset="0,3" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="10">
 
                         <Grid ColumnDefinitions="*,Auto">
 
-                            <Label Text="Datos principales"
-                                   FontSize="17"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource TextMain}"
-                                   VerticalOptions="Center" />
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="17"
+                                Text="Datos principales"
+                                TextColor="{StaticResource PrimaryDark}"
+                                VerticalOptions="Center" />
 
-                            <Border Grid.Column="1"
-                                    BackgroundColor="#FCE7F3"
-                                    Stroke="Transparent"
-                                    Padding="8,3"
-                                    VerticalOptions="Center">
+                            <Border
+                                Grid.Column="1"
+                                Padding="8,3"
+                                BackgroundColor="#FDF2F8"
+                                Stroke="#FF4FB3"
+                                StrokeThickness="1"
+                                VerticalOptions="Center">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10" />
                                 </Border.StrokeShape>
 
-                                <Label Text="Obligatorio"
-                                       FontSize="11"
-                                       FontAttributes="Bold"
-                                       TextColor="#BE185D" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="11"
+                                    Text="Obligatorio"
+                                    TextColor="#BE185D" />
                             </Border>
                         </Grid>
 
-                        <Border Stroke="{StaticResource InputBorder}"
-                                StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,0"
-                                HeightRequest="50">
+                        <Border
+                            Padding="12,0"
+                            BackgroundColor="#FFFFFF"
+                            HeightRequest="50"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="16" />
                             </Border.StrokeShape>
 
-                            <Entry x:Name="NombreEntry"
-                                   Placeholder="Nombre de la mascota *"
-                                   PlaceholderColor="#8C84A6"
-                                   BackgroundColor="Transparent"
-                                   TextColor="{StaticResource TextMain}" />
+                            <Entry
+                                x:Name="NombreEntry"
+                                BackgroundColor="Transparent"
+                                Placeholder="Nombre de la mascota *"
+                                PlaceholderColor="#8C84A6"
+                                TextColor="{StaticResource PrimaryDark}" />
                         </Border>
 
-                        <Border x:Name="EspecieField"
-                                Stroke="{StaticResource InputBorder}"
-                                StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,10">
+                        <Border
+                            x:Name="EspecieField"
+                            Padding="12,10"
+                            BackgroundColor="#FFFFFF"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="16" />
@@ -310,39 +397,41 @@
 
                             <VerticalStackLayout Spacing="8">
 
-                                <Label Text="Especie *"
-                                       FontSize="12"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMuted}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    Text="Especie *"
+                                    TextColor="{StaticResource TextMuted}" />
 
-                                <Grid ColumnDefinitions="*,*"
-                                    ColumnSpacing="10">
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
 
-                                    <Button x:Name="BtnEspeciePerro"
-                                            Grid.Column="0"
-                                            Text="🐶 Perro"
-                                            Clicked="OnEspeciePerroClicked"
-                                            BackgroundColor="{StaticResource InputBackground}"
-                                            TextColor="{StaticResource PrimaryDark}"
-                                            BorderColor="{StaticResource InputBorder}"
-                                            BorderWidth="1"
-                                            FontAttributes="Bold"
-                                            FontSize="13"
-                                            CornerRadius="16"
-                                            HeightRequest="42" />
+                                    <Button
+                                        x:Name="BtnEspeciePerro"
+                                        Grid.Column="0"
+                                        BackgroundColor="#EEE7FF"
+                                        BorderColor="#7C3AED"
+                                        BorderWidth="1"
+                                        Clicked="OnEspeciePerroClicked"
+                                        CornerRadius="16"
+                                        FontAttributes="Bold"
+                                        FontSize="13"
+                                        HeightRequest="42"
+                                        Text="🐶 Perro"
+                                        TextColor="#4C1D95" />
 
-                                    <Button x:Name="BtnEspecieGato"
-                                            Grid.Column="1"
-                                            Text="🐱 Gato"
-                                            Clicked="OnEspecieGatoClicked"
-                                            BackgroundColor="{StaticResource InputBackground}"
-                                            TextColor="{StaticResource PrimaryDark}"
-                                            BorderColor="{StaticResource InputBorder}"
-                                            BorderWidth="1"
-                                            FontAttributes="Bold"
-                                            FontSize="13"
-                                            CornerRadius="16"
-                                            HeightRequest="42" />
+                                    <Button
+                                        x:Name="BtnEspecieGato"
+                                        Grid.Column="1"
+                                        BackgroundColor="#EEE7FF"
+                                        BorderColor="#7C3AED"
+                                        BorderWidth="1"
+                                        Clicked="OnEspecieGatoClicked"
+                                        CornerRadius="16"
+                                        FontAttributes="Bold"
+                                        FontSize="13"
+                                        HeightRequest="42"
+                                        Text="🐱 Gato"
+                                        TextColor="#4C1D95" />
 
                                 </Grid>
                             </VerticalStackLayout>
@@ -351,21 +440,30 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Detalles adicionales plegables -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="14">
+                <!--  Detalles adicionales plegables  -->
+                <Border
+                    Padding="14"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="22" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#2B0B98"
+                            Opacity="0.20"
+                            Radius="10"
+                            Offset="0,3" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="10">
@@ -373,157 +471,180 @@
                         <Grid ColumnDefinitions="*,Auto">
 
                             <VerticalStackLayout Spacing="1">
-                                <Label Text="Detalles"
-                                       FontSize="17"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="17"
+                                    Text="Detalles"
+                                    TextColor="{StaticResource PrimaryDark}" />
 
-                                <Label Text="Raza, color, edad y rasgos."
-                                       FontSize="12"
-                                       TextColor="{StaticResource TextMuted}" />
+                                <Label
+                                    FontSize="12"
+                                    Text="Raza, color, edad y rasgos."
+                                    TextColor="{StaticResource TextMuted}" />
                             </VerticalStackLayout>
 
-                            <Button x:Name="BtnToggleDetalles"
-                                    Grid.Column="1"
-                                    Text="Mostrar"
-                                    Clicked="OnToggleDetallesClicked"
-                                    BackgroundColor="{StaticResource PrimarySoft}"
-                                    TextColor="{StaticResource PrimaryDark}"
-                                    FontAttributes="Bold"
-                                    FontSize="12"
-                                    CornerRadius="14"
-                                    HeightRequest="36"
-                                    Padding="12,0"
-                                    VerticalOptions="Center" />
+                            <Button
+                                x:Name="BtnToggleDetalles"
+                                Grid.Column="1"
+                                Padding="12,0"
+                                BackgroundColor="#EEE7FF"
+                                BorderColor="#7C3AED"
+                                BorderWidth="1"
+                                Clicked="OnToggleDetallesClicked"
+                                CornerRadius="14"
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                HeightRequest="36"
+                                Text="Mostrar"
+                                TextColor="#4C1D95"
+                                VerticalOptions="Center" />
                         </Grid>
 
-                        <VerticalStackLayout x:Name="DetallesContainer"
-                                             Spacing="10"
-                                             IsVisible="False">
+                        <VerticalStackLayout
+                            x:Name="DetallesContainer"
+                            IsVisible="False"
+                            Spacing="10">
 
-                            <Grid ColumnDefinitions="*,*"
-                                  ColumnSpacing="10">
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
 
-                                <Border Grid.Column="0"
-                                        Stroke="{StaticResource InputBorder}"
-                                        StrokeThickness="1"
-                                        BackgroundColor="{StaticResource InputBackground}"
-                                        Padding="12,0"
-                                        HeightRequest="50">
+                                <Border
+                                    Grid.Column="0"
+                                    Padding="12,0"
+                                    BackgroundColor="#FFFFFF"
+                                    HeightRequest="50"
+                                    Stroke="#A855F7"
+                                    StrokeThickness="1">
 
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="16" />
                                     </Border.StrokeShape>
 
-                                    <Entry x:Name="RazaEntry"
-                                           Placeholder="Raza"
-                                           PlaceholderColor="#8C84A6"
-                                           BackgroundColor="Transparent"
-                                           TextColor="{StaticResource TextMain}" />
+                                    <Entry
+                                        x:Name="RazaEntry"
+                                        BackgroundColor="Transparent"
+                                        Placeholder="Raza"
+                                        PlaceholderColor="#8C84A6"
+                                        TextColor="{StaticResource TextMain}" />
                                 </Border>
 
-                                <Border Grid.Column="1"
-                                        Stroke="{StaticResource InputBorder}"
-                                        StrokeThickness="1"
-                                        BackgroundColor="{StaticResource InputBackground}"
-                                        Padding="12,0"
-                                        HeightRequest="50">
+                                <Border
+                                    Grid.Column="1"
+                                    Padding="12,0"
+                                    BackgroundColor="#FFFFFF"
+                                    HeightRequest="50"
+                                    Stroke="#A855F7"
+                                    StrokeThickness="1">
 
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="16" />
                                     </Border.StrokeShape>
 
-                                    <Entry x:Name="ColorEntry"
-                                           Placeholder="Color"
-                                           PlaceholderColor="#8C84A6"
-                                           BackgroundColor="Transparent"
-                                           TextColor="{StaticResource TextMain}" />
-                                </Border>
-                            </Grid>
-
-                            <Grid ColumnDefinitions="*,*"
-                                  ColumnSpacing="10">
-
-                                <Border x:Name="SexoField"
-                                        Grid.Column="0"
-                                        Stroke="{StaticResource InputBorder}"
-                                        StrokeThickness="1"
-                                        BackgroundColor="{StaticResource InputBackground}"
-                                        Padding="12,0"
-                                        HeightRequest="52">
-
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="16" />
-                                    </Border.StrokeShape>
-
-                                    <Button x:Name="BtnSexoSelector"
-                                            Text="Seleccionar sexo"
-                                            Clicked="OnAbrirSexoSelectorClicked"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource TextMain}"
-                                            FontAttributes="Bold"
-                                            HorizontalOptions="Fill"
-                                            VerticalOptions="Center"
-                                            Padding="0"
-                                            HeightRequest="48" />
-                                </Border>
-
-                                <Border Grid.Column="1"
-                                        Stroke="{StaticResource InputBorder}"
-                                        StrokeThickness="1"
-                                        BackgroundColor="{StaticResource InputBackground}"
-                                        Padding="12,0"
-                                        HeightRequest="50">
-
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="16" />
-                                    </Border.StrokeShape>
-
-                                    <Entry x:Name="EdadEntry"
-                                           Placeholder="Edad aprox."
-                                           PlaceholderColor="#8C84A6"
-                                           BackgroundColor="Transparent"
-                                           TextColor="{StaticResource TextMain}" />
+                                    <Entry
+                                        x:Name="ColorEntry"
+                                        BackgroundColor="Transparent"
+                                        Placeholder="Color"
+                                        PlaceholderColor="#8C84A6"
+                                        TextColor="{StaticResource PrimaryDark}" />
                                 </Border>
                             </Grid>
 
-                            <Border Stroke="{StaticResource InputBorder}"
-                                    StrokeThickness="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Padding="12,4"
-                                    HeightRequest="86">
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                                <Border
+                                    x:Name="SexoField"
+                                    Grid.Column="0"
+                                    Padding="12,0"
+                                    BackgroundColor="#FFFFFF"
+                                    HeightRequest="52"
+                                    Stroke="#A855F7"
+                                    StrokeThickness="1">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Button
+                                        x:Name="BtnSexoSelector"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        Clicked="OnAbrirSexoSelectorClicked"
+                                        FontAttributes="Bold"
+                                        HeightRequest="48"
+                                        HorizontalOptions="Fill"
+                                        Text="Seleccionar sexo"
+                                        TextColor="{StaticResource PrimaryDark}"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <Border
+                                    Grid.Column="1"
+                                    Padding="12,0"
+                                    BackgroundColor="#FFFFFF"
+                                    HeightRequest="50"
+                                    Stroke="#A855F7"
+                                    StrokeThickness="1">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Entry
+                                        x:Name="EdadEntry"
+                                        BackgroundColor="Transparent"
+                                        Placeholder="Edad aprox."
+                                        PlaceholderColor="#8C84A6"
+                                        TextColor="{StaticResource PrimaryDark}" />
+                                </Border>
+                            </Grid>
+
+                            <Border
+                                Padding="12,4"
+                                BackgroundColor="#FFFFFF"
+                                HeightRequest="86"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="16" />
                                 </Border.StrokeShape>
 
-                                <Editor x:Name="RasgosEditor"
-                                        Placeholder="Rasgos particulares"
-                                        PlaceholderColor="#8C84A6"
-                                        AutoSize="TextChanges"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMain}" />
+                                <Editor
+                                    x:Name="RasgosEditor"
+                                    AutoSize="TextChanges"
+                                    BackgroundColor="Transparent"
+                                    Placeholder="Rasgos particulares"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Información de salud plegable -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="14">
+                <!--  Información de salud plegable  -->
+                <Border
+                    Padding="14"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="22" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#2B0B98"
+                            Opacity="0.20"
+                            Radius="10"
+                            Offset="0,3" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="10">
@@ -531,143 +652,168 @@
                         <Grid ColumnDefinitions="*,Auto">
 
                             <VerticalStackLayout Spacing="1">
-                                <Label Text="Salud"
-                                       FontSize="17"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="17"
+                                    Text="Salud"
+                                    TextColor="{StaticResource PrimaryDark}" />
 
-                                <Label Text="Cuidados especiales."
-                                       FontSize="12"
-                                       TextColor="{StaticResource TextMuted}" />
+                                <Label
+                                    FontSize="12"
+                                    Text="Cuidados especiales."
+                                    TextColor="{StaticResource TextMuted}" />
                             </VerticalStackLayout>
 
-                            <Button x:Name="BtnToggleSalud"
-                                    Grid.Column="1"
-                                    Text="Mostrar"
-                                    Clicked="OnToggleSaludClicked"
-                                    BackgroundColor="{StaticResource PrimarySoft}"
-                                    TextColor="{StaticResource PrimaryDark}"
-                                    FontAttributes="Bold"
-                                    FontSize="12"
-                                    CornerRadius="14"
-                                    HeightRequest="36"
-                                    Padding="12,0"
-                                    VerticalOptions="Center" />
+                            <Button
+                                x:Name="BtnToggleSalud"
+                                Grid.Column="1"
+                                Padding="12,0"
+                                BackgroundColor="#EEE7FF"
+                                BorderColor="#7C3AED"
+                                BorderWidth="1"
+                                Clicked="OnToggleSaludClicked"
+                                CornerRadius="14"
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                HeightRequest="36"
+                                Text="Mostrar"
+                                TextColor="#4C1D95"
+                                VerticalOptions="Center" />
                         </Grid>
 
-                        <VerticalStackLayout x:Name="SaludContainer"
-                                             Spacing="10"
-                                             IsVisible="False">
+                        <VerticalStackLayout
+                            x:Name="SaludContainer"
+                            IsVisible="False"
+                            Spacing="10">
 
-                            <Border Stroke="{StaticResource InputBorder}"
-                                    StrokeThickness="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Padding="12,4"
-                                    HeightRequest="72">
+                            <Border
+                                Padding="12,4"
+                                BackgroundColor="#FFFFFF"
+                                HeightRequest="72"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="16" />
                                 </Border.StrokeShape>
 
-                                <Editor x:Name="EnfermedadesEditor"
-                                        Placeholder="Enfermedades"
-                                        PlaceholderColor="#8C84A6"
-                                        AutoSize="TextChanges"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMain}" />
+                                <Editor
+                                    x:Name="EnfermedadesEditor"
+                                    AutoSize="TextChanges"
+                                    BackgroundColor="Transparent"
+                                    Placeholder="Enfermedades"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
-                            <Border Stroke="{StaticResource InputBorder}"
-                                    StrokeThickness="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Padding="12,4"
-                                    HeightRequest="72">
+                            <Border
+                                Padding="12,4"
+                                BackgroundColor="#FFFFFF"
+                                HeightRequest="72"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="16" />
                                 </Border.StrokeShape>
 
-                                <Editor x:Name="DiscapacidadesEditor"
-                                        Placeholder="Discapacidades"
-                                        PlaceholderColor="#8C84A6"
-                                        AutoSize="TextChanges"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMain}" />
+                                <Editor
+                                    x:Name="DiscapacidadesEditor"
+                                    AutoSize="TextChanges"
+                                    BackgroundColor="Transparent"
+                                    Placeholder="Discapacidades"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
-                            <Border Stroke="{StaticResource InputBorder}"
-                                    StrokeThickness="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Padding="12,4"
-                                    HeightRequest="72">
+                            <Border
+                                Padding="12,4"
+                                BackgroundColor="#FFFFFF"
+                                HeightRequest="72"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="16" />
                                 </Border.StrokeShape>
 
-                                <Editor x:Name="TratamientosEditor"
-                                        Placeholder="Tratamientos"
-                                        PlaceholderColor="#8C84A6"
-                                        AutoSize="TextChanges"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMain}" />
+                                <Editor
+                                    x:Name="TratamientosEditor"
+                                    AutoSize="TextChanges"
+                                    BackgroundColor="Transparent"
+                                    Placeholder="Tratamientos"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
-                            <Border Stroke="{StaticResource InputBorder}"
-                                    StrokeThickness="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Padding="12,4"
-                                    HeightRequest="72">
+                            <Border
+                                Padding="12,4"
+                                BackgroundColor="#FFFFFF"
+                                HeightRequest="72"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="16" />
                                 </Border.StrokeShape>
 
-                                <Editor x:Name="NecesidadesEspecialesEditor"
-                                        Placeholder="Necesidades especiales"
-                                        PlaceholderColor="#8C84A6"
-                                        AutoSize="TextChanges"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMain}" />
+                                <Editor
+                                    x:Name="NecesidadesEspecialesEditor"
+                                    AutoSize="TextChanges"
+                                    BackgroundColor="Transparent"
+                                    Placeholder="Necesidades especiales"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
-                            <Border Stroke="{StaticResource InputBorder}"
-                                    StrokeThickness="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Padding="12,4"
-                                    HeightRequest="72">
+                            <Border
+                                Padding="12,4"
+                                BackgroundColor="#FFFFFF"
+                                HeightRequest="72"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="16" />
                                 </Border.StrokeShape>
 
-                                <Editor x:Name="ObservacionesSaludEditor"
-                                        Placeholder="Observaciones de salud"
-                                        PlaceholderColor="#8C84A6"
-                                        AutoSize="TextChanges"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMain}" />
+                                <Editor
+                                    x:Name="ObservacionesSaludEditor"
+                                    AutoSize="TextChanges"
+                                    BackgroundColor="Transparent"
+                                    Placeholder="Observaciones de salud"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- GPS plegable -->
-                <Border BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="14">
+                <!--  GPS plegable  -->
+                <Border
+                    Padding="14"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="22" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.08"
-                                Offset="0,3"
-                                Radius="10" />
+                        <Shadow
+                            Brush="#2B0B98"
+                            Opacity="0.20"
+                            Radius="10"
+                            Offset="0,3" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="10">
@@ -675,189 +821,208 @@
                         <Grid ColumnDefinitions="*,Auto">
 
                             <VerticalStackLayout Spacing="1">
-                                <Label Text="Collar GPS"
-                                       FontSize="17"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="17"
+                                    Text="Collar GPS"
+                                    TextColor="{StaticResource PrimaryDark}" />
 
-                                <Label Text="Código del dispositivo."
-                                       FontSize="12"
-                                       TextColor="{StaticResource TextMuted}" />
+                                <Label
+                                    FontSize="12"
+                                    Text="Código del dispositivo."
+                                    TextColor="{StaticResource TextMuted}" />
                             </VerticalStackLayout>
 
-                            <Button x:Name="BtnToggleGps"
-                                    Grid.Column="1"
-                                    Text="Mostrar"
-                                    Clicked="OnToggleGpsClicked"
-                                    BackgroundColor="{StaticResource PrimarySoft}"
-                                    TextColor="{StaticResource PrimaryDark}"
-                                    FontAttributes="Bold"
-                                    FontSize="12"
-                                    CornerRadius="14"
-                                    HeightRequest="36"
-                                    Padding="12,0"
-                                    VerticalOptions="Center" />
+                            <Button
+                                x:Name="BtnToggleGps"
+                                Grid.Column="1"
+                                Padding="12,0"
+                                BackgroundColor="#EEE7FF"
+                                BorderColor="#7C3AED"
+                                BorderWidth="1"
+                                Clicked="OnToggleGpsClicked"
+                                CornerRadius="14"
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                HeightRequest="36"
+                                Text="Mostrar"
+                                TextColor="#4C1D95"
+                                VerticalOptions="Center" />
                         </Grid>
 
-                        <VerticalStackLayout x:Name="GpsContainer"
-                                             Spacing="10"
-                                             IsVisible="False">
+                        <VerticalStackLayout
+                            x:Name="GpsContainer"
+                            IsVisible="False"
+                            Spacing="10">
 
-                            <Border Stroke="{StaticResource InputBorder}"
-                                    StrokeThickness="1"
-                                    BackgroundColor="{StaticResource InputBackground}"
-                                    Padding="12,0"
-                                    HeightRequest="50">
+                            <Border
+                                Padding="12,0"
+                                BackgroundColor="#FFFFFF"
+                                HeightRequest="50"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="16" />
                                 </Border.StrokeShape>
 
-                                <Entry x:Name="DispositivoIdEntry"
-                                       Placeholder="Código o IMEI del GPS"
-                                       PlaceholderColor="#8C84A6"
-                                       BackgroundColor="Transparent"
-                                       TextColor="{StaticResource TextMain}" />
+                                <Entry
+                                    x:Name="DispositivoIdEntry"
+                                    BackgroundColor="Transparent"
+                                    Placeholder="Código o IMEI del GPS"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
-                            <Border BackgroundColor="{StaticResource PrimarySoft}"
-                                    Stroke="Transparent"
-                                    Padding="10">
+                            <Border
+                                Padding="10"
+                                BackgroundColor="{StaticResource PrimarySoft}"
+                                Stroke="Transparent">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
                                 </Border.StrokeShape>
 
-                                <Label Text="Solo el dueño puede ver la ubicación GPS."
-                                       FontSize="12"
-                                       TextColor="{StaticResource PrimaryDark}"
-                                       FontAttributes="Bold"
-                                       HorizontalTextAlignment="Center" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Solo el dueño puede ver la ubicación GPS."
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Guardar -->
-                <Button x:Name="BtnGuardar"
-                        Text="💾 Guardar mascota"
-                        Clicked="OnGuardarMascotaClicked"
-                        BackgroundColor="{StaticResource PrimaryColor}"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        CornerRadius="18"
-                        HeightRequest="54"
-                        Margin="0,4,0,0">
+                <!--  Guardar  -->
+                <Button
+                    x:Name="BtnGuardar"
+                    Margin="0,4,0,0"
+                    BackgroundColor="{StaticResource PrimaryColor}"
+                    Clicked="OnGuardarMascotaClicked"
+                    CornerRadius="22"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HeightRequest="56"
+                    Text="💾 Guardar mascota"
+                    TextColor="White">
 
                     <Button.Shadow>
-                        <Shadow Brush="#5B21E6"
-                                Opacity="0.25"
-                                Offset="0,5"
-                                Radius="12" />
+                        <Shadow
+                            Brush="#5B21E6"
+                            Opacity="0.44"
+                            Radius="12"
+                            Offset="0,5" />
                     </Button.Shadow>
                 </Button>
 
-                <ActivityIndicator x:Name="LoadingIndicator"
-                                   IsRunning="False"
-                                   IsVisible="False"
-                                   Color="{StaticResource PrimaryColor}" />
+                <ActivityIndicator
+                    x:Name="LoadingIndicator"
+                    IsRunning="False"
+                    IsVisible="False"
+                    Color="{StaticResource PrimaryColor}" />
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Modal personalizado para seleccionar sexo -->
-        <Grid x:Name="SexoOverlay"
-              IsVisible="False"
-              Opacity="0"
-              BackgroundColor="#80000000">
+        <!--  Modal personalizado para seleccionar sexo  -->
+        <Grid
+            x:Name="SexoOverlay"
+            BackgroundColor="#80000000"
+            IsVisible="False"
+            Opacity="0">
 
             <Grid RowDefinitions="*,Auto">
 
-                <BoxView Grid.Row="0"
-                        BackgroundColor="Transparent">
+                <BoxView Grid.Row="0" BackgroundColor="Transparent">
                     <BoxView.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnCerrarSexoOverlayTapped" />
                     </BoxView.GestureRecognizers>
                 </BoxView>
 
-                <Border Grid.Row="1"
-                        BackgroundColor="#FFFFFF"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="18,16">
+                <Border
+                    Grid.Row="1"
+                    Padding="18,16"
+                    BackgroundColor="#FCFBFF"
+                    Stroke="#A855F7"
+                    StrokeThickness="1.2">
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="26,26,0,0" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.20"
-                                Offset="0,-4"
-                                Radius="16" />
+                        <Shadow
+                            Brush="#2B0B98"
+                            Opacity="0.20"
+                            Radius="16"
+                            Offset="0,-4" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="12">
 
-                        <Grid ColumnDefinitions="*,Auto"
-                            ColumnSpacing="10">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
 
-                            <VerticalStackLayout Grid.Column="0"
-                                         Spacing="2">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
 
-                                <Label Text="Seleccionar sexo"
-                                       FontSize="19"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextMain}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="19"
+                                    Text="Seleccionar sexo"
+                                    TextColor="{StaticResource PrimaryDark}" />
 
-                                <Label Text="Elige una opción para la mascota."
-                                       FontSize="12"
-                                       TextColor="{StaticResource TextMuted}" />
+                                <Label
+                                    FontSize="12"
+                                    Text="Elige una opción para la mascota."
+                                    TextColor="{StaticResource TextMuted}" />
                             </VerticalStackLayout>
 
-                            <Button Grid.Column="1"
-                                    Text="✕"
-                                    Clicked="OnCerrarSexoOverlayClicked"
-                                    BackgroundColor="{StaticResource PrimarySoft}"
-                                    TextColor="{StaticResource PrimaryColor}"
-                                    FontAttributes="Bold"
-                                    CornerRadius="18"
-                                    WidthRequest="38"
-                                    HeightRequest="38"
-                                    Padding="0" />
+                            <Button
+                                Grid.Column="1"
+                                Padding="0"
+                                BackgroundColor="{StaticResource PrimarySoft}"
+                                Clicked="OnCerrarSexoOverlayClicked"
+                                CornerRadius="18"
+                                FontAttributes="Bold"
+                                HeightRequest="38"
+                                Text="✕"
+                                TextColor="{StaticResource PrimaryColor}"
+                                WidthRequest="38" />
                         </Grid>
 
-                        <Button Text="♂️ Macho"
-                                Clicked="OnSexoMachoClicked"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                TextColor="{StaticResource PrimaryDark}"
-                                BorderColor="{StaticResource CardBorder}"
-                                BorderWidth="1"
-                                FontAttributes="Bold"
-                                CornerRadius="16"
-                                HeightRequest="48" />
+                        <Button
+                            BackgroundColor="#EEE7FF"
+                            BorderColor="#7C3AED"
+                            BorderWidth="1"
+                            Clicked="OnSexoMachoClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            HeightRequest="48"
+                            Text="♂️ Macho"
+                            TextColor="#4C1D95" />
 
-                        <Button Text="♀️ Hembra"
-                                Clicked="OnSexoHembraClicked"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                TextColor="{StaticResource PrimaryDark}"
-                                BorderColor="{StaticResource CardBorder}"
-                                BorderWidth="1"
-                                FontAttributes="Bold"
-                                CornerRadius="16"
-                                HeightRequest="48" />
+                        <Button
+                            BackgroundColor="#EEE7FF"
+                            BorderColor="#7C3AED"
+                            BorderWidth="1"
+                            Clicked="OnSexoHembraClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            HeightRequest="48"
+                            Text="♀️ Hembra"
+                            TextColor="#4C1D95" />
 
-                        <Button Text="❔ No especificado"
-                                Clicked="OnSexoNoEspecificadoClicked"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                TextColor="{StaticResource PrimaryDark}"
-                                BorderColor="{StaticResource CardBorder}"
-                                BorderWidth="1"
-                                FontAttributes="Bold"
-                                CornerRadius="16"
-                                HeightRequest="48" />
+                        <Button
+                            BackgroundColor="#EEE7FF"
+                            BorderColor="#7C3AED"
+                            BorderWidth="1"
+                            Clicked="OnSexoNoEspecificadoClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            HeightRequest="48"
+                            Text="❔ No especificado"
+                            TextColor="#4C1D95" />
 
                     </VerticalStackLayout>
                 </Border>
@@ -865,12 +1030,13 @@
         </Grid>
 
 
-        <!-- Modal personalizado: salir sin guardar -->
-        <Grid x:Name="SalirSinGuardarOverlay"
-              IsVisible="False"
-              Opacity="0"
-              BackgroundColor="#90000000"
-              Padding="22">
+        <!--  Modal personalizado: salir sin guardar  -->
+        <Grid
+            x:Name="SalirSinGuardarOverlay"
+            Padding="22"
+            BackgroundColor="#90000000"
+            IsVisible="False"
+            Opacity="0">
 
             <BoxView BackgroundColor="Transparent">
                 <BoxView.GestureRecognizers>
@@ -878,102 +1044,117 @@
                 </BoxView.GestureRecognizers>
             </BoxView>
 
-            <Border BackgroundColor="#FFFFFF"
-                    Stroke="{StaticResource CardBorder}"
-                    StrokeThickness="1"
-                    Padding="20"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
+            <Border
+                Padding="20"
+                BackgroundColor="#FCFBFF"
+                HorizontalOptions="Center"
+                StrokeThickness="1.2"
+                VerticalOptions="Center">
+
+                <Border.Stroke>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0.0" Color="#D8B4FE" />
+                        <GradientStop Offset="0.65" Color="#A855F7" />
+                        <GradientStop Offset="1.0" Color="#7C3AED" />
+                    </LinearGradientBrush>
+                </Border.Stroke>
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="26" />
                 </Border.StrokeShape>
 
                 <Border.Shadow>
-                    <Shadow Brush="#2B0B98"
-                            Opacity="0.25"
-                            Offset="0,8"
-                            Radius="22" />
+                    <Shadow
+                        Brush="#2B0B98"
+                        Opacity="0.25"
+                        Radius="22"
+                        Offset="0,8" />
                 </Border.Shadow>
 
-                <VerticalStackLayout Spacing="16"
-                             WidthRequest="310">
+                <VerticalStackLayout Spacing="16" WidthRequest="310">
 
-                    <Border BackgroundColor="{StaticResource PrimarySoft}"
-                            Stroke="Transparent"
-                            WidthRequest="58"
-                            HeightRequest="58"
-                            HorizontalOptions="Center">
+                    <Border
+                        BackgroundColor="{StaticResource PrimarySoft}"
+                        HeightRequest="58"
+                        HorizontalOptions="Center"
+                        Stroke="Transparent"
+                        WidthRequest="58">
 
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="29" />
                         </Border.StrokeShape>
 
-                        <Label Text="⚠️"
-                               FontSize="30"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                        <Label
+                            FontSize="30"
+                            HorizontalOptions="Center"
+                            Text="⚠️"
+                            VerticalOptions="Center" />
                     </Border>
 
                     <VerticalStackLayout Spacing="6">
 
-                        <Label Text="Salir sin guardar"
-                               FontSize="22"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource TextMain}"
-                               HorizontalTextAlignment="Center" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="22"
+                            HorizontalTextAlignment="Center"
+                            Text="Salir sin guardar"
+                            TextColor="{StaticResource PrimaryDark}" />
 
-                        <Label x:Name="LblMensajeSalirSinGuardar"
-                               Text="¿Deseas volver? Los datos ingresados no se guardarán."
-                               FontSize="14"
-                               TextColor="{StaticResource TextMuted}"
-                               HorizontalTextAlignment="Center"
-                               LineBreakMode="WordWrap" />
+                        <Label
+                            x:Name="LblMensajeSalirSinGuardar"
+                            FontSize="14"
+                            HorizontalTextAlignment="Center"
+                            LineBreakMode="WordWrap"
+                            Text="¿Deseas volver? Los datos ingresados no se guardarán."
+                            TextColor="{StaticResource TextMuted}" />
                     </VerticalStackLayout>
 
-                    <Border BackgroundColor="#FFF7ED"
-                            Stroke="#FED7AA"
-                            StrokeThickness="1"
-                            Padding="12">
+                    <Border
+                        Padding="12"
+                        BackgroundColor="#FFF7ED"
+                        Stroke="#FED7AA"
+                        StrokeThickness="1">
 
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16" />
                         </Border.StrokeShape>
 
-                        <Label Text="Si sales ahora, perderás la información que aún no guardaste."
-                               FontSize="12"
-                               TextColor="#9A3412"
-                               HorizontalTextAlignment="Center"
-                               LineBreakMode="WordWrap" />
+                        <Label
+                            FontSize="12"
+                            HorizontalTextAlignment="Center"
+                            LineBreakMode="WordWrap"
+                            Text="Si sales ahora, perderás la información que aún no guardaste."
+                            TextColor="#9A3412" />
                     </Border>
 
-                    <Grid ColumnDefinitions="*,*"
-                        ColumnSpacing="10">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
 
-                        <Button Grid.Column="0"
-                                Text="Cancelar"
-                                Clicked="OnCancelarSalirClicked"
-                                BackgroundColor="#FFFFFF"
-                                TextColor="{StaticResource PrimaryColor}"
-                                BorderColor="{StaticResource CardBorder}"
-                                BorderWidth="1"
-                                FontAttributes="Bold"
-                                CornerRadius="16"
-                                HeightRequest="46" />
+                        <Button
+                            Grid.Column="0"
+                            BackgroundColor="#EEE7FF"
+                            BorderColor="#7C3AED"
+                            BorderWidth="1"
+                            Clicked="OnCancelarSalirClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            HeightRequest="46"
+                            Text="Cancelar"
+                            TextColor="#4C1D95" />
 
-                        <Button Grid.Column="1"
-                                Text="Sí, volver"
-                                Clicked="OnConfirmarSalirClicked"
-                                BackgroundColor="{StaticResource PrimaryColor}"
-                                TextColor="White"
-                                FontAttributes="Bold"
-                                CornerRadius="16"
-                                HeightRequest="46" />
+                        <Button
+                            Grid.Column="1"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            Clicked="OnConfirmarSalirClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            HeightRequest="46"
+                            Text="Sí, volver"
+                            TextColor="White" />
                     </Grid>
 
                 </VerticalStackLayout>
             </Border>
         </Grid>
-        
+
     </Grid>
 </ContentPage>

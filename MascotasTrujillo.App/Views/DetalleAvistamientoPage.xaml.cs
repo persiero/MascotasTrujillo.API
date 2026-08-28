@@ -9,6 +9,7 @@ public partial class DetalleAvistamientoPage : ContentPage
     private readonly long _avistamientoId;
 
     private Avistamiento? _avistamiento;
+    private bool _detalleCargado = false;
 
     public DetalleAvistamientoPage(ApiService apiService, long avistamientoId)
     {
@@ -21,7 +22,26 @@ public partial class DetalleAvistamientoPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await CargarDetalleAsync();
+
+        if (_detalleCargado)
+            return;
+
+        _detalleCargado = true;
+
+        try
+        {
+            await CargarDetalleAsync();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                $"No se pudo abrir el detalle del avistamiento.\n\nDetalle técnico:\n{ex.Message}",
+                "OK"
+            );
+
+            await VolverAsync();
+        }
     }
 
     private async Task CargarDetalleAsync()
@@ -38,7 +58,7 @@ public partial class DetalleAvistamientoPage : ContentPage
                     "OK"
                 );
 
-                await Navigation.PopAsync();
+                await VolverAsync();
                 return;
             }
 
@@ -48,15 +68,34 @@ public partial class DetalleAvistamientoPage : ContentPage
                 ? "Información registrada por la comunidad."
                 : $"Reporte: {detalle.ReporteTitulo}";
 
-            FotoAvistamientoImage.Source = detalle.FotoMostrar;
+            string fotoMostrar = string.IsNullOrWhiteSpace(detalle.FotoMostrar)
+                ? "https://cdn-icons-png.flaticon.com/512/616/616408.png"
+                : detalle.FotoMostrar;
 
-            LblDescripcion.Text = detalle.DescripcionMostrar;
-            LblDireccion.Text = detalle.ResumenUbicacion;
-            LblFecha.Text = detalle.FechaResumen;
-            LblCoordenadas.Text = $"Lat. {detalle.Latitud:F6}, Long. {detalle.Longitud:F6}";
+            FotoAvistamientoImage.Source = fotoMostrar;
 
-            LblNombreContacto.Text = detalle.ContactoMostrar;
-            LblTelefonoContacto.Text = detalle.TelefonoMostrar;
+            LblDescripcion.Text = string.IsNullOrWhiteSpace(detalle.DescripcionMostrar)
+                ? "Sin descripción registrada."
+                : detalle.DescripcionMostrar;
+
+            LblDireccion.Text = string.IsNullOrWhiteSpace(detalle.ResumenUbicacion)
+                ? "Sin referencia registrada."
+                : detalle.ResumenUbicacion;
+
+            LblFecha.Text = string.IsNullOrWhiteSpace(detalle.FechaResumen)
+                ? "Fecha no disponible."
+                : detalle.FechaResumen;
+
+            LblCoordenadas.Text =
+                $"Lat. {detalle.Latitud:F6}, Long. {detalle.Longitud:F6}";
+
+            LblNombreContacto.Text = string.IsNullOrWhiteSpace(detalle.ContactoMostrar)
+                ? "Contacto no disponible"
+                : detalle.ContactoMostrar;
+
+            LblTelefonoContacto.Text = string.IsNullOrWhiteSpace(detalle.TelefonoMostrar)
+                ? "Teléfono no disponible"
+                : detalle.TelefonoMostrar;
 
             BtnWhatsAppAvistamiento.IsVisible = detalle.PuedeContactar;
             LblContactoNoDisponible.IsVisible = !detalle.PuedeContactar;
@@ -65,9 +104,11 @@ public partial class DetalleAvistamientoPage : ContentPage
         {
             await DisplayAlertAsync(
                 "Error",
-                $"No se pudo cargar el detalle: {ex.Message}",
+                $"No se pudo cargar el detalle del avistamiento.\n\nDetalle técnico:\n{ex.Message}",
                 "OK"
             );
+
+            await VolverAsync();
         }
     }
 

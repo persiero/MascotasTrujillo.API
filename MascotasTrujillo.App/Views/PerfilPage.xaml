@@ -12,11 +12,24 @@
         <ResourceDictionary>
             <Color x:Key="PrimaryColor">#5B21E6</Color>
             <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimaryDeep">#4C1D95</Color>
             <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="PrimarySoft2">#F3E8FF</Color>
+
+            <Color x:Key="AccentPink">#FF4FB3</Color>
+            <Color x:Key="AccentPinkSoft">#FDF2F8</Color>
+            <Color x:Key="AccentPinkBorder">#F9A8D4</Color>
+            <Color x:Key="AccentPinkText">#DB2777</Color>
+
             <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextTitle">#1E1B4B</Color>
             <Color x:Key="TextMuted">#64748B</Color>
-            <Color x:Key="CardBorder">#E1D6FF</Color>
-            <Color x:Key="InputBorder">#D8CCFF</Color>
+            <Color x:Key="TextSecondary">#475569</Color>
+            <Color x:Key="TextLight">#8A86A3</Color>
+
+            <Color x:Key="CardBorder">#DCCBFF</Color>
+            <Color x:Key="CardBorderStrong">#A855F7</Color>
+            <Color x:Key="InputBorder">#D8B4FE</Color>
             <Color x:Key="InputBackground">#F8F5FF</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -31,9 +44,9 @@
 
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0.0" Color="#E8DEF8" />
-                    <GradientStop Offset="0.45" Color="#EFE7FB" />
-                    <GradientStop Offset="1.0" Color="#F5F1FC" />
+                    <GradientStop Offset="0.0" Color="#E1D2FF" />
+                    <GradientStop Offset="0.45" Color="#EADFFF" />
+                    <GradientStop Offset="1.0" Color="#F4ECFF" />
                 </LinearGradientBrush>
             </Grid.Background>
 
@@ -46,9 +59,9 @@
 
                 <Border.Stroke>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0.0" Color="#E9D8FD" />
-                        <GradientStop Offset="0.55" Color="#C084FC" />
-                        <GradientStop Offset="1.0" Color="#A855F7" />
+                        <GradientStop Offset="0.0" Color="#D8B4FE" />
+                        <GradientStop Offset="0.55" Color="#A855F7" />
+                        <GradientStop Offset="1.0" Color="#6D28D9" />
                     </LinearGradientBrush>
                 </Border.Stroke>
 
@@ -59,7 +72,7 @@
                 <Border.Shadow>
                     <Shadow
                         Brush="#6D28D9"
-                        Opacity="0.18"
+                        Opacity="0.26"
                         Radius="18"
                         Offset="0,7" />
                 </Border.Shadow>
@@ -94,7 +107,7 @@
                         FontAttributes="Bold"
                         FontSize="20"
                         Text="Mi Perfil"
-                        TextColor="{StaticResource TextMain}"
+                        TextColor="{StaticResource PrimaryDark}"
                         VerticalOptions="Center" />
                 </Grid>
             </Border>
@@ -110,9 +123,9 @@
 
                         <Border.Stroke>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                <GradientStop Offset="0.0" Color="#E9D8FD" />
-                                <GradientStop Offset="0.65" Color="#D8B4FE" />
-                                <GradientStop Offset="1.0" Color="#C084FC" />
+                                <GradientStop Offset="0.0" Color="#D8B4FE" />
+                                <GradientStop Offset="0.65" Color="#A855F7" />
+                                <GradientStop Offset="1.0" Color="#7C3AED" />
                             </LinearGradientBrush>
                         </Border.Stroke>
 
@@ -123,7 +136,7 @@
                         <Border.Shadow>
                             <Shadow
                                 Brush="#6D28D9"
-                                Opacity="0.15"
+                                Opacity="0.22"
                                 Radius="16"
                                 Offset="0,6" />
                         </Border.Shadow>
@@ -133,13 +146,21 @@
                             <Border
                                 BackgroundColor="#F3E8FF"
                                 HeightRequest="112"
-                                Stroke="#5B21E6"
-                                StrokeThickness="2.5"
+                                Stroke="#4C1D95"
+                                StrokeThickness="2.8"
                                 WidthRequest="112">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="56" />
                                 </Border.StrokeShape>
+
+                                <Border.Shadow>
+                                    <Shadow
+                                        Brush="#5B21E6"
+                                        Opacity="0.22"
+                                        Radius="12"
+                                        Offset="0,5" />
+                                </Border.Shadow>
 
                                 <Image
                                     x:Name="FotoPerfilImage"
@@ -158,7 +179,7 @@
                                     HorizontalTextAlignment="Center"
                                     LineBreakMode="TailTruncation"
                                     Text="Cargando..."
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
 
                                 <Label
                                     x:Name="LblEmailPerfil"
@@ -185,7 +206,7 @@
                                     <Button.Shadow>
                                         <Shadow
                                             Brush="#5B21E6"
-                                            Opacity="0.28"
+                                            Opacity="0.36"
                                             Radius="10"
                                             Offset="0,4" />
                                     </Button.Shadow>
@@ -193,8 +214,8 @@
 
                                 <Button
                                     Padding="15,0"
-                                    BackgroundColor="#F3E8FF"
-                                    BorderColor="#C084FC"
+                                    BackgroundColor="#EEE7FF"
+                                    BorderColor="#7C3AED"
                                     BorderWidth="1"
                                     Clicked="OnSeleccionarFotoPerfilClicked"
                                     CornerRadius="16"
@@ -202,13 +223,14 @@
                                     FontSize="12"
                                     HeightRequest="42"
                                     Text="🖼️ Galería"
-                                    TextColor="{StaticResource PrimaryColor}" />
+                                    TextColor="#4C1D95" />
                             </HorizontalStackLayout>
 
                             <Border
                                 Padding="9,4"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                Stroke="Transparent">
+                                BackgroundColor="#F3E8FF"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="12" />
@@ -218,7 +240,7 @@
                                     FontAttributes="Bold"
                                     FontSize="11"
                                     Text="Cuenta activa"
-                                    TextColor="{StaticResource PrimaryColor}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
                             </Border>
 
                         </VerticalStackLayout>
@@ -232,9 +254,9 @@
 
                         <Border.Stroke>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                <GradientStop Offset="0.0" Color="#E9D8FD" />
-                                <GradientStop Offset="0.65" Color="#D8B4FE" />
-                                <GradientStop Offset="1.0" Color="#C084FC" />
+                                <GradientStop Offset="0.0" Color="#D8B4FE" />
+                                <GradientStop Offset="0.65" Color="#A855F7" />
+                                <GradientStop Offset="1.0" Color="#7C3AED" />
                             </LinearGradientBrush>
                         </Border.Stroke>
 
@@ -245,7 +267,7 @@
                         <Border.Shadow>
                             <Shadow
                                 Brush="#6D28D9"
-                                Opacity="0.14"
+                                Opacity="0.20"
                                 Radius="14"
                                 Offset="0,5" />
                         </Border.Shadow>
@@ -257,14 +279,15 @@
                                     FontAttributes="Bold"
                                     FontSize="18"
                                     Text="Información personal"
-                                    TextColor="{StaticResource TextMain}"
+                                    TextColor="{StaticResource PrimaryDark}"
                                     VerticalOptions="Center" />
 
                                 <Border
                                     Grid.Column="1"
                                     Padding="8,3"
-                                    BackgroundColor="{StaticResource PrimarySoft}"
-                                    Stroke="Transparent"
+                                    BackgroundColor="#F3E8FF"
+                                    Stroke="#A855F7"
+                                    StrokeThickness="1"
                                     VerticalOptions="Center">
 
                                     <Border.StrokeShape>
@@ -275,7 +298,7 @@
                                         FontAttributes="Bold"
                                         FontSize="11"
                                         Text="Editable"
-                                        TextColor="{StaticResource PrimaryColor}" />
+                                        TextColor="{StaticResource PrimaryDark}" />
                                 </Border>
                             </Grid>
 
@@ -287,9 +310,9 @@
 
                                 <Border.Stroke>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Offset="0.0" Color="#EEE7FF" />
-                                        <GradientStop Offset="0.55" Color="#D8B4FE" />
-                                        <GradientStop Offset="1.0" Color="#C084FC" />
+                                        <GradientStop Offset="0.0" Color="#E9D5FF" />
+                                        <GradientStop Offset="0.55" Color="#C084FC" />
+                                        <GradientStop Offset="1.0" Color="#9333EA" />
                                     </LinearGradientBrush>
                                 </Border.Stroke>
 
@@ -307,9 +330,9 @@
 
                             <Border
                                 Padding="12,0"
-                                BackgroundColor="#F3E8FF"
+                                BackgroundColor="#EEE7FF"
                                 HeightRequest="52"
-                                Stroke="#D8B4FE"
+                                Stroke="#A855F7"
                                 StrokeThickness="1">
 
                                 <Border.StrokeShape>
@@ -321,7 +344,7 @@
                                     BackgroundColor="Transparent"
                                     IsEnabled="False"
                                     Placeholder="Correo electrónico"
-                                    TextColor="{StaticResource TextMuted}" />
+                                    TextColor="#475569" />
                             </Border>
 
                             <Border
@@ -353,8 +376,9 @@
 
                             <Border
                                 Padding="10"
-                                BackgroundColor="{StaticResource PrimarySoft}"
-                                Stroke="Transparent">
+                                BackgroundColor="#F3E8FF"
+                                Stroke="#A855F7"
+                                StrokeThickness="1">
 
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
@@ -381,7 +405,7 @@
                                 <Button.Shadow>
                                     <Shadow
                                         Brush="#5B21E6"
-                                        Opacity="0.35"
+                                        Opacity="0.44"
                                         Radius="14"
                                         Offset="0,6" />
                                 </Button.Shadow>
@@ -399,13 +423,21 @@
                     <!--  Seguridad  -->
                     <Border
                         Padding="0"
-                        BackgroundColor="#FCFBFF"
-                        Stroke="#E1D6FF"
-                        StrokeThickness="1">
+                        BackgroundColor="#FFFCFF"
+                        Stroke="#A855F7"
+                        StrokeThickness="1.2">
 
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="22" />
                         </Border.StrokeShape>
+
+                        <Border.Shadow>
+                            <Shadow
+                                Brush="#5B21E6"
+                                Opacity="0.16"
+                                Radius="12"
+                                Offset="0,4" />
+                        </Border.Shadow>
 
                         <Grid Padding="15" ColumnDefinitions="50,*,30">
 
@@ -446,7 +478,7 @@
                                     FontAttributes="Bold"
                                     FontSize="15"
                                     Text="Cambiar contraseña"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
 
                                 <Label
                                     FontSize="12"
@@ -482,7 +514,7 @@
                         <Border.Shadow>
                             <Shadow
                                 Brush="#5B21E6"
-                                Opacity="0.08"
+                                Opacity="0.16"
                                 Radius="10"
                                 Offset="0,3" />
                         </Border.Shadow>
@@ -561,9 +593,9 @@
                 <Border
                     Margin="0,0,0,12"
                     Padding="16"
-                    BackgroundColor="#FFFFFF"
-                    Stroke="{StaticResource CardBorder}"
-                    StrokeThickness="1"
+                    BackgroundColor="#FFFCFF"
+                    Stroke="#A855F7"
+                    StrokeThickness="1.2"
                     VerticalOptions="End">
 
                     <Border.StrokeShape>
@@ -572,8 +604,8 @@
 
                     <Border.Shadow>
                         <Shadow
-                            Brush="Black"
-                            Opacity="0.18"
+                            Brush="#5B21E6"
+                            Opacity="0.25"
                             Radius="18"
                             Offset="0,6" />
                     </Border.Shadow>
@@ -586,7 +618,7 @@
                                     FontAttributes="Bold"
                                     FontSize="18"
                                     Text="Cambiar contraseña"
-                                    TextColor="{StaticResource TextMain}" />
+                                    TextColor="{StaticResource PrimaryDark}" />
 
                                 <Label
                                     FontSize="12"
@@ -611,9 +643,9 @@
 
                         <Border
                             Padding="12,0"
-                            BackgroundColor="{StaticResource InputBackground}"
+                            BackgroundColor="#FFFFFF"
                             HeightRequest="50"
-                            Stroke="{StaticResource InputBorder}"
+                            Stroke="#A855F7"
                             StrokeThickness="1">
 
                             <Border.StrokeShape>
@@ -631,9 +663,9 @@
 
                         <Border
                             Padding="12,0"
-                            BackgroundColor="{StaticResource InputBackground}"
+                            BackgroundColor="#FFFFFF"
                             HeightRequest="50"
-                            Stroke="{StaticResource InputBorder}"
+                            Stroke="#A855F7"
                             StrokeThickness="1">
 
                             <Border.StrokeShape>
@@ -651,9 +683,9 @@
 
                         <Border
                             Padding="12,0"
-                            BackgroundColor="{StaticResource InputBackground}"
+                            BackgroundColor="#FFFFFF"
                             HeightRequest="50"
-                            Stroke="{StaticResource InputBorder}"
+                            Stroke="#A855F7"
                             StrokeThickness="1">
 
                             <Border.StrokeShape>
@@ -681,14 +713,16 @@
                             TextColor="White" />
 
                         <Button
-                            BackgroundColor="#F8F5FF"
+                            BackgroundColor="#F3E8FF"
+                            BorderColor="#D8B4FE"
+                            BorderWidth="1"
                             Clicked="OnCerrarPasswordClicked"
                             CornerRadius="16"
                             FontAttributes="Bold"
                             FontSize="14"
                             HeightRequest="44"
                             Text="Cancelar"
-                            TextColor="{StaticResource TextMuted}" />
+                            TextColor="#4C1D95" />
 
                     </VerticalStackLayout>
                 </Border>

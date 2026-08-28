@@ -308,23 +308,53 @@ public partial class DetalleReportePage : ContentPage
 
     private async void OnAvistamientoTapped(object sender, TappedEventArgs e)
     {
-        if (e.Parameter is not Avistamiento avistamiento)
-            return;
+        try
+        {
+            if (e.Parameter is not Avistamiento avistamiento)
+            {
+                await DisplayAlertAsync(
+                    "Aviso",
+                    "No se pudo identificar el avistamiento seleccionado.",
+                    "OK"
+                );
 
-        if (!avistamiento.PuedeVerDetalle)
+                return;
+            }
+
+            if (!avistamiento.PuedeVerDetalle)
+            {
+                await DisplayAlertAsync(
+                    "Detalle restringido",
+                    "Solo el dueño del reporte o el usuario que registró este avistamiento pueden ver el detalle completo.",
+                    "OK"
+                );
+
+                return;
+            }
+
+            if (avistamiento.Id <= 0)
+            {
+                await DisplayAlertAsync(
+                    "Aviso",
+                    "El avistamiento seleccionado no tiene un identificador válido.",
+                    "OK"
+                );
+
+                return;
+            }
+
+            await Navigation.PushAsync(
+                new DetalleAvistamientoPage(_apiService, avistamiento.Id)
+            );
+        }
+        catch (Exception ex)
         {
             await DisplayAlertAsync(
-                "Detalle restringido",
-                "Solo el dueño del reporte o el usuario que registró este avistamiento pueden ver el detalle completo.",
+                "Error",
+                $"No se pudo abrir el detalle del avistamiento.\n\nDetalle técnico:\n{ex.Message}",
                 "OK"
             );
-
-            return;
         }
-
-        await Navigation.PushAsync(
-            new DetalleAvistamientoPage(_apiService, avistamiento.Id)
-        );
     }
 
     private async void OnVolverClicked(object sender, EventArgs e)

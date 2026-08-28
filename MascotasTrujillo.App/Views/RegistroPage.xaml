@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage 
+<ContentPage
+    x:Class="MascotasTrujillo.App.Views.RegistroPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="MascotasTrujillo.App.Views.RegistroPage"
     Title="Crear cuenta"
-    Shell.NavBarIsVisible="False"
-    BackgroundColor="#F5F1FF">
+    BackgroundColor="#F5F1FF"
+    Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -25,381 +25,464 @@
 
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#F8F5FF" Offset="0.0" />
-                <GradientStop Color="#F3EDFF" Offset="0.55" />
-                <GradientStop Color="#FDFBFF" Offset="1.0" />
+                <GradientStop Offset="0.0" Color="#E1D2FF" />
+                <GradientStop Offset="0.45" Color="#EADFFF" />
+                <GradientStop Offset="1.0" Color="#F4ECFF" />
             </LinearGradientBrush>
         </Grid.Background>
 
         <ScrollView VerticalOptions="Center">
             <VerticalStackLayout Spacing="18">
 
-                <Button Text="← Volver"
-                        Clicked="OnVolverAlLoginTapped"
-                        BackgroundColor="Transparent"
-                        TextColor="{StaticResource PrimaryColor}"
-                        FontAttributes="Bold"
-                        HorizontalOptions="Start"
-                        Padding="0" />
+                <Button
+                    Padding="14,0"
+                    BackgroundColor="#F3E8FF"
+                    BorderColor="#A855F7"
+                    BorderWidth="1"
+                    Clicked="OnVolverAlLoginTapped"
+                    CornerRadius="16"
+                    FontAttributes="Bold"
+                    HeightRequest="40"
+                    HorizontalOptions="Start"
+                    Text="← Volver"
+                    TextColor="{StaticResource PrimaryDark}" />
 
-                <!-- Logo y título -->
-                <VerticalStackLayout Spacing="8"
-                                     HorizontalOptions="Center"
-                                     Margin="0,0,0,4">
+                <!--  Logo y título  -->
+                <VerticalStackLayout
+                    Margin="0,0,0,4"
+                    HorizontalOptions="Center"
+                    Spacing="8">
 
-                    <Border HeightRequest="120"
-                            WidthRequest="120"
-                            BackgroundColor="White"
-                            Stroke="{StaticResource CardBorder}"
-                            StrokeThickness="1"
-                            Padding="12">
+                    <Border
+                        Padding="12"
+                        BackgroundColor="White"
+                        HeightRequest="120"
+                        Stroke="{StaticResource CardBorder}"
+                        StrokeThickness="1"
+                        WidthRequest="120">
 
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="60" />
                         </Border.StrokeShape>
 
                         <Border.Shadow>
-                            <Shadow Brush="#5B21E6"
-                                    Opacity="0.20"
-                                    Offset="0,8"
-                                    Radius="20" />
+                            <Shadow
+                                Brush="#5B21E6"
+                                Opacity="0.20"
+                                Radius="20"
+                                Offset="0,8" />
                         </Border.Shadow>
 
-                        <Image Source="logo_petguardian.png"
-                               Aspect="AspectFit"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                        <Image
+                            Aspect="AspectFit"
+                            HorizontalOptions="Center"
+                            Source="logo_petguardian.png"
+                            VerticalOptions="Center" />
                     </Border>
 
-                    <Label Text="Crear una cuenta"
-                           FontSize="27"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryDark}"
-                           HorizontalTextAlignment="Center" />
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="27"
+                        HorizontalTextAlignment="Center"
+                        Text="Crear una cuenta"
+                        TextColor="{StaticResource PrimaryDark}" />
 
-                    <Label Text="Únete a la comunidad de rescate"
-                           FontSize="13"
-                           TextColor="{StaticResource TextMuted}"
-                           HorizontalTextAlignment="Center" />
+                    <Label
+                        FontSize="13"
+                        HorizontalTextAlignment="Center"
+                        Text="Únete a la comunidad de rescate"
+                        TextColor="{StaticResource TextMuted}" />
                 </VerticalStackLayout>
 
-                <!-- Tarjeta de registro -->
-                <Border BackgroundColor="White"
-                        Stroke="{StaticResource CardBorder}"
-                        StrokeThickness="1"
-                        Padding="18">
+                <!--  Tarjeta de registro  -->
+                <Border
+                    Padding="18"
+                    BackgroundColor="#FCFBFF"
+                    StrokeThickness="1.2">
+
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.0" Color="#D8B4FE" />
+                            <GradientStop Offset="0.65" Color="#A855F7" />
+                            <GradientStop Offset="1.0" Color="#7C3AED" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
 
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="26" />
                     </Border.StrokeShape>
 
                     <Border.Shadow>
-                        <Shadow Brush="#2B0B98"
-                                Opacity="0.12"
-                                Offset="0,8"
-                                Radius="22" />
+                        <Shadow
+                            Brush="#5B21E6"
+                            Opacity="0.24"
+                            Radius="26"
+                            Offset="0,10" />
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="13">
 
-                        <Label Text="Datos de acceso"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource TextMain}" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Text="Datos de acceso"
+                            TextColor="{StaticResource PrimaryDark}" />
 
-                        <!-- Nombre -->
-                        <Border Stroke="{StaticResource InputBorder}"
-                                StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,0"
-                                HeightRequest="54">
-
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="18" />
-                            </Border.StrokeShape>
-
-                            <Grid ColumnDefinitions="Auto,*"
-                                  ColumnSpacing="10"
-                                  VerticalOptions="Center">
-
-                                <Border WidthRequest="30"
-                                        HeightRequest="30"
-                                        BackgroundColor="{StaticResource PrimarySoft}"
-                                        Stroke="Transparent"
-                                        VerticalOptions="Center">
-
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="15" />
-                                    </Border.StrokeShape>
-
-                                    <Label Text="👤"
-                                           FontSize="14"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-
-                                <Entry x:Name="NombreEntry"
-                                       Grid.Column="1"
-                                       Placeholder="Nombre completo"
-                                       PlaceholderColor="#8C84A6"
-                                       TextColor="{StaticResource TextMain}"
-                                       BackgroundColor="Transparent"
-                                       ClearButtonVisibility="WhileEditing" />
-                            </Grid>
-                        </Border>
-
-                        <!-- Correo -->
-                        <Border Stroke="{StaticResource InputBorder}"
-                                StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,0"
-                                HeightRequest="54">
+                        <!--  Nombre  -->
+                        <Border
+                            Padding="12,0"
+                            BackgroundColor="#FFFFFF"
+                            HeightRequest="54"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="18" />
                             </Border.StrokeShape>
 
-                            <Grid ColumnDefinitions="Auto,*"
-                                  ColumnSpacing="10"
-                                  VerticalOptions="Center">
+                            <Grid
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="10"
+                                VerticalOptions="Center">
 
-                                <Border WidthRequest="30"
-                                        HeightRequest="30"
-                                        BackgroundColor="{StaticResource PrimarySoft}"
-                                        Stroke="Transparent"
-                                        VerticalOptions="Center">
+                                <Border
+                                    BackgroundColor="#F3E8FF"
+                                    HeightRequest="30"
+                                    Stroke="#D8B4FE"
+                                    StrokeThickness="1"
+                                    VerticalOptions="Center"
+                                    WidthRequest="30">
 
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="15" />
                                     </Border.StrokeShape>
 
-                                    <Label Text="✉"
-                                           FontSize="14"
-                                           TextColor="{StaticResource PrimaryColor}"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                    <Label
+                                        FontSize="14"
+                                        HorizontalOptions="Center"
+                                        Text="👤"
+                                        VerticalOptions="Center" />
                                 </Border>
 
-                                <Entry x:Name="EmailEntry"
-                                       Grid.Column="1"
-                                       Placeholder="Correo electrónico"
-                                       PlaceholderColor="#8C84A6"
-                                       Keyboard="Email"
-                                       TextColor="{StaticResource TextMain}"
-                                       BackgroundColor="Transparent"
-                                       ClearButtonVisibility="WhileEditing" />
+                                <Entry
+                                    x:Name="NombreEntry"
+                                    Grid.Column="1"
+                                    BackgroundColor="Transparent"
+                                    ClearButtonVisibility="WhileEditing"
+                                    Placeholder="Nombre completo"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource TextMain}" />
                             </Grid>
                         </Border>
 
-                        <!-- Teléfono -->
-                        <Border Stroke="{StaticResource InputBorder}"
-                                StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,0"
-                                HeightRequest="54">
+                        <!--  Correo  -->
+                        <Border
+                            Padding="12,0"
+                            BackgroundColor="#FFFFFF"
+                            HeightRequest="54"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="18" />
                             </Border.StrokeShape>
 
-                            <Grid ColumnDefinitions="Auto,*"
-                                  ColumnSpacing="10"
-                                  VerticalOptions="Center">
+                            <Grid
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="10"
+                                VerticalOptions="Center">
 
-                                <Border WidthRequest="30"
-                                        HeightRequest="30"
-                                        BackgroundColor="{StaticResource PrimarySoft}"
-                                        Stroke="Transparent"
-                                        VerticalOptions="Center">
+                                <Border
+                                    BackgroundColor="#F3E8FF"
+                                    HeightRequest="30"
+                                    Stroke="#D8B4FE"
+                                    StrokeThickness="1"
+                                    VerticalOptions="Center"
+                                    WidthRequest="30">
 
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="15" />
                                     </Border.StrokeShape>
 
-                                    <Label Text="💬"
-                                           FontSize="14"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                    <Label
+                                        FontSize="14"
+                                        HorizontalOptions="Center"
+                                        Text="✉"
+                                        TextColor="{StaticResource PrimaryColor}"
+                                        VerticalOptions="Center" />
                                 </Border>
 
-                                <Entry x:Name="TelefonoEntry"
-                                       Grid.Column="1"
-                                       Placeholder="WhatsApp. Ej. 51987654321"
-                                       PlaceholderColor="#8C84A6"
-                                       Keyboard="Telephone"
-                                       TextColor="{StaticResource TextMain}"
-                                       BackgroundColor="Transparent"
-                                       ClearButtonVisibility="WhileEditing" />
+                                <Entry
+                                    x:Name="EmailEntry"
+                                    Grid.Column="1"
+                                    BackgroundColor="Transparent"
+                                    ClearButtonVisibility="WhileEditing"
+                                    Keyboard="Email"
+                                    Placeholder="Correo electrónico"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource TextMain}" />
                             </Grid>
                         </Border>
 
-                        <Border BackgroundColor="{StaticResource PrimarySoft}"
-                                Stroke="Transparent"
-                                Padding="10">
+                        <!--  Teléfono  -->
+                        <Border
+                            Padding="12,0"
+                            BackgroundColor="#FFFFFF"
+                            HeightRequest="54"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+
+                            <Grid
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="10"
+                                VerticalOptions="Center">
+
+                                <Border
+                                    BackgroundColor="#F3E8FF"
+                                    HeightRequest="30"
+                                    Stroke="#D8B4FE"
+                                    StrokeThickness="1"
+                                    VerticalOptions="Center"
+                                    WidthRequest="30">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="15" />
+                                    </Border.StrokeShape>
+
+                                    <Label
+                                        FontSize="14"
+                                        HorizontalOptions="Center"
+                                        Text="💬"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <Entry
+                                    x:Name="TelefonoEntry"
+                                    Grid.Column="1"
+                                    BackgroundColor="Transparent"
+                                    ClearButtonVisibility="WhileEditing"
+                                    Keyboard="Telephone"
+                                    Placeholder="WhatsApp. Ej. 51987654321"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource TextMain}" />
+                            </Grid>
+                        </Border>
+
+                        <Border
+                            Padding="10"
+                            BackgroundColor="#F3E8FF"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="14" />
                             </Border.StrokeShape>
 
-                            <Label Text="Tu WhatsApp será útil si publicas reportes o necesitas ser contactado por una mascota."
-                                   FontSize="12"
-                                   TextColor="{StaticResource PrimaryDark}"
-                                   FontAttributes="Bold"
-                                   LineBreakMode="WordWrap" />
-                        </Border>
-
-                        <!-- Contraseña -->
-                        <Border Stroke="{StaticResource InputBorder}"
-                                StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,0"
-                                HeightRequest="54">
-
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="18" />
-                            </Border.StrokeShape>
-
-                            <Grid ColumnDefinitions="Auto,*,Auto"
-                                  ColumnSpacing="10"
-                                  VerticalOptions="Center">
-
-                                <Border WidthRequest="30"
-                                        HeightRequest="30"
-                                        BackgroundColor="{StaticResource PrimarySoft}"
-                                        Stroke="Transparent"
-                                        VerticalOptions="Center">
-
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="15" />
-                                    </Border.StrokeShape>
-
-                                    <Label Text="🔒"
-                                           FontSize="13"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-
-                                <Entry x:Name="PasswordEntry"
-                                       Grid.Column="1"
-                                       Placeholder="Contraseña"
-                                       PlaceholderColor="#8C84A6"
-                                       IsPassword="True"
-                                       TextColor="{StaticResource TextMain}"
-                                       BackgroundColor="Transparent" />
-
-                                <Button x:Name="BtnTogglePassword"
-                                        Grid.Column="2"
-                                        Text="👁"
-                                        Clicked="OnTogglePasswordClicked"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMuted}"
-                                        FontSize="15"
-                                        Padding="0"
-                                        WidthRequest="34"
-                                        HeightRequest="34" />
-                            </Grid>
-                        </Border>
-
-                        <!-- Confirmar contraseña -->
-                        <Border Stroke="{StaticResource InputBorder}"
-                                StrokeThickness="1"
-                                BackgroundColor="{StaticResource InputBackground}"
-                                Padding="12,0"
-                                HeightRequest="54">
-
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="18" />
-                            </Border.StrokeShape>
-
-                            <Grid ColumnDefinitions="Auto,*,Auto"
-                                  ColumnSpacing="10"
-                                  VerticalOptions="Center">
-
-                                <Border WidthRequest="30"
-                                        HeightRequest="30"
-                                        BackgroundColor="{StaticResource PrimarySoft}"
-                                        Stroke="Transparent"
-                                        VerticalOptions="Center">
-
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="15" />
-                                    </Border.StrokeShape>
-
-                                    <Label Text="✅"
-                                           FontSize="13"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-
-                                <Entry x:Name="ConfirmarPasswordEntry"
-                                       Grid.Column="1"
-                                       Placeholder="Confirmar contraseña"
-                                       PlaceholderColor="#8C84A6"
-                                       IsPassword="True"
-                                       TextColor="{StaticResource TextMain}"
-                                       BackgroundColor="Transparent" />
-
-                                <Button x:Name="BtnToggleConfirmarPassword"
-                                        Grid.Column="2"
-                                        Text="👁"
-                                        Clicked="OnToggleConfirmarPasswordClicked"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextMuted}"
-                                        FontSize="15"
-                                        Padding="0"
-                                        WidthRequest="34"
-                                        HeightRequest="34" />
-                            </Grid>
-                        </Border>
-
-                        <CheckBox x:Name="AceptaTerminosCheckBox"
-                                  Color="{StaticResource PrimaryColor}" />
-
-                        <Label Text="Acepto que mis datos de contacto se usen para funciones de rescate y comunicación dentro de Pet Guardian 365."
-                               FontSize="12"
-                               TextColor="{StaticResource TextMuted}"
-                               LineBreakMode="WordWrap"
-                               Margin="36,-42,0,0" />
-
-                        <Button x:Name="BtnRegistrar"
-                                Text="Crear cuenta"
-                                Clicked="OnRegistrarClicked"
-                                BackgroundColor="{StaticResource PrimaryColor}"
-                                TextColor="White"
+                            <Label
                                 FontAttributes="Bold"
-                                FontSize="16"
-                                CornerRadius="18"
-                                HeightRequest="54">
+                                FontSize="12"
+                                LineBreakMode="WordWrap"
+                                Text="Tu WhatsApp será útil si publicas reportes o necesitas ser contactado por una mascota."
+                                TextColor="{StaticResource PrimaryDark}" />
+                        </Border>
+
+                        <!--  Contraseña  -->
+                        <Border
+                            Padding="12,0"
+                            BackgroundColor="#FFFFFF"
+                            HeightRequest="54"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+
+                            <Grid
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="10"
+                                VerticalOptions="Center">
+
+                                <Border
+                                    BackgroundColor="#F3E8FF"
+                                    HeightRequest="30"
+                                    Stroke="#D8B4FE"
+                                    StrokeThickness="1"
+                                    VerticalOptions="Center"
+                                    WidthRequest="30">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="15" />
+                                    </Border.StrokeShape>
+
+                                    <Label
+                                        FontSize="13"
+                                        HorizontalOptions="Center"
+                                        Text="🔒"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <Entry
+                                    x:Name="PasswordEntry"
+                                    Grid.Column="1"
+                                    BackgroundColor="Transparent"
+                                    IsPassword="True"
+                                    Placeholder="Contraseña"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource TextMain}" />
+
+                                <Button
+                                    x:Name="BtnTogglePassword"
+                                    Grid.Column="2"
+                                    Padding="0"
+                                    BackgroundColor="Transparent"
+                                    Clicked="OnTogglePasswordClicked"
+                                    FontSize="15"
+                                    HeightRequest="34"
+                                    Text="👁"
+                                    TextColor="{StaticResource TextMuted}"
+                                    WidthRequest="34" />
+                            </Grid>
+                        </Border>
+
+                        <!--  Confirmar contraseña  -->
+                        <Border
+                            Padding="12,0"
+                            BackgroundColor="#FFFFFF"
+                            HeightRequest="54"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+
+                            <Grid
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="10"
+                                VerticalOptions="Center">
+
+                                <Border
+                                    BackgroundColor="#F3E8FF"
+                                    HeightRequest="30"
+                                    Stroke="#D8B4FE"
+                                    StrokeThickness="1"
+                                    VerticalOptions="Center"
+                                    WidthRequest="30">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="15" />
+                                    </Border.StrokeShape>
+
+                                    <Label
+                                        FontSize="13"
+                                        HorizontalOptions="Center"
+                                        Text="✅"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <Entry
+                                    x:Name="ConfirmarPasswordEntry"
+                                    Grid.Column="1"
+                                    BackgroundColor="Transparent"
+                                    IsPassword="True"
+                                    Placeholder="Confirmar contraseña"
+                                    PlaceholderColor="#8C84A6"
+                                    TextColor="{StaticResource TextMain}" />
+
+                                <Button
+                                    x:Name="BtnToggleConfirmarPassword"
+                                    Grid.Column="2"
+                                    Padding="0"
+                                    BackgroundColor="Transparent"
+                                    Clicked="OnToggleConfirmarPasswordClicked"
+                                    FontSize="15"
+                                    HeightRequest="34"
+                                    Text="👁"
+                                    TextColor="{StaticResource TextMuted}"
+                                    WidthRequest="34" />
+                            </Grid>
+                        </Border>
+
+                        <Border
+                            Padding="10"
+                            BackgroundColor="#F3E8FF"
+                            Stroke="#A855F7"
+                            StrokeThickness="1">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+
+                                <CheckBox
+                                    x:Name="AceptaTerminosCheckBox"
+                                    Grid.Column="0"
+                                    Margin="-6,-6,0,0"
+                                    VerticalOptions="Start"
+                                    Color="{StaticResource PrimaryColor}" />
+
+                                <Label
+                                    Grid.Column="1"
+                                    FontSize="12"
+                                    LineBreakMode="WordWrap"
+                                    Text="Acepto que mis datos de contacto se usen para funciones de rescate y comunicación dentro de Pet Guardian 365."
+                                    TextColor="{StaticResource PrimaryDark}"
+                                    VerticalOptions="Center" />
+
+                            </Grid>
+                        </Border>
+
+                        <Button
+                            x:Name="BtnRegistrar"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            Clicked="OnRegistrarClicked"
+                            CornerRadius="22"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            HeightRequest="56"
+                            Text="Crear cuenta"
+                            TextColor="White">
 
                             <Button.Shadow>
-                                <Shadow Brush="#5B21E6"
-                                        Opacity="0.26"
-                                        Offset="0,5"
-                                        Radius="12" />
+                                <Shadow
+                                    Brush="#5B21E6"
+                                    Opacity="0.44"
+                                    Radius="12"
+                                    Offset="0,5" />
                             </Button.Shadow>
                         </Button>
 
-                        <ActivityIndicator x:Name="LoadingIndicator"
-                                           IsRunning="False"
-                                           IsVisible="False"
-                                           Color="{StaticResource PrimaryColor}" />
+                        <ActivityIndicator
+                            x:Name="LoadingIndicator"
+                            IsRunning="False"
+                            IsVisible="False"
+                            Color="{StaticResource PrimaryColor}" />
 
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Login -->
-                <HorizontalStackLayout HorizontalOptions="Center"
-                                       Spacing="5"
-                                       Margin="0,2,0,0">
+                <!--  Login  -->
+                <HorizontalStackLayout
+                    Margin="0,2,0,0"
+                    HorizontalOptions="Center"
+                    Spacing="5">
 
-                    <Label Text="¿Ya tienes una cuenta?"
-                           FontSize="13"
-                           TextColor="{StaticResource TextMuted}" />
+                    <Label
+                        FontSize="13"
+                        Text="¿Ya tienes una cuenta?"
+                        TextColor="{StaticResource TextMuted}" />
 
-                    <Label Text="Inicia sesión"
-                           FontSize="13"
-                           TextColor="{StaticResource PrimaryColor}"
-                           FontAttributes="Bold">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="Inicia sesión"
+                        TextColor="{StaticResource PrimaryColor}">
 
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnVolverAlLoginTapped" />
