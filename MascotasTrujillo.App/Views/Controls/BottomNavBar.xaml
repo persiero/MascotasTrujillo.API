@@ -1,190 +1,230 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
+    x:Class="MascotasTrujillo.App.Views.Controls.BottomNavBar"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="MascotasTrujillo.App.Views.Controls.BottomNavBar">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Grid Padding="14,6,14,12"
-          BackgroundColor="Transparent">
+    <Grid Padding="12,6,12,12" BackgroundColor="Transparent">
 
-        <Border BackgroundColor="#FFFFFF"
-                Stroke="#E9D8FD"
-                StrokeThickness="1"
-                Padding="8,8">
+        <Border
+            Padding="8,7"
+            BackgroundColor="#FFFCFF"
+            Stroke="#C084FC"
+            StrokeThickness="1.2">
 
             <Border.StrokeShape>
-                <RoundRectangle CornerRadius="28" />
+                <RoundRectangle CornerRadius="30" />
             </Border.StrokeShape>
 
             <Border.Shadow>
-                <Shadow Brush="#5B21E6"
-                        Opacity="0.16"
-                        Offset="0,6"
-                        Radius="18" />
+                <Shadow
+                    Brush="#5B21E6"
+                    Opacity="0.24"
+                    Radius="22"
+                    Offset="0,8" />
             </Border.Shadow>
 
-            <Grid ColumnDefinitions="*,*,*,*"
-                  ColumnSpacing="4">
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
 
-                <!-- Radar -->
-                <Grid x:Name="RadarItem"
-                      Grid.Column="0"
-                      Padding="4">
+                <!--  Radar  -->
+                <Grid
+                    x:Name="RadarItem"
+                    Grid.Column="0"
+                    Padding="3">
+
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnRadarTapped" />
                     </Grid.GestureRecognizers>
 
-                    <VerticalStackLayout Spacing="3"
-                                         HorizontalOptions="Center">
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="3"
+                        VerticalOptions="Center">
 
-                        <Border x:Name="RadarCircle"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                BackgroundColor="#F3E8FF"
-                                Stroke="Transparent">
+                        <Border
+                            x:Name="RadarCircle"
+                            BackgroundColor="#EEE7FF"
+                            HeightRequest="48"
+                            Stroke="#7C3AED"
+                            StrokeThickness="1.2"
+                            WidthRequest="48">
 
                             <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="21" />
+                                <RoundRectangle CornerRadius="24" />
                             </Border.StrokeShape>
 
-                            <Label x:Name="RadarIcon"
-                                   Text="⌖"
-                                   FontSize="23"
-                                   FontAttributes="Bold"
-                                   TextColor="#5B21E6"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="#5B21E6"
+                                    Opacity="0.18"
+                                    Radius="10"
+                                    Offset="0,4" />
+                            </Border.Shadow>
+
+                            <Label
+                                x:Name="RadarIcon"
+                                FontAttributes="Bold"
+                                FontSize="26"
+                                HorizontalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                Text="⌖"
+                                TextColor="#5B21E6"
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center" />
                         </Border>
 
-                        <Label x:Name="RadarText"
-                               Text="Radar"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               TextColor="#5B21E6"
-                               HorizontalOptions="Center" />
+                        <Label
+                            x:Name="RadarText"
+                            FontAttributes="Bold"
+                            FontSize="10"
+                            HorizontalOptions="Center"
+                            Text="Radar"
+                            TextColor="#5B21E6" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- Reportes -->
-                <Grid x:Name="ReportesItem"
-                      Grid.Column="1"
-                      Padding="4">
+                <!--  Reportes  -->
+                <Grid
+                    x:Name="ReportesItem"
+                    Grid.Column="1"
+                    Padding="3">
+
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnReportesTapped" />
                     </Grid.GestureRecognizers>
 
-                    <VerticalStackLayout Spacing="3"
-                                         HorizontalOptions="Center">
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="3"
+                        VerticalOptions="Center">
 
-                        <Border x:Name="ReportesCircle"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                BackgroundColor="Transparent"
-                                Stroke="Transparent">
+                        <Border
+                            x:Name="ReportesCircle"
+                            BackgroundColor="Transparent"
+                            HeightRequest="48"
+                            Stroke="Transparent"
+                            StrokeThickness="1"
+                            WidthRequest="48">
 
                             <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="21" />
+                                <RoundRectangle CornerRadius="24" />
                             </Border.StrokeShape>
 
-                            <Label x:Name="ReportesIcon"
-                                   Text="▣"
-                                   FontSize="21"
-                                   FontAttributes="Bold"
-                                   TextColor="#64748B"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                            <Label
+                                x:Name="ReportesIcon"
+                                FontAttributes="Bold"
+                                FontSize="24"
+                                HorizontalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                Text="▣"
+                                TextColor="#475569"
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center" />
                         </Border>
 
-                        <Label x:Name="ReportesText"
-                               Text="Reportes"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               TextColor="#64748B"
-                               HorizontalOptions="Center" />
+                        <Label
+                            x:Name="ReportesText"
+                            FontAttributes="Bold"
+                            FontSize="10"
+                            HorizontalOptions="Center"
+                            Text="Reportes"
+                            TextColor="#475569" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- Mascotas -->
-                <Grid x:Name="MascotasItem"
-                      Grid.Column="2"
-                      Padding="4">
+                <!--  Mascotas  -->
+                <Grid
+                    x:Name="MascotasItem"
+                    Grid.Column="2"
+                    Padding="3">
+
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnMascotasTapped" />
                     </Grid.GestureRecognizers>
 
-                    <VerticalStackLayout Spacing="3"
-                                         HorizontalOptions="Center">
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="3"
+                        VerticalOptions="Center">
 
-                        <Border x:Name="MascotasCircle"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                BackgroundColor="Transparent"
-                                Stroke="Transparent">
+                        <Border
+                            x:Name="MascotasCircle"
+                            BackgroundColor="Transparent"
+                            HeightRequest="48"
+                            Stroke="Transparent"
+                            StrokeThickness="1"
+                            WidthRequest="48">
 
                             <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="21" />
+                                <RoundRectangle CornerRadius="24" />
                             </Border.StrokeShape>
 
-                            <Label x:Name="MascotasIcon"
-                                   Text="🐾"
-                                   FontSize="19"
-                                   TextColor="#64748B"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                            <Label
+                                x:Name="MascotasIcon"
+                                FontSize="22"
+                                HorizontalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                Text="🐾"
+                                TextColor="#475569"
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center" />
                         </Border>
 
-                        <Label x:Name="MascotasText"
-                               Text="Mascotas"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               TextColor="#64748B"
-                               HorizontalOptions="Center" />
+                        <Label
+                            x:Name="MascotasText"
+                            FontAttributes="Bold"
+                            FontSize="10"
+                            HorizontalOptions="Center"
+                            Text="Mascotas"
+                            TextColor="#475569" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- Perfil -->
-                <Grid x:Name="PerfilItem"
-                      Grid.Column="3"
-                      Padding="4">
+                <!--  Perfil  -->
+                <Grid
+                    x:Name="PerfilItem"
+                    Grid.Column="3"
+                    Padding="3">
+
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnPerfilTapped" />
                     </Grid.GestureRecognizers>
 
-                    <VerticalStackLayout Spacing="3"
-                                         HorizontalOptions="Center">
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="3"
+                        VerticalOptions="Center">
 
-                        <Border x:Name="PerfilCircle"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                BackgroundColor="Transparent"
-                                Stroke="Transparent">
+                        <Border
+                            x:Name="PerfilCircle"
+                            BackgroundColor="Transparent"
+                            HeightRequest="48"
+                            Stroke="Transparent"
+                            StrokeThickness="1"
+                            WidthRequest="48">
 
                             <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="21" />
+                                <RoundRectangle CornerRadius="24" />
                             </Border.StrokeShape>
 
-                            <Label x:Name="PerfilIcon"
-                                   Text="👤"
-                                   FontSize="19"
-                                   TextColor="#64748B"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                            <Label
+                                x:Name="PerfilIcon"
+                                FontSize="22"
+                                HorizontalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                Text="👤"
+                                TextColor="#475569"
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center" />
                         </Border>
 
-                        <Label x:Name="PerfilText"
-                               Text="Perfil"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               TextColor="#64748B"
-                               HorizontalOptions="Center" />
+                        <Label
+                            x:Name="PerfilText"
+                            FontAttributes="Bold"
+                            FontSize="10"
+                            HorizontalOptions="Center"
+                            Text="Perfil"
+                            TextColor="#475569" />
                     </VerticalStackLayout>
                 </Grid>
 
