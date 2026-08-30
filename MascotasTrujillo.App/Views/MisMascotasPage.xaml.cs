@@ -14,6 +14,9 @@ public partial class MisMascotasPage : ContentPage
     private bool _timerIniciado = false;
     private bool _cargandoMascotas = false;
 
+    private bool _mapaCentradoInicialmente = false;
+    private long? _ultimaMascotaCentradaId = null;
+
     public MisMascotasPage(ApiService apiService)
     {
         InitializeComponent();
@@ -26,7 +29,11 @@ public partial class MisMascotasPage : ContentPage
 
         _rastreoActivo = true;
 
-        await CargarMascotas();
+        await CargarMascotas(
+            mostrarErrores: true,
+            centrarMapa: true,
+            limpiarSiVacio: true
+        );
 
         if (!_timerIniciado)
         {
@@ -50,7 +57,10 @@ public partial class MisMascotasPage : ContentPage
         BtnAccionesMascota.Opacity = hayMascotaSeleccionada ? 1 : 0.45;
     }
 
-    private async Task CargarMascotas(bool mostrarErrores = true)
+    private async Task CargarMascotas(
+    bool mostrarErrores = true,
+    bool centrarMapa = false,
+    bool limpiarSiVacio = true)
     {
         if (_cargandoMascotas)
             return;
@@ -63,7 +73,21 @@ public partial class MisMascotasPage : ContentPage
 
             var lista = await _apiService.GetMisMascotasAsync();
 
-            if (lista != null && lista.Count > 0)
+            if (lista == null)
+            {
+                if (mostrarErrores)
+                {
+                    await DisplayAlertAsync(
+                        "Error",
+                        "No se pudieron cargar tus mascotas.",
+                        "OK"
+                    );
+                }
+
+                return;
+            }
+
+            if (lista.Count > 0)
             {
                 LblConteoMascotas.Text = lista.Count == 1
                     ? "1 mascota"
@@ -82,6 +106,10 @@ public partial class MisMascotasPage : ContentPage
 
                 mascotaParaSeleccionar ??= lista.First();
 
+                bool cambioMascota =
+                    _mascotaSeleccionada == null ||
+                    _mascotaSeleccionada.Id != mascotaParaSeleccionar.Id;
+
                 _mascotaSeleccionada = mascotaParaSeleccionar;
                 MascotasCarousel.SelectedItem = mascotaParaSeleccionar;
 
@@ -90,25 +118,31 @@ public partial class MisMascotasPage : ContentPage
                 if (_mascotaSeleccionada.Latitud.HasValue &&
                     _mascotaSeleccionada.Longitud.HasValue)
                 {
-                    ActualizarMapa();
+                    ActualizarMapa(centrarMapa: centrarMapa || cambioMascota);
                 }
                 else
                 {
-                    MostrarMascotaSinUbicacion();
+                    MostrarMascotaSinUbicacion(centrarMapa: centrarMapa || cambioMascota);
                 }
-            }
-            else
-            {
-                MascotasCarousel.ItemsSource = null;
-                MascotaMap.Pins.Clear();
 
-                LblConteoMascotas.Text = "0 mascotas";
-                LblTituloMapa.Text = "Sin mascota seleccionada";
-                LblNotaSeguimiento.Text = "Registra una mascota para consultar su seguimiento GPS privado.";
-
-                _mascotaSeleccionada = null;
-                ActualizarEstadoBotonesMascota();
+                return;
             }
+
+            if (!limpiarSiVacio)
+                return;
+
+            MascotasCarousel.ItemsSource = null;
+            MascotaMap.Pins.Clear();
+
+            LblConteoMascotas.Text = "0 mascotas";
+            LblTituloMapa.Text = "Sin mascota seleccionada";
+            LblNotaSeguimiento.Text = "Registra una mascota para consultar su seguimiento GPS privado.";
+
+            _mascotaSeleccionada = null;
+            _mapaCentradoInicialmente = false;
+            _ultimaMascotaCentradaId = null;
+
+            ActualizarEstadoBotonesMascota();
         }
         catch (Exception ex)
         {
@@ -133,24 +167,53 @@ public partial class MisMascotasPage : ContentPage
 
     private async void OnMascotaSelected(object sender, SelectionChangedEventArgs e)
     {
-        _mascotaSeleccionada = e.CurrentSelection.FirstOrDefault() as Mascota;
+        var mascotaSeleccionada = e.CurrentSelection.FirstOrDefault() as Mascota;
 
-        ActualizarEstadoBotonesMascota();
-
-        if (_mascotaSeleccionada == null)
+        if (mascotaSeleccionada == null)
         {
-            MostrarMascotaSinUbicacion();
+            _mascotaSeleccionada = null;
+            ActualizarEstadoBotonesMascota();
+            MostrarMascotaSinUbicacion(centrarMapa: false);
             return;
         }
+
+        bool cambioMascota =
+            _mascotaSeleccionada == null ||
+            _mascotaSeleccionada.Id != mascotaSeleccionada.Id;
+
+        _mascotaSeleccionada = mascotaSeleccionada;
+
+        ActualizarEstadoBotonesMascota();
 
         if (_mascotaSeleccionada.Latitud.HasValue &&
             _mascotaSeleccionada.Longitud.HasValue)
         {
-            ActualizarMapa();
+            ActualizarMapa(centrarMapa: cambioMascota);
         }
         else
         {
-            MostrarMascotaSinUbicacion();
+            MostrarMascotaSinUbicacion(centrarMapa: cambioMascota);
+        }
+    }
+
+    private void OnMascotaCardTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not Mascota mascota)
+            return;
+
+        _mascotaSeleccionada = mascota;
+        MascotasCarousel.SelectedItem = mascota;
+
+        ActualizarEstadoBotonesMascota();
+
+        if (_mascotaSeleccionada.Latitud.HasValue &&
+            _mascotaSeleccionada.Longitud.HasValue)
+        {
+            ActualizarMapa(centrarMapa: true);
+        }
+        else
+        {
+            MostrarMascotaSinUbicacion(centrarMapa: true);
         }
     }
 
@@ -184,7 +247,11 @@ public partial class MisMascotasPage : ContentPage
                 MascotaMap.Pins.Clear();
                 ActualizarEstadoBotonesMascota();
 
-                await CargarMascotas();
+                await CargarMascotas(
+                    mostrarErrores: true,
+                    centrarMapa: true,
+                    limpiarSiVacio: true
+                );
             }
             else
             {
@@ -232,7 +299,11 @@ public partial class MisMascotasPage : ContentPage
 
         try
         {
-            await CargarMascotas(mostrarErrores: false);
+            await CargarMascotas(
+                mostrarErrores: false,
+                centrarMapa: false,
+                limpiarSiVacio: false
+            );
         }
         catch (Exception ex)
         {
@@ -240,7 +311,7 @@ public partial class MisMascotasPage : ContentPage
         }
     }
 
-    private void ActualizarMapa()
+    private void ActualizarMapa(bool centrarMapa = false)
     {
         var mascotaActual = _mascotaSeleccionada;
 
@@ -263,18 +334,25 @@ public partial class MisMascotasPage : ContentPage
         });
 
         LblTituloMapa.Text = $"Rastreo GPS de {mascotaActual.Nombre}";
-
         LblNotaSeguimiento.Text = mascotaActual.UltimaUbicacionTexto;
 
-        MascotaMap.MoveToRegion(
-            MapSpan.FromCenterAndRadius(
-                ubicacion,
-                Distance.FromKilometers(0.5)
-            )
-        );
+        bool cambioMascota = _ultimaMascotaCentradaId != mascotaActual.Id;
+
+        if (centrarMapa || !_mapaCentradoInicialmente || cambioMascota)
+        {
+            MascotaMap.MoveToRegion(
+                MapSpan.FromCenterAndRadius(
+                    ubicacion,
+                    Distance.FromMeters(350)
+                )
+            );
+
+            _mapaCentradoInicialmente = true;
+            _ultimaMascotaCentradaId = mascotaActual.Id;
+        }
     }
 
-    private void MostrarMascotaSinUbicacion()
+    private void MostrarMascotaSinUbicacion(bool centrarMapa = false)
     {
         MascotaMap.Pins.Clear();
 
@@ -286,8 +364,10 @@ public partial class MisMascotasPage : ContentPage
         }
 
         LblTituloMapa.Text = "Sin ubicación GPS";
-
         LblNotaSeguimiento.Text = _mascotaSeleccionada.UltimaUbicacionTexto;
+
+        if (!centrarMapa && _mapaCentradoInicialmente)
+            return;
 
         var ubicacionReferencia = new Location(-8.1118, -79.0287);
 
@@ -297,6 +377,9 @@ public partial class MisMascotasPage : ContentPage
                 Distance.FromKilometers(3)
             )
         );
+
+        _mapaCentradoInicialmente = true;
+        _ultimaMascotaCentradaId = _mascotaSeleccionada.Id;
     }
 
     private async void OnAbrirRegistroMascotaClicked(object sender, EventArgs e)

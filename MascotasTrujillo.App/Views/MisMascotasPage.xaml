@@ -263,6 +263,10 @@
                                     Stroke="#CDB7FF"
                                     StrokeThickness="1.2"
                                     WidthRequest="124">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer CommandParameter="{Binding .}" Tapped="OnMascotaCardTapped" />
+                                    </Border.GestureRecognizers>
+
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="18" />
                                     </Border.StrokeShape>
