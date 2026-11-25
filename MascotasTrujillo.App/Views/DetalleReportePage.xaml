@@ -873,6 +873,32 @@
                             </Button.Shadow>
                         </Button>
 
+                        <!--  COMPARAR MASCOTA MEDIANTE IA  -->
+
+                        <Button
+                            x:Name="BtnCompararMascotaIA"
+                            BackgroundColor="#5B21E6"
+                            BorderColor="#7C3AED"
+                            BorderWidth="1"
+                            Clicked="OnCompararMascotaIAClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            HeightRequest="50"
+                            IsVisible="False"
+                            Text="🔍 Comparar mascota con IA"
+                            TextColor="White">
+
+                            <Button.Shadow>
+                                <Shadow
+                                    Brush="#5B21E6"
+                                    Opacity="0.30"
+                                    Radius="12"
+                                    Offset="0,5" />
+                            </Button.Shadow>
+
+                        </Button>
+
                         <Button
                             x:Name="BtnRegistrarAvistamiento"
                             BackgroundColor="#047857"

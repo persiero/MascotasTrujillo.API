@@ -13,7 +13,7 @@ namespace MascotasTrujillo.App.Services
         // ============================================================
         // CAMBIA ESTO SEGÚN LO QUE QUIERAS PROBAR
         // ============================================================
-        private static readonly bool UsarProduccionRailway = true;
+        private static readonly bool UsarProduccionRailway = false;
 
         // API en Railway
         private const string ApiProduccion = "https://mascotastrujilloapi-production.up.railway.app/api/";

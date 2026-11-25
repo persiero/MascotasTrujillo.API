@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MascotasTrujillo.App.Views.CompararMascotaPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Comparador inteligente"
+    BackgroundColor="#F5F1FF"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Color x:Key="PrimaryColor">#5B21E6</Color>
+            <Color x:Key="PrimaryDark">#2B0B98</Color>
+            <Color x:Key="PrimaryDeep">#4C1D95</Color>
+            <Color x:Key="PrimarySoft">#EEE7FF</Color>
+            <Color x:Key="TextMain">#1F2340</Color>
+            <Color x:Key="TextMuted">#64748B</Color>
+            <Color x:Key="CardBorder">#DCCBFF</Color>
+
+            <Style x:Key="TarjetaStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#FCFBFF" />
+                <Setter Property="Stroke" Value="#DCCBFF" />
+                <Setter Property="StrokeThickness" Value="1.2" />
+                <Setter Property="Padding" Value="14" />
+
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="22" />
+                    </Setter.Value>
+                </Setter>
+
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow
+                            Brush="#6D28D9"
+                            Opacity="0.18"
+                            Radius="14"
+                            Offset="0,5" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TituloSeccionStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#2B0B98" />
+            </Style>
+
+            <Style x:Key="BotonSecundarioStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#EEE7FF" />
+                <Setter Property="TextColor" Value="#5B21E6" />
+                <Setter Property="CornerRadius" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HeightRequest" Value="46" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="BorderColor" Value="#CDB7FF" />
+                <Setter Property="BorderWidth" Value="1" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="#E1D2FF" />
+                <GradientStop Offset="0.45" Color="#EADFFF" />
+                <GradientStop Offset="1" Color="#F4ECFF" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!--  ENCABEZADO  -->
+
+        <Border
+            Grid.Row="0"
+            Margin="12,12,12,6"
+            Padding="12,10"
+            Stroke="#C084FC"
+            Style="{StaticResource TarjetaStyle}">
+
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+
+                <Button
+                    x:Name="BtnVolver"
+                    Grid.Column="0"
+                    Padding="0"
+                    BackgroundColor="{StaticResource PrimaryDark}"
+                    Clicked="OnVolverClicked"
+                    CornerRadius="21"
+                    FontAttributes="Bold"
+                    FontSize="22"
+                    HeightRequest="42"
+                    Text="←"
+                    TextColor="White"
+                    VerticalOptions="Center"
+                    WidthRequest="42" />
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Spacing="3"
+                    VerticalOptions="Center">
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        Text="Comparador inteligente"
+                        TextColor="{StaticResource PrimaryDark}" />
+
+                    <Label
+                        FontSize="11"
+                        Text="Visión artificial · Pet Guardian 365"
+                        TextColor="{StaticResource TextMuted}" />
+
+                </VerticalStackLayout>
+
+            </Grid>
+
+        </Border>
+
+        <!--  CONTENIDO  -->
+
+        <ScrollView Grid.Row="1">
+
+            <VerticalStackLayout Padding="12,6,12,24" Spacing="12">
+
+                <!--  PRESENTACION  -->
+
+                <Border Style="{StaticResource TarjetaStyle}">
+
+                    <VerticalStackLayout Spacing="6">
+
+                        <Label Style="{StaticResource TituloSeccionStyle}" Text="🔍 Identificación visual" />
+
+                        <Label
+                            x:Name="LblTituloReporte"
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            TextColor="{StaticResource PrimaryDeep}" />
+
+                        <Label
+                            FontSize="13"
+                            Text="Compara la fotografía del reporte con una imagen de la mascota encontrada."
+                            TextColor="{StaticResource TextMuted}" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+                <!--  COMPARACION DE IMAGENES  -->
+
+                <Border Style="{StaticResource TarjetaStyle}">
+
+                    <VerticalStackLayout Spacing="14">
+
+                        <Label Style="{StaticResource TituloSeccionStyle}" Text="Comparar fotografías" />
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                            <!--  FOTO ORIGINAL  -->
+
+                            <VerticalStackLayout Grid.Column="0" Spacing="7">
+
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Mascota perdida"
+                                    TextColor="{StaticResource PrimaryDeep}" />
+
+                                <Border
+                                    Padding="3"
+                                    BackgroundColor="#F3E8FF"
+                                    HeightRequest="160"
+                                    Stroke="#CDB7FF">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Image x:Name="FotoOriginalImage" Aspect="AspectFit" />
+
+                                </Border>
+
+                                <Label
+                                    x:Name="LblNombreMascota"
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    HorizontalTextAlignment="Center"
+                                    TextColor="{StaticResource TextMain}" />
+
+                                <Label
+                                    FontSize="11"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Foto del reporte"
+                                    TextColor="{StaticResource TextMuted}" />
+
+                            </VerticalStackLayout>
+
+                            <!--  FOTO ENCONTRADA  -->
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="7">
+
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Mascota encontrada"
+                                    TextColor="{StaticResource PrimaryDeep}" />
+
+                                <Border
+                                    Padding="3"
+                                    BackgroundColor="#F3E8FF"
+                                    HeightRequest="160"
+                                    Stroke="#CDB7FF">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+
+                                    <Grid>
+
+                                        <Image
+                                            x:Name="FotoEncontradaImage"
+                                            Aspect="AspectFit"
+                                            IsVisible="False" />
+
+                                        <VerticalStackLayout
+                                            x:Name="PlaceholderFoto"
+                                            HorizontalOptions="Center"
+                                            Spacing="5"
+                                            VerticalOptions="Center">
+
+                                            <Label
+                                                FontSize="36"
+                                                HorizontalTextAlignment="Center"
+                                                Text="📷" />
+
+                                            <Label
+                                                FontSize="11"
+                                                HorizontalTextAlignment="Center"
+                                                Text="Selecciona una foto"
+                                                TextColor="{StaticResource TextMuted}" />
+
+                                        </VerticalStackLayout>
+
+                                    </Grid>
+
+                                </Border>
+
+                                <Label
+                                    x:Name="LblEstadoFoto"
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Sin fotografía"
+                                    TextColor="{StaticResource TextMain}" />
+
+                                <Label
+                                    x:Name="LblPesoFoto"
+                                    FontSize="11"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Cámara o galería"
+                                    TextColor="{StaticResource TextMuted}" />
+
+                            </VerticalStackLayout>
+
+                        </Grid>
+
+                        <!--  BOTONES DE CAPTURA  -->
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                            <Button
+                                x:Name="BtnCamara"
+                                Grid.Column="0"
+                                Clicked="OnTomarFotoClicked"
+                                Style="{StaticResource BotonSecundarioStyle}"
+                                Text="📷 Cámara" />
+
+                            <Button
+                                x:Name="BtnGaleria"
+                                Grid.Column="1"
+                                Clicked="OnElegirGaleriaClicked"
+                                Style="{StaticResource BotonSecundarioStyle}"
+                                Text="🖼 Galería" />
+
+                        </Grid>
+
+                        <!--  BOTON ANALIZAR  -->
+
+                        <Button
+                            x:Name="BtnAnalizar"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            Clicked="OnAnalizarClicked"
+                            CornerRadius="16"
+                            FontAttributes="Bold"
+                            FontSize="15"
+                            HeightRequest="50"
+                            IsEnabled="False"
+                            Text="🔍 Analizar similitud"
+                            TextColor="White" />
+
+                        <!--  ESTADO DE PROCESAMIENTO  -->
+
+                        <VerticalStackLayout
+                            x:Name="PanelProcesando"
+                            IsVisible="False"
+                            Spacing="8">
+
+                            <ActivityIndicator
+                                x:Name="LoadingIndicator"
+                                HeightRequest="35"
+                                IsRunning="False"
+                                Color="{StaticResource PrimaryColor}" />
+
+                            <Label
+                                x:Name="LblProcesando"
+                                FontSize="13"
+                                HorizontalTextAlignment="Center"
+                                Text="Analizando las características visuales..."
+                                TextColor="{StaticResource PrimaryDeep}" />
+
+                            <Label
+                                FontSize="11"
+                                HorizontalTextAlignment="Center"
+                                Text="Esto puede tardar unos segundos."
+                                TextColor="{StaticResource TextMuted}" />
+
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+                <!--  RESULTADO DE INTELIGENCIA ARTIFICIAL  -->
+
+                <Border
+                    x:Name="PanelResultado"
+                    IsVisible="False"
+                    Style="{StaticResource TarjetaStyle}">
+
+                    <VerticalStackLayout Spacing="13">
+
+                        <Label
+                            HorizontalTextAlignment="Center"
+                            Style="{StaticResource TituloSeccionStyle}"
+                            Text="Resultado del análisis" />
+
+                        <!--  INDICADOR CIRCULAR  -->
+
+                        <GraphicsView
+                            x:Name="GraficoSimilitud"
+                            HeightRequest="180"
+                            HorizontalOptions="Center"
+                            WidthRequest="180" />
+
+                        <Border
+                            x:Name="BadgeResultado"
+                            Padding="14,7"
+                            BackgroundColor="#EEE7FF"
+                            HorizontalOptions="Center"
+                            StrokeThickness="0">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+
+                            <Label
+                                x:Name="LblNivelSimilitud"
+                                FontAttributes="Bold"
+                                FontSize="14"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#5B21E6" />
+
+                        </Border>
+
+                        <Label
+                            x:Name="LblDescripcionResultado"
+                            FontSize="14"
+                            HorizontalTextAlignment="Center"
+                            LineBreakMode="WordWrap"
+                            TextColor="{StaticResource TextMain}" />
+
+                        <BoxView HeightRequest="1" Color="#EDE9FE" />
+
+                        <!--  INFORMACION DEL MODELO  -->
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+
+                            <VerticalStackLayout Grid.Column="0" Spacing="3">
+
+                                <Label
+                                    FontSize="11"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Modelo de IA"
+                                    TextColor="{StaticResource TextMuted}" />
+
+                                <Label
+                                    x:Name="LblModelo"
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    HorizontalTextAlignment="Center"
+                                    TextColor="{StaticResource PrimaryDeep}" />
+
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="3">
+
+                                <Label
+                                    FontSize="11"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Método"
+                                    TextColor="{StaticResource TextMuted}" />
+
+                                <Label
+                                    x:Name="LblMetodo"
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    HorizontalTextAlignment="Center"
+                                    TextColor="{StaticResource PrimaryDeep}" />
+
+                            </VerticalStackLayout>
+
+                        </Grid>
+
+                        <!--  ADVERTENCIA  -->
+
+                        <Border
+                            Padding="12"
+                            BackgroundColor="#FEF3C7"
+                            Stroke="#FCD34D">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="5">
+
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    Text="⚠ Resultado orientativo"
+                                    TextColor="#92400E" />
+
+                                <Label
+                                    x:Name="LblAdvertencia"
+                                    FontSize="12"
+                                    LineBreakMode="WordWrap"
+                                    TextColor="#92400E" />
+
+                            </VerticalStackLayout>
+
+                        </Border>
+
+                        <Button
+                            x:Name="BtnNuevaComparacion"
+                            Clicked="OnNuevaComparacionClicked"
+                            Style="{StaticResource BotonSecundarioStyle}"
+                            Text="↻ Realizar otra comparación" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+                <!--  RECOMENDACIONES  -->
+
+                <Border Style="{StaticResource TarjetaStyle}">
+
+                    <VerticalStackLayout Spacing="8">
+
+                        <Label Style="{StaticResource TituloSeccionStyle}" Text="💡 Recomendaciones" />
+
+                        <Label
+                            FontSize="12"
+                            Text="• Utiliza fotografías claras y bien iluminadas."
+                            TextColor="{StaticResource TextMuted}" />
+
+                        <Label
+                            FontSize="12"
+                            Text="• Procura que la mascota ocupe la mayor parte de la imagen."
+                            TextColor="{StaticResource TextMuted}" />
+
+                        <Label
+                            FontSize="12"
+                            Text="• Evita fotografías con varios animales."
+                            TextColor="{StaticResource TextMuted}" />
+
+                        <Label
+                            FontSize="12"
+                            Text="• Utiliza ángulos similares cuando sea posible."
+                            TextColor="{StaticResource TextMuted}" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+                <Label
+                    FontSize="11"
+                    HorizontalTextAlignment="Center"
+                    Text="Pet Guardian 365 · Inteligencia Artificial"
+                    TextColor="{StaticResource TextMuted}" />
+
+            </VerticalStackLayout>
+
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

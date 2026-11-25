@@ -42,6 +42,12 @@ public partial class DetalleReportePage : ContentPage
         return esReportePerdida && estaActivo;
     }
 
+    private bool PuedeCompararMascotaIA()
+    {
+        return PuedeRegistrarAvistamiento() &&
+               !string.IsNullOrWhiteSpace(_reporteActual.FotoUrl);
+    }
+
     private void CargarDatos()
     {
         if (string.IsNullOrWhiteSpace(_reporteActual.FotoUrl))
@@ -141,6 +147,59 @@ public partial class DetalleReportePage : ContentPage
         }
 
         await Navigation.PushAsync(new RegistrarAvistamientoPage(_apiService, _reporteActual));
+    }
+
+    private bool _abriendoComparador = false;
+
+    private async void OnCompararMascotaIAClicked(
+        object sender,
+        EventArgs e)
+    {
+        if (_abriendoComparador)
+            return;
+
+        if (!PuedeCompararMascotaIA())
+        {
+            await DisplayAlertAsync(
+                "No disponible",
+                "Solo puedes comparar fotografías en reportes " +
+                "activos de mascotas perdidas que tengan " +
+                "una imagen registrada.",
+                "OK"
+            );
+
+            return;
+        }
+
+        _abriendoComparador = true;
+
+        BtnCompararMascotaIA.IsEnabled = false;
+
+        try
+        {
+            await Navigation.PushAsync(
+                new CompararMascotaPage(
+                    _apiService,
+                    _reporteActual
+                )
+            );
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+
+            await DisplayAlertAsync(
+                "Error",
+                "No se pudo abrir el comparador de imágenes.",
+                "OK"
+            );
+        }
+        finally
+        {
+            _abriendoComparador = false;
+
+            BtnCompararMascotaIA.IsEnabled = true;
+        }
     }
 
     private async Task CargarAvistamientosAsync()
@@ -291,6 +350,7 @@ public partial class DetalleReportePage : ContentPage
         BtnRegistrarAvistamiento.IsVisible = puedeRegistrarAvistamientoFinal;
         BtnWhatsApp.IsVisible = !_esReportePropio;
         LblReportePropio.IsVisible = _esReportePropio;
+        BtnCompararMascotaIA.IsVisible = PuedeCompararMascotaIA();
 
         if (_esReportePropio)
         {

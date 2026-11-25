@@ -29,6 +29,43 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<R2StorageService>();
 builder.Services.AddScoped<EmailService>();
 
+// ========================================================
+// SERVICIO DE INTELIGENCIA ARTIFICIAL
+// ========================================================
+
+builder.Services
+    .AddHttpClient<InteligenciaArtificialService>(client =>
+    {
+        string? baseUrl =
+            builder.Configuration[
+                "InteligenciaArtificial:BaseUrl"
+            ];
+
+        if (string.IsNullOrWhiteSpace(baseUrl))
+        {
+            throw new InvalidOperationException(
+                "No se configuró la dirección del servicio de IA."
+            );
+        }
+
+        client.BaseAddress = new Uri(baseUrl);
+
+        client.Timeout = TimeSpan.FromSeconds(90);
+    });
+
+// Cliente independiente para descargar fotografías de R2
+builder.Services
+    .AddHttpClient("FotosMascotas", client =>
+    {
+        client.Timeout = TimeSpan.FromSeconds(30);
+    })
+    .ConfigurePrimaryHttpMessageHandler(() =>
+        new HttpClientHandler
+        {
+            AllowAutoRedirect = false
+        }
+    );
+
 // 1. Activar Identity (El gestor de usuarios)
 builder.Services.AddIdentity<Usuario, IdentityRole<long>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -92,8 +129,8 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-  //  app.UseSwagger();
-  //  app.UseSwaggerUI();
+//  app.UseSwagger();
+//  app.UseSwaggerUI();
 //}
 
 app.UseSwagger();
